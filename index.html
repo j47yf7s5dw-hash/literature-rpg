@@ -159,8 +159,8 @@ button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px soli
 .sheet{animation-duration:.14s}
 .toast{transition:opacity .12s ease}
 </style>
-<!-- Ver.3.12: EX genre packs regrouped by reading stage -->
-</head><body><header><div class="title">📚 文学RPG <small>Ver.3.12</small></div><div class="sub">500冊の本編＋EX557作品を冒険する文学RPG</div><button id="themeToggle" class="theme-toggle" type="button" aria-label="表示テーマを切り替える">◐</button><nav aria-label="メインナビゲーション">
+<!-- Ver.3.12.1: EX genre packs regrouped by reading stage; startup crash fixed -->
+</head><body><header><div class="title">📚 文学RPG <small>Ver.3.12.1</small></div><div class="sub">500冊の本編＋EX557作品を冒険する文学RPG</div><button id="themeToggle" class="theme-toggle" type="button" aria-label="表示テーマを切り替える">◐</button><nav aria-label="メインナビゲーション">
 <button data-view="home" class="active">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="backup">保存</button>
 </nav></header><main>
 <section id="homeView"></section><section id="phasesView" class="hidden"></section><section id="exView" class="hidden"></section><section id="booksView" class="hidden"></section><section id="authorsView" class="hidden"></section><section id="timelineView" class="hidden"></section>
@@ -288,11 +288,12 @@ function buildExWorldPacks(){let packs=[];
  const genreStages=['入門','基礎','発展','深淵'];
  Object.entries(EX_GENRE_GROUPS).forEach(([group,names])=>names.forEach(name=>{
    let ordered=plannedBooks(EX_BOOKS.filter(b=>exGenreMatch(b,name)));
+   const stageDescriptions={入門:'まず作品世界に入りやすい本から',基礎:'代表的な主題と技法をつかむ',発展:'作風の広がりや難度の高い作品へ',深淵:'長大・複雑・実験的な作品に挑戦'};
    genreStages.forEach(stage=>{
      let nos=ordered.filter((b,i)=>stageForIndex(i,ordered.length)===stage).map(b=>b.no);
      let suffix=stage==='入門'?'入門編':stage;
      let titleMap={入門:name+'入門者',基礎:name+'の旅人',発展:name+'の探究者',深淵:name+'マスター'};
-     packs.push({id:'g-'+name+'-'+stage,type:'ジャンルパック',group,stage,icon:EX_ICONS[name]||'📚',name:name+'の旅【'+suffix+'】',desc:STAGE_INFO[stage]+'。'+name+'に属するEX作品を、同じ段階の作品だけで攻略するパック。',nos,titles:{beginner:titleMap[stage],mid:titleMap[stage],master:titleMap[stage]}})
+     packs.push({id:'g-'+name+'-'+stage,type:'ジャンルパック',group,stage,icon:EX_ICONS[name]||'📚',name:name+'の旅【'+suffix+'】',desc:stageDescriptions[stage]+'。'+name+'に属するEX作品を、同じ段階の作品だけで攻略するパック。',nos,titles:{beginner:titleMap[stage],mid:titleMap[stage],master:titleMap[stage]}})
    })
  }));
  EX_AUTHOR_NAMES.forEach(name=>{let nos=ALL_BOOKS.filter(b=>exAuthorMatch(b.author,name)).map(b=>b.no);addSplitPacks({id:'a-'+name,type:'作家パック',group:EX_AUTHOR_NAMES.indexOf(name)<10?'日本':'海外',icon:'✍️',authorName:name,name:name+'を知る旅',desc:name+'の本編・EX作品を、読みやすさと作風の広がりを意識しながら深掘りする。',nos,titles:{beginner:name+'入門者',mid:name+'研究員',master:name+'研究家'}})});
