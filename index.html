@@ -260,7 +260,7 @@ nav{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
 </style>
 <meta content="modular-v5" name="literature-rpg-architecture"/>
 <script id="ex-selection-policy" type="application/json">{"priority":["本編500作には入らなかったが各ジャンルで必読とされる作品","批評・研究・主要文学賞などで評価が定着した作品","ジャンル史の流れを理解するうえで重要な作品","作家の代表性や作風の広がりを補う作品"],"avoid":["冊数だけを増やす水増し","本編との重複","評価根拠の弱い追加"]}</script>
-</head><body><header><div class="title">📚 文学RPG <small>Ver.6.2.1</small></div><div class="sub">500冊の本編＋EX623作品を巡り、文学世界を発見するRPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
+</head><body><header><div class="title">📚 文学RPG <small>Ver.6.6</small></div><div class="sub">500冊の本編＋EX623作品を巡り、文学世界を発見するRPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
 <button class="active" data-view="home">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="bosses">ボス戦</button><button data-view="backup">保存</button>
 </nav></header><main>
 <section id="homeView"></section><section class="hidden" id="phasesView"></section><section class="hidden" id="exView"></section><section class="hidden" id="booksView"></section><section class="hidden" id="authorsView"></section><section class="hidden" id="timelineView"></section>
@@ -1660,6 +1660,55 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setView(b.datas
  const priorDetail=window.openDetail;window.openDetail=function(no){priorDetail.apply(this,arguments);setTimeout(()=>{if(!eligible(no))return;let actions=document.querySelector('#modal .detail-actions');if(actions&&!actions.querySelector('.reflection-btn')){let btn=document.createElement('button');btn.className='reflection-btn';btn.type='button';btn.onclick=()=>openPostReadReflection(no);actions.appendChild(btn);refreshReflectionDetail(no)}let d=data(no),wrap=document.querySelector('#modal .detail-wrap');if(wrap&&has(no)&&!wrap.querySelector('.reflection-summary')){let box=document.createElement('div');box.className='reflection-summary';box.innerHTML=`<b>🌙 冒険の余韻 ${d.match?`<span class="reflection-score">期待との一致 ${d.match}/5</span>`:''}</b>${d.impression?`読後の一言：${esc(d.impression)}<br>`:''}${d.surprise?`予想外：${esc(d.surprise)}<br>`:''}${d.question?`残った問い：${esc(d.question)}`:''}`;let prep=wrap.querySelector('.prep-summary'),hero=wrap.querySelector('.detail-hero');(prep||hero||wrap.firstElementChild)?.insertAdjacentElement('afterend',box)}} ,0)}
  const priorToggle=window.toggleGetFromDetail;if(typeof priorToggle==='function')window.toggleGetFromDetail=function(no){let before=eligible(no);priorToggle.apply(this,arguments);setTimeout(()=>{renderReflectionPanel();if(!before&&eligible(no)&&(window.literatureRpgV64?.has?.(no))&&!has(no))toast('読む前の期待を、読後の実感と比べられます')},0)}
  ensure();saveState();renderReflectionPanel();window.literatureRpgV65={ensure,data,has,SCALE};
+})();
+</script>
+
+<style id="v66-style">
+/* ===== Ver.6.6 読書コンパス ===== */
+.reading-compass{margin-top:10px;padding:11px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,var(--paper),rgba(127,112,72,.08))}
+.reading-compass-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.reading-compass-head h3{margin:0;font-size:14px}.reading-compass-head button{border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:6px 10px;font-size:11px;font-weight:800}
+.reading-compass-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}.compass-mini{padding:8px 6px;border-radius:10px;background:rgba(255,255,255,.55);text-align:center}.compass-mini b{display:block;font-size:15px}.compass-mini small{display:block;margin-top:2px;color:var(--muted);font-size:9px}
+.compass-modal{position:fixed;inset:0;z-index:1200;background:rgba(20,16,12,.58);display:flex;align-items:flex-end;justify-content:center}.compass-sheet{width:min(680px,100%);max-height:88vh;overflow:auto;background:var(--bg);border-radius:20px 20px 0 0;padding:0 14px 22px;box-shadow:0 -18px 50px rgba(0,0,0,.28)}
+.compass-sheet-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:15px 2px 11px;background:var(--bg)}.compass-sheet-head h3{margin:0}.compass-sheet-head button{border:0;background:none;font-size:25px}
+.compass-hero{padding:15px;border-radius:16px;background:linear-gradient(145deg,#5f6041,#7b7652);color:#fff}.compass-hero b{display:block;font-size:19px}.compass-hero p{margin:6px 0 0;font-size:12px;line-height:1.7;opacity:.9}
+.compass-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.compass-card{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}.compass-card h4{margin:0 0 7px;font-size:12px}.compass-card strong{display:block;font-size:18px}.compass-card p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.55}
+.compass-bar{height:7px;margin-top:7px;border-radius:999px;background:rgba(120,110,90,.18);overflow:hidden}.compass-bar i{display:block;height:100%;border-radius:inherit;background:#8b7337}
+.compass-list{display:grid;gap:6px;margin-top:8px}.compass-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;font-size:11px}.compass-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.compass-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px;line-height:1.8}
+.dark .reading-compass{background:linear-gradient(145deg,var(--paper),rgba(200,185,130,.07))}.dark .compass-mini{background:rgba(255,255,255,.04)}
+@media(max-width:430px){.reading-compass-summary{gap:5px}.compass-mini b{font-size:13px}.compass-grid{grid-template-columns:1fr 1fr}.compass-card{padding:10px}}
+</style>
+<script id="v66-script">
+/* Literature RPG Ver.6.6 — Reading Compass */
+(function(){
+ function vals(o){return o&&typeof o==='object'?Object.values(o):[]}
+ function reflected(){return vals(state.postReadReflections).filter(x=>x&&(x.match||x.impression||x.surprise||x.question))}
+ function prepared(){return vals(state.preReadNotes).filter(x=>x&&(x.reason||x.expectation||x.mood))}
+ function countBy(arr,key){let m={};arr.forEach(x=>{let v=typeof key==='function'?key(x):x[key];if(v)m[v]=(m[v]||0)+1});return m}
+ function top(m){let a=Object.entries(m).sort((a,b)=>b[1]-a[1]);return a[0]||['まだ不明',0]}
+ function pct(n,d){return d?Math.round(n/d*100):0}
+ function stats(){
+   let pre=prepared(),post=reflected(),moods=countBy(pre,'mood'),favMood=top(moods),scores=post.map(x=>Number(x.match)||0).filter(Boolean),avg=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:0;
+   let surprise=post.filter(x=>String(x.surprise||'').trim()).length,questions=post.filter(x=>String(x.question||'').trim()).length;
+   let reflectedNos=Object.entries(state.postReadReflections||{}).filter(([,x])=>x&&(x.match||x.impression||x.surprise||x.question)).map(([no])=>Number(no));
+   let genres=countBy(reflectedNos.map(no=>ALL_BOOKS.find(b=>Number(b.no)===no)).filter(Boolean),b=>b.genre||b.bigGenre||'その他');
+   return {pre,post,favMood,avg,surprise,questions,genres,reflectedNos};
+ }
+ function level(s){if(s.post.length>=30)return['熟練の航海者','自分の読書の癖が、かなりはっきり見えてきた。'];if(s.post.length>=10)return['読書の探検家','期待と読後の差から、自分だけの好みが育っている。'];if(s.post.length>=3)return['方角を見つけた旅人','少しずつ、自分が本に求めるものが見え始めている。'];return['コンパス調整中','読前・読後の記録が3冊たまると、傾向が見え始める。']}
+ function renderPanel(){
+   let home=document.getElementById('homeView');if(!home)return;let s=stats(),lv=level(s),host=document.getElementById('readingCompassPanel');
+   if(!host){host=document.createElement('div');host.id='readingCompassPanel';host.className='reading-compass';let anchor=document.getElementById('reflectionPanel')||document.getElementById('nextAdventurePanel');anchor?anchor.insertAdjacentElement('afterend',host):home.appendChild(host)}
+   host.innerHTML=`<div class="reading-compass-head"><div><h3>🧭 読書コンパス</h3><small>${esc(lv[0])}</small></div><button onclick="openReadingCompass()">詳しく見る</button></div><div class="reading-compass-summary"><div class="compass-mini"><b>${s.favMood[1]?esc(s.favMood[0]):'未記録'}</b><small>選びやすい気分</small></div><div class="compass-mini"><b>${s.avg?s.avg.toFixed(1)+'/5':'—'}</b><small>期待との一致</small></div><div class="compass-mini"><b>${s.post.length}冊</b><small>振り返り済み</small></div></div>`;
+ }
+ window.openReadingCompass=function(){
+   let s=stats(),lv=level(s),old=document.getElementById('readingCompassModal');old?.remove();let el=document.createElement('div');el.id='readingCompassModal';el.className='compass-modal';el.onclick=e=>{if(e.target===el)closeReadingCompass()};
+   let moodRows=Object.entries(countBy(s.pre,'mood')).sort((a,b)=>b[1]-a[1]);let genreRows=Object.entries(s.genres).sort((a,b)=>b[1]-a[1]).slice(0,5);let maxMood=Math.max(1,...moodRows.map(x=>x[1])),maxGenre=Math.max(1,...genreRows.map(x=>x[1]));
+   el.innerHTML=`<section class="compass-sheet"><div class="compass-sheet-head"><h3>🧭 読書コンパス</h3><button onclick="closeReadingCompass()">×</button></div><div class="compass-hero"><b>${esc(lv[0])}</b><p>${esc(lv[1])}</p></div>${!s.pre.length&&!s.post.length?'<div class="compass-empty">まだ記録がありません。<br>「冒険準備」と「冒険の余韻」を残すと、自分の読書傾向がここに育っていきます。</div>':`<div class="compass-grid"><div class="compass-card"><h4>読む前の傾向</h4><strong>${s.pre.length}冊</strong><p>読前メモを残した作品数</p></div><div class="compass-card"><h4>期待との一致</h4><strong>${s.avg?s.avg.toFixed(1)+' / 5':'—'}</strong><div class="compass-bar"><i style="width:${pct(s.avg,5)}%"></i></div></div><div class="compass-card"><h4>予想外との遭遇</h4><strong>${s.surprise}冊</strong><p>「予想外だったこと」が残った作品</p></div><div class="compass-card"><h4>問いが残った本</h4><strong>${s.questions}冊</strong><p>読後に問いを持ち帰った作品</p></div></div><div class="compass-card" style="margin-top:10px"><h4>本を選ぶときの気分</h4><div class="compass-list">${moodRows.length?moodRows.map(([k,v])=>`<div><div class="compass-row"><span>${esc(k)}</span><b>${v}</b></div><div class="compass-bar"><i style="width:${pct(v,maxMood)}%"></i></div></div>`).join(''):'<p>まだ気分の記録がありません。</p>'}</div></div><div class="compass-card" style="margin-top:10px"><h4>振り返りが多いジャンル</h4><div class="compass-list">${genreRows.length?genreRows.map(([k,v])=>`<div><div class="compass-row"><span>${esc(k)}</span><b>${v}</b></div><div class="compass-bar"><i style="width:${pct(v,maxGenre)}%"></i></div></div>`).join(''):'<p>振り返りを3冊ほど残すと傾向が見えてきます。</p>'}</div></div>`}</section>`;
+   document.body.appendChild(el);
+ }
+ window.closeReadingCompass=function(){document.getElementById('readingCompassModal')?.remove()}
+ const priorHome=window.renderHome;window.renderHome=function(){priorHome.apply(this,arguments);renderPanel()}
+ setTimeout(()=>{if(document.querySelector('nav button.active')?.dataset.view==='home')renderPanel()},0);
+ window.literatureRpgV66={stats};
 })();
 </script>
 
