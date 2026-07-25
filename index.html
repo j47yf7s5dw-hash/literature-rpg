@@ -260,6 +260,62 @@ nav{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
 </style>
 <meta content="modular-v5" name="literature-rpg-architecture"/>
 <script id="ex-selection-policy" type="application/json">{"priority":["本編500作には入らなかったが各ジャンルで必読とされる作品","批評・研究・主要文学賞などで評価が定着した作品","ジャンル史の流れを理解するうえで重要な作品","作家の代表性や作風の広がりを補う作品"],"avoid":["冊数だけを増やす水増し","本編との重複","評価根拠の弱い追加"]}</script>
+
+<style id="v704-detail-action-polish">
+/* Ver.7.0.4 — 作品詳細の補助アクションを、細く静かなタイポグラフィへ */
+#modal .detail-actions .prep-detail-btn,
+#modal .detail-actions .plan-detail-btn{
+  min-height:42px;
+  padding:0 14px;
+  border:1px solid color-mix(in srgb,var(--accent) 24%,var(--line));
+  border-radius:12px;
+  background:color-mix(in srgb,var(--paper) 94%,var(--accent) 6%);
+  color:var(--accent);
+  font-family:inherit;
+  font-size:12px;
+  font-weight:650;
+  line-height:1.25;
+  letter-spacing:.035em;
+  white-space:nowrap;
+  box-shadow:none;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  transition:background .16s ease,border-color .16s ease,transform .16s ease;
+}
+#modal .detail-actions .prep-detail-btn:active,
+#modal .detail-actions .plan-detail-btn:active{transform:scale(.98)}
+#modal .detail-actions .prep-detail-btn.prepared{
+  background:color-mix(in srgb,#8a6428 12%,var(--paper))!important;
+  color:#76551f!important;
+  border-color:color-mix(in srgb,#8a6428 38%,var(--line))!important;
+}
+#modal .detail-actions .plan-detail-btn.planned{
+  background:color-mix(in srgb,#6a4b35 12%,var(--paper))!important;
+  color:#684a36!important;
+  border-color:color-mix(in srgb,#6a4b35 38%,var(--line))!important;
+}
+.dark #modal .detail-actions .prep-detail-btn,
+.dark #modal .detail-actions .plan-detail-btn{
+  background:rgba(255,255,255,.045);
+  color:#e3d4c8;
+  border-color:rgba(255,255,255,.15);
+}
+.dark #modal .detail-actions .prep-detail-btn.prepared,
+.dark #modal .detail-actions .plan-detail-btn.planned{
+  color:#f0dfc7!important;
+  background:rgba(184,137,49,.14)!important;
+  border-color:rgba(214,174,98,.34)!important;
+}
+@media(max-width:520px){
+  #modal .detail-actions .prep-detail-btn,
+  #modal .detail-actions .plan-detail-btn{
+    grid-column:1/-1;
+    width:100%;
+    min-height:40px;
+    font-size:12px;
+  }
+}
+</style>
 </head><body><header><div class="title">📚 文学RPG <small>Ver.6.6</small></div><div class="sub">500冊の本編＋EX623作品を巡り、文学世界を発見するRPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
 <button class="active" data-view="home">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="bosses">ボス戦</button><button data-view="backup">保存</button>
 </nav></header><main>
