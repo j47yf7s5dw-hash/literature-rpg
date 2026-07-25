@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#1c1714" name="theme-color"/><title>文学RPG Ver.5.3</title><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><meta content="文学RPG" name="apple-mobile-web-app-title"/><style>
+<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#1c1714" name="theme-color"/><title>文学RPG Ver.5.4</title><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><meta content="文学RPG" name="apple-mobile-web-app-title"/><style>
 
 :root{--bg:#f3ece2;--paper:#fffdf8;--ink:#2b2420;--muted:#786c64;--accent:#7c3f2d;--gold:#b9862c;--line:#dfd1c2;--green:#376b52;--dark:#211b18}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}button,input,textarea,select{font:inherit}header{position:sticky;top:0;z-index:20;background:rgba(28,23,20,.97);color:#fff;padding:13px 14px 10px;box-shadow:0 3px 14px #0004}.title{font-size:18px;font-weight:900}.sub{font-size:11px;opacity:.7;margin-top:2px}nav{display:flex;gap:7px;overflow:auto;padding-top:10px;scrollbar-width:none}nav button{border:0;border-radius:999px;padding:9px 12px;background:#423832;color:#eee;white-space:nowrap}nav button.active{background:#dfbd7b;color:#2b211a;font-weight:900}main{max-width:700px;margin:auto;padding:13px 11px 100px}.panel,.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:0 4px 16px #5d443012}.hero{background:linear-gradient(145deg,#fffaf0,#ecd8b7)}.progress{height:12px;background:#e5d9ca;border-radius:99px;overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;background:linear-gradient(90deg,#95583b,#d8a94d)}.kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px}.kpi{background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px}.kpi b{display:block;font-size:22px}.section-title{margin:4px 2px 11px;font-size:18px}.toolbar{display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:10px}.search,.filter{border:1px solid var(--line);border-radius:12px;background:white;padding:11px;min-width:0}.book{background:var(--paper);border:1px solid var(--line);border-radius:17px;margin-bottom:10px;overflow:hidden}.book.got{border-color:#bd8d34;background:#fff9e9}.book-main{display:grid;grid-template-columns:43px 1fr auto;gap:9px;align-items:center;padding:12px}.get{width:41px;height:41px;border-radius:50%;border:1px solid #cab9a5;background:#f2e9df;font-size:19px}.got .get{background:#f4c65b;border-color:#ac7b20}.get.unread{width:41px;min-width:41px;height:41px;padding:0;border-radius:50%;font-size:0;color:transparent;background:#f2e9df}.book-title{font-weight:900;line-height:1.35}.meta{font-size:11px;color:var(--muted);margin-top:3px}.open-btn{border:0;background:#302721;color:#fff;border-radius:11px;padding:9px 10px;font-size:12px;font-weight:800}.tag{display:inline-block;font-size:11px;background:#efe2d0;border-radius:999px;padding:5px 8px;margin:5px 3px 0 0}.phase{padding:14px;border-radius:16px;background:var(--paper);border:1px solid var(--line);margin-bottom:10px}.badge{display:inline-flex;border:1px solid #d4b986;background:#f3e5cb;border-radius:999px;padding:7px 9px;margin:3px;font-size:12px}.locked{filter:grayscale(1);opacity:.38}.random{width:100%;border:0;border-radius:13px;padding:13px;background:var(--accent);color:#fff;font-weight:900}.empty{text-align:center;color:var(--muted);padding:28px 10px}.hidden{display:none!important}textarea{width:100%;min-height:100px;border:1px solid var(--line);border-radius:12px;padding:10px;resize:vertical}.save{width:100%;border:0;border-radius:11px;padding:11px;background:var(--green);color:#fff;font-weight:800;margin-top:7px}.stars button{border:0;background:transparent;font-size:28px;color:#c9beb2;padding:0 2px}.stars button.on{color:#d49b2f}.modal{position:fixed;inset:0;z-index:100;background:#0009;display:flex;align-items:flex-end}.sheet{background:var(--bg);width:100%;max-height:94vh;overflow:auto;border-radius:24px 24px 0 0;padding:0 0 calc(20px + env(safe-area-inset-bottom));animation:up .2s ease}@keyframes up{from{transform:translateY(30px);opacity:.5}}.sheet-head{position:sticky;top:0;background:rgba(243,236,226,.97);padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;z-index:2}.close{border:0;background:#2d2520;color:#fff;border-radius:50%;width:36px;height:36px}.detail-wrap{padding:14px}.detail-hero{background:linear-gradient(145deg,#3b2d26,#1d1815);color:#fff;border-radius:18px;padding:18px}.detail-hero h2{margin:8px 0 4px;font-size:24px}.hook{font-family:serif;font-size:18px;line-height:1.65;margin-top:14px;color:#f1d9a7}.detail-taste{margin-top:11px;padding:10px 12px;border:1px solid var(--line);border-radius:13px;background:rgba(185,134,44,.08);line-height:1.6}.detail-taste small{display:block;color:var(--muted);font-weight:800;margin-bottom:3px}.reading-cue{display:inline-flex;align-items:center;margin-left:6px;padding:3px 6px;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.08em;vertical-align:2px;background:#2f2925;color:#fff}.reading-cue.last{background:var(--gold);color:#2b211a}.ex-book.next-book{border-radius:12px;background:rgba(185,134,44,.07);padding-left:8px;padding-right:8px}.ex-book.last-book{border:1px solid rgba(185,134,44,.58);background:rgba(185,134,44,.11)}.detail-section{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:15px;margin-top:11px}.detail-section h3{margin:0 0 8px;font-size:15px;color:var(--accent)}.detail-section p{margin:0;line-height:1.85;font-size:14px;white-space:pre-line}.meter{display:grid;grid-template-columns:58px 1fr 28px;gap:8px;align-items:center;margin:8px 0;font-size:12px}.meterbar{height:8px;background:#e5d9ca;border-radius:99px;overflow:hidden}.meterbar i{display:block;height:100%;background:linear-gradient(90deg,#8e563d,#d7a348)}.question{font-family:serif;font-size:17px!important;font-weight:700}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button,.filelabel{border:0;border-radius:12px;padding:12px;text-align:center;font-weight:800}.export{background:#3d6a54;color:white}.reset{background:#8a3f35;color:white}.filelabel{background:#4a596b;color:white}#fileInput{display:none}.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#201a17;color:white;border-radius:999px;padding:11px 16px;opacity:0;pointer-events:none;transition:.2s;z-index:200}.toast.show{opacity:1}
 
@@ -221,7 +221,7 @@ button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px soli
 @media(prefers-reduced-motion:reduce){.completion-result-card,.result-spark{animation:none!important}}
 
 </style>
-<meta content="modular-v5" name="literature-rpg-architecture"/></head><body><header><div class="title">📚 文学RPG <small>Ver.5.3</small></div><div class="sub">500冊の本編＋EX570作品を巡り、文学史を探索するRPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
+<meta content="modular-v5" name="literature-rpg-architecture"/></head><body><header><div class="title">📚 文学RPG <small>Ver.5.4</small></div><div class="sub">500冊の本編＋EX570作品を巡り、文学史を探索するRPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
 <button class="active" data-view="home">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="bosses">ボス戦</button><button data-view="backup">保存</button>
 </nav></header><main>
 <section id="homeView"></section><section class="hidden" id="phasesView"></section><section class="hidden" id="exView"></section><section class="hidden" id="booksView"></section><section class="hidden" id="authorsView"></section><section class="hidden" id="timelineView"></section>
@@ -971,6 +971,61 @@ exportData=function(){let payload={app:'文学RPG',version:'4.3',exportedAt:new 
 .collection-hall-hero{background:linear-gradient(135deg,#30231d,#62402d);color:#fff}.collection-hall-hero .meta{color:#eaded5}.collection-total{display:flex;align-items:center;gap:16px;margin-top:14px}.collection-ring{width:94px;height:94px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent,#b56b3e) var(--collection-pct),rgba(255,255,255,.18) 0);position:relative;flex:none}.collection-ring:after{content:"";position:absolute;inset:9px;border-radius:50%;background:#33241e}.collection-ring b{position:relative;z-index:1;font-size:23px}.collection-hall-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.collection-hall-card{border:1px solid var(--line);border-radius:18px;background:var(--paper);padding:15px;text-align:left;color:var(--ink);box-shadow:none}.collection-hall-card.complete{border-color:#b68b34;background:linear-gradient(180deg,var(--paper),rgba(221,183,87,.13))}.collection-hall-card h3{margin:0 0 5px;font-size:17px}.collection-hall-card .big{display:block;font-size:23px;font-weight:800;margin:8px 0}.collection-hall-card .progress{margin:9px 0}.collection-hall-card button{width:100%;margin-top:10px}.collection-featured{display:grid;gap:9px}.collection-featured button{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--paper);color:var(--ink)}.collection-featured .icon{font-size:22px}.collection-featured small{display:block;color:var(--muted);margin-top:3px}.collection-badges{display:flex;flex-wrap:wrap;gap:7px}.collection-badges span{border:1px solid var(--line);border-radius:999px;padding:7px 10px;background:var(--paper)}@media(max-width:560px){.collection-hall-grid{grid-template-columns:1fr}.collection-total{align-items:flex-start}.collection-ring{width:82px;height:82px}.collection-hall-card{padding:14px}.collection-featured button{grid-template-columns:auto minmax(0,1fr);}.collection-featured button>span:last-child{grid-column:2}}
 
 </style>
+<style>
+/* Ver.5.4 UI・演出改善 */
+:root{--motion-fast:160ms;--motion-normal:260ms;--motion-slow:420ms}
+html{scroll-behavior:smooth}
+body{overscroll-behavior-y:none}
+main>section.view-enter{animation:viewEnter var(--motion-normal) cubic-bezier(.2,.75,.25,1) both}
+@keyframes viewEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.panel,.book,.phase,.collection-card,.author-card,.boss-card{transition:transform var(--motion-fast) ease,box-shadow var(--motion-fast) ease,border-color var(--motion-fast) ease,opacity var(--motion-normal) ease}
+button,a,.badge,[role="button"]{-webkit-tap-highlight-color:transparent}
+button{transition:transform 110ms ease,filter var(--motion-fast) ease,box-shadow var(--motion-fast) ease}
+button:active{transform:scale(.975)}
+nav button.active{position:relative}
+nav button.active::after{content:"";position:absolute;left:20%;right:20%;bottom:2px;height:3px;border-radius:999px;background:currentColor;animation:navMark var(--motion-normal) ease both}
+@keyframes navMark{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+.progress{overflow:hidden}
+.progress i,.xpbar i{transition:width .72s cubic-bezier(.2,.8,.2,1)}
+.progress.progress-awake i,.xpbar.progress-awake i{animation:progressShine 1.05s ease-out both}
+@keyframes progressShine{0%{filter:brightness(1)}45%{filter:brightness(1.32)}100%{filter:brightness(1)}}
+.toast{max-width:min(88vw,420px);left:50%;right:auto;transform:translate(-50%,18px) scale(.96);display:flex;align-items:center;gap:9px;padding:12px 16px;border-radius:999px;box-shadow:0 12px 30px rgba(0,0,0,.24);font-weight:700;pointer-events:none}
+.toast::before{content:"✓";display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.18);font-size:14px;flex:0 0 auto}
+.toast.show{transform:translate(-50%,0) scale(1)}
+.toast.toast-alert::before{content:"!"}
+.toast.toast-book::before{content:"📚";background:transparent}
+.complete-flash.show .complete-flash-card{animation:rewardDrop .55s cubic-bezier(.18,.9,.25,1.18) both}
+@keyframes rewardDrop{0%{opacity:0;transform:translateY(-22px) scale(.88)}65%{opacity:1;transform:translateY(3px) scale(1.03)}100%{transform:none}}
+.unlock-box,.completion-result-card{animation:rewardCard .48s cubic-bezier(.18,.9,.25,1.12) both}
+@keyframes rewardCard{from{opacity:0;transform:translateY(28px) scale(.94)}to{opacity:1;transform:none}}
+.completion-result::before,.unlock-pop::before{animation:veilIn .28s ease both}
+@keyframes veilIn{from{opacity:0}to{opacity:1}}
+.result-reward{animation:rewardItem .36s ease both}
+.result-reward:nth-child(2){animation-delay:.08s}.result-reward:nth-child(3){animation-delay:.16s}.result-reward:nth-child(4){animation-delay:.24s}
+@keyframes rewardItem{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.ui-reveal{animation:itemReveal .34s ease both}
+@keyframes itemReveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.scroll-top{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));z-index:70;width:48px;height:48px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--accent,#5c3a2e);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.28);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity var(--motion-fast),transform var(--motion-fast),visibility var(--motion-fast)}
+.scroll-top.show{opacity:1;visibility:visible;transform:none}
+.scroll-top span{font-size:22px;line-height:1}
+.tap-ripple{position:relative;overflow:hidden}
+.tap-ripple::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(255,255,255,.24),transparent 32%);opacity:0;transform:scale(.7);pointer-events:none}
+.tap-ripple.rippling::after{animation:ripple .42s ease-out}
+@keyframes ripple{0%{opacity:.9;transform:scale(.65)}100%{opacity:0;transform:scale(1.5)}}
+@media(hover:hover) and (pointer:fine){.panel.clickable:hover,.book:hover,.collection-card:hover,.author-card:hover,.boss-card:hover{transform:translateY(-2px)}}
+@media(max-width:600px){
+  :root{--motion-normal:220ms}
+  header{padding-top:max(12px,env(safe-area-inset-top))}
+  main{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+  .scroll-top{bottom:calc(16px + env(safe-area-inset-bottom))}
+  .completion-result-card,.unlock-box{border-radius:24px 24px 0 0}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+</style>
 <script>
 /* Literature RPG Ver.5.0 — world-map.js */
 
@@ -1203,6 +1258,114 @@ window.LITERATURE_QUESTS=[
  renderCollections=function(){let s=summary(),works=doneCount(ALL_BOOKS);collectionsView.innerHTML=`<div class="panel collection-hall-hero"><h2 style="margin-top:0">🏛 コレクション館</h2><p>文学RPGで集めた作品、作家、土地、称号、実績、ボス撃破記録を一つの館に展示する。</p><div class="collection-total"><div class="collection-ring" style="--collection-pct:${s.pct}%"><b>${s.pct}%</b></div><div><b>総合コレクション率</b><div class="meta">読む・訪れる・解除するほど館が完成していく</div><div class="collection-badges"><span>📚 ${works}冊</span><span>👤 ${s.readAuthors.length}作家</span><span>🌍 ${s.visited.length}地域</span></div></div></div></div><div class="collection-hall-grid">${card('📖','作品図鑑',works,ALL_BOOKS.length,'本編とEXを横断した全作品','books',works===ALL_BOOKS.length)}${card('👤','作家図鑑',s.readAuthors.length,s.authors.length,`制覇作家 ${s.masterAuthors.length}人`,'authors',s.masterAuthors.length===s.authors.length)}${card('🏆','文学賞図鑑',s.awardDone.length,s.awards.length,'受賞作を読んで賞ごとの棚を完成','ex',s.awardDone.length===s.awards.length)}${card('🌍','国・地域図鑑',s.visited.length,s.countries.length,'読了作品の舞台となる文学圏','world',s.visited.length===s.countries.length)}${card('🎭','ジャンル図鑑',s.genreDone.length,s.genres.length,'ジャンルごとの登録作品を制覇','themes',s.genreDone.length===s.genres.length)}${card('👑','称号',s.titleDone.length,s.titles.length,'解除した称号を装備する','titles',s.titleDone.length===s.titles.length)}${card('🏅','実績',s.ach.length,ACHIEVEMENTS.length,'読書の歩みを示す実績コレクション','achievements',s.ach.length===ACHIEVEMENTS.length)}${card('⚔️','ボス撃破記録',s.bossDone.length,s.bosses.length,'長編作品の完全攻略記録','bosses',s.bossDone.length===s.bosses.length)}</div><div class="panel"><h3 class="section-title">🧭 次に埋めやすい展示</h3><div class="collection-featured">${nextItems(s)||'<div class="empty">すべての展示が完成しています。</div>'}</div></div><div class="panel"><h3 class="section-title">✨ 最近の収集品</h3><div class="collection-badges">${s.ach.slice(-8).reverse().map(a=>`<span>${a.icon} ${esc(a.name)}</span>`).join('')||'<span>最初の一冊から展示が始まる</span>'}</div></div>`}
  const oldHome=renderHome;renderHome=function(){oldHome();let btn=[...homeView.querySelectorAll('button')].find(x=>x.textContent.includes('コレクション'));if(btn)btn.innerHTML='🏛 コレクション館'};
  window.renderCollections=renderCollections;
+})();
+
+</script>
+<script>
+/* Ver.5.4 UI・演出改善 */
+(function(){
+  'use strict';
+  const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const visibleSection=()=>document.querySelector('main>section:not(.hidden)');
+
+  function animateSection(section){
+    if(!section||reduceMotion)return;
+    section.classList.remove('view-enter');
+    void section.offsetWidth;
+    section.classList.add('view-enter');
+    window.setTimeout(()=>section.classList.remove('view-enter'),420);
+  }
+
+  if(typeof window.setView==='function'){
+    const originalSetView=window.setView;
+    window.setView=function(v){
+      originalSetView(v);
+      requestAnimationFrame(()=>{
+        const section=visibleSection();
+        animateSection(section);
+        awakenProgress(section);
+        revealItems(section);
+      });
+    };
+  }
+
+  function awakenProgress(root=document){
+    root.querySelectorAll('.progress,.xpbar').forEach((bar,i)=>{
+      bar.classList.remove('progress-awake');
+      if(reduceMotion)return;
+      window.setTimeout(()=>bar.classList.add('progress-awake'),Math.min(i*24,240));
+      window.setTimeout(()=>bar.classList.remove('progress-awake'),1400);
+    });
+  }
+
+  function revealItems(root=document){
+    if(reduceMotion)return;
+    const items=[...root.querySelectorAll('.panel,.book,.phase,.collection-card,.author-card,.boss-card')].slice(0,18);
+    items.forEach((el,i)=>{
+      el.classList.remove('ui-reveal');
+      el.style.animationDelay=Math.min(i*24,240)+'ms';
+      void el.offsetWidth;
+      el.classList.add('ui-reveal');
+      window.setTimeout(()=>{el.classList.remove('ui-reveal');el.style.animationDelay=''},700+i*24);
+    });
+  }
+
+  const originalToast=window.toast;
+  if(typeof originalToast==='function'){
+    window.toast=function(text){
+      originalToast(text);
+      const el=document.getElementById('toast');
+      if(!el)return;
+      el.classList.toggle('toast-alert',/削除|解除|失敗|入力|ありません/.test(String(text)));
+      el.classList.toggle('toast-book',/読了|図鑑|作品|ノート|パック/.test(String(text)));
+    };
+  }
+
+  const scrollButton=document.createElement('button');
+  scrollButton.type='button';
+  scrollButton.className='scroll-top';
+  scrollButton.setAttribute('aria-label','ページ上部へ戻る');
+  scrollButton.innerHTML='<span aria-hidden="true">↑</span>';
+  scrollButton.addEventListener('click',()=>window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'}));
+  document.body.appendChild(scrollButton);
+  let scrollTick=false;
+  window.addEventListener('scroll',()=>{
+    if(scrollTick)return;
+    scrollTick=true;
+    requestAnimationFrame(()=>{
+      scrollButton.classList.toggle('show',window.scrollY>520&&!document.querySelector('.modal:not(.hidden),.completion-result,.unlock-pop,.boss-modal-overlay'));
+      scrollTick=false;
+    });
+  },{passive:true});
+
+  document.addEventListener('pointerdown',event=>{
+    const button=event.target.closest('button,.open-btn,.random');
+    if(!button)return;
+    button.classList.add('tap-ripple');
+    const rect=button.getBoundingClientRect();
+    button.style.setProperty('--rx',`${event.clientX-rect.left}px`);
+    button.style.setProperty('--ry',`${event.clientY-rect.top}px`);
+    button.classList.remove('rippling');
+    void button.offsetWidth;
+    button.classList.add('rippling');
+    window.setTimeout(()=>button.classList.remove('rippling'),460);
+  },{passive:true});
+
+  const observer=new MutationObserver(records=>{
+    for(const record of records){
+      for(const node of record.addedNodes){
+        if(!(node instanceof HTMLElement))continue;
+        if(node.matches('.completion-result,.unlock-pop,.complete-flash-card'))awakenProgress(node);
+      }
+    }
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+
+  requestAnimationFrame(()=>{
+    const section=visibleSection();
+    awakenProgress(section||document);
+    revealItems(section||document);
+  });
 })();
 
 </script>
