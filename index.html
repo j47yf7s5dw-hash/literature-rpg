@@ -316,7 +316,7 @@ nav{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
   }
 }
 </style>
-</head><body><header><div class="title">📚 文学RPG <small>Ver.6.6</small></div><div class="sub">500冊の本編＋EX623作品を巡り、文学世界を発見するRPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
+</head><body><header><div class="title">📚 文学RPG <small>Ver.7.6</small></div><div class="sub">500冊の本編＋EX612作品を巡り、文学世界を旅するRPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
 <button class="active" data-view="home">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="bosses">ボス戦</button><button data-view="backup">保存</button>
 </nav></header><main>
 <section id="homeView"></section><section class="hidden" id="phasesView"></section><section class="hidden" id="exView"></section><section class="hidden" id="booksView"></section><section class="hidden" id="authorsView"></section><section class="hidden" id="timelineView"></section>
@@ -2156,12 +2156,6 @@ openDetail=function(no){ver73OldOpenDetail(no);const b=ALL_BOOKS.find(x=>x.no===
      box.innerHTML=`<span class="audit75">✓ Ver.7.5監査済み</span><div class="meta">${label}進めやすいよう、難易度を優先し、同難易度では短い作品から再整理。パック内の同一ID重複も除去。</div><div class="audit75-dist">${distHtml(p)}</div>`;
      (d.querySelector('.ex-category-body')||d).prepend(box);
    });
-   if(exView&&!document.getElementById('exAuditComplete75')){
-     const doneGenres=10,doneAuthors=AUTHOR_IDS.length,totalPacks=EX_PACK_DEFS.length;
-     const panel=document.createElement('div');panel.id='exAuditComplete75';panel.className='panel ex-audit-complete75';
-     panel.innerHTML=`<h2>✅ EX監査 完了</h2><div class="meta">全ジャンルパックと全作家パックの読む順・内部参照・重複を監査しました。作品番号と既存の読書記録は維持しています。</div><div class="audit75-grid"><div><b>${doneGenres}/10</b>ジャンル</div><div><b>${doneAuthors}/${doneAuthors}</b>作家パック</div><div><b>${EX_BOOKS.length}</b>EX作品</div></div>`;
-     exView.prepend(panel);
-   }
  },0)};
  const oldOpenDetail=openDetail;
  openDetail=function(no){oldOpenDetail(no);const b=ALL_BOOKS.find(x=>x.no===no);if(!b||!b.ver75Route)return;setTimeout(()=>{
@@ -2169,6 +2163,59 @@ openDetail=function(no){ver73OldOpenDetail(no);const b=ALL_BOOKS.find(x=>x.no===
    const x=document.createElement('div');x.className='audit75';x.textContent=`✓ ${b.ver75Pack}監査済み・推奨順 ${b.ver75Route}`;target.prepend(x)
  },0)};
  window.literatureRpgV75={PACK_IDS,genreAuditComplete:true,authorAuditComplete:true};
+})();
+</script>
+
+<style id="ver76-style">
+/* Ver.7.6 文学パスポート */
+.passport76-hero{position:relative;overflow:hidden;background:linear-gradient(145deg,#173d48,#326a6c);color:#fff;border:0}
+.passport76-hero:after{content:'🛂';position:absolute;right:10px;top:-4px;font-size:92px;opacity:.08}
+.passport76-hero h2{margin:0 0 5px}.passport76-hero .meta{color:#dcebec}
+.passport76-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}
+.passport76-kpis>div{background:#ffffff16;border:1px solid #ffffff25;border-radius:12px;padding:10px;text-align:center}
+.passport76-kpis b{display:block;font-size:21px}.passport76-kpis small{font-size:10px}
+.passport76-region-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.passport76-region{border:1px solid var(--line);border-radius:15px;background:var(--paper);padding:12px}
+.passport76-region-head{display:flex;justify-content:space-between;gap:8px;align-items:start}.passport76-region h3{margin:0;font-size:15px}
+.passport76-bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:9px 0 5px}.passport76-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#39777a,#c49a4d)}
+.passport76-country-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.passport76-country{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:11px;text-align:left;color:var(--ink)}
+.passport76-country b,.passport76-country small{display:block}.passport76-country small{color:var(--muted);margin-top:3px}
+.passport76-stamp{display:inline-flex;align-items:center;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900;margin-top:7px;background:#ece4da;color:#6f6258}
+.passport76-stamp.landed{background:#fff0c7;color:#795414}.passport76-stamp.explore{background:#dcebea;color:#315e5d}.passport76-stamp.master{background:#dbe8d6;color:#3d6537}.passport76-stamp.expert{background:#49382d;color:#fff0d7}
+.passport76-achievements{display:grid;grid-template-columns:1fr 1fr;gap:8px}.passport76-achievement{border:1px solid var(--line);border-radius:13px;padding:10px;background:var(--paper);opacity:.42}.passport76-achievement.unlocked{opacity:1;border-color:#c49a4d;background:#fff8e6}.passport76-achievement b,.passport76-achievement small{display:block}.passport76-achievement small{font-size:10px;color:var(--muted);margin-top:3px}
+.passport76-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.passport76-actions button{border:0;border-radius:12px;padding:11px;font-weight:900}.passport76-map{background:#315c58;color:#fff}.passport76-home{background:var(--soft);color:var(--ink);border:1px solid var(--line)!important}
+.passport76-modal{position:fixed;inset:0;z-index:10020;background:#17120faa;display:flex;align-items:flex-end;justify-content:center}
+.passport76-sheet{width:min(680px,100%);max-height:91dvh;overflow:auto;background:var(--bg);border-radius:22px 22px 0 0;padding:14px 13px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px #0006}
+.passport76-sheet-head{position:sticky;top:-14px;z-index:2;background:var(--bg);display:flex;justify-content:space-between;gap:10px;padding:10px 0}.passport76-sheet-head h2{margin:0}.passport76-close{border:0;border-radius:50%;width:35px;height:35px;background:var(--soft);font-size:18px}
+.passport76-book{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;border-top:1px solid var(--line);padding:10px 0}.passport76-book:first-child{border-top:0}.passport76-book button{border:0;border-radius:9px;padding:8px 9px;background:#3b302a;color:#fff;font-size:11px;font-weight:800}
+.passport76-entry{margin-top:10px;width:100%;border:0;border-radius:12px;padding:11px;background:#244f55;color:#fff;font-weight:900}
+@media(max-width:520px){.passport76-region-grid,.passport76-country-list{grid-template-columns:1fr}.passport76-kpis{grid-template-columns:1fr 1fr}.passport76-kpis>div:last-child{grid-column:1/-1}}
+@media(max-width:360px){.passport76-kpis,.passport76-achievements,.passport76-actions{grid-template-columns:1fr}.passport76-kpis>div:last-child{grid-column:auto}}
+</style>
+<script id="ver76-script">
+(function(){
+ const passportView=document.createElement('section');passportView.id='passportView';passportView.className='hidden';document.querySelector('main').appendChild(passportView);
+ const REGION_ORDER=['日本','北米','中南米','ヨーロッパ','アフリカ','アジア','オセアニア'];
+ const REGION_ICON={日本:'🗾',北米:'🌎',中南米:'🌎',ヨーロッパ:'🏰',アフリカ:'🌍',アジア:'🌏',オセアニア:'🌊'};
+ function sphereName(b){return String(b.region||'不明').trim()||'不明'}
+ function groupName(b){if(sphereName(b)==='日本')return'日本';return typeof normRegion==='function'?normRegion(sphereName(b)):'その他'}
+ function data(){
+  const map=new Map();ALL_BOOKS.forEach(b=>{const name=sphereName(b);if(name==='不明'||name==='世界')return;let x=map.get(name);if(!x)x={name,group:groupName(b),books:[],read:0,authors:new Set()};x.books.push(b);x.authors.add(b.author);if(entry(b.no).got)x.read++;map.set(name,x)});
+  return [...map.values()].sort((a,b)=>b.read-a.read||a.name.localeCompare(b.name,'ja'));
+ }
+ function status(x){if(x.read>=10)return['文学通','expert'];if(x.read>=5)return['踏破','master'];if(x.read>=3)return['探検中','explore'];if(x.read>=1)return['初上陸','landed'];return['未訪問','']}
+ function unlockedCount(ds){return ds.filter(x=>x.read>0).length}
+ function achievements(ds){const visited=unlockedCount(ds),groups=new Set(ds.filter(x=>x.read>0).map(x=>x.group)),latin=ds.filter(x=>x.group==='中南米').reduce((n,x)=>n+x.read,0),africa=ds.filter(x=>x.group==='アフリカ').reduce((n,x)=>n+x.read,0),europe=ds.filter(x=>x.group==='ヨーロッパ').reduce((n,x)=>n+x.read,0);return [
+  ['🛂','初入国','最初の海外文学圏を訪れる',visited>=1],['🗺️','10の土地','10の国・文学圏を訪れる',visited>=10],['🌐','25の土地','25の国・文学圏を訪れる',visited>=25],['🌍','五地域の旅人','海外5地域を訪れる',groups.size>=5],['🌎','ラテンアメリカ探検家','中南米作品を5冊読む',latin>=5],['🏰','欧州文学探検家','ヨーロッパ作品を10冊読む',europe>=10],['🌍','アフリカ文学探検家','アフリカ作品を5冊読む',africa>=5]
+ ]}
+ function renderPassport76(){const ds=data(),visited=unlockedCount(ds),total=ds.length,read=ds.reduce((n,x)=>n+x.read,0),regions=REGION_ORDER.map(g=>[g,ds.filter(x=>x.group===g)]).filter(([,x])=>x.length),ach=achievements(ds);passportView.innerHTML=`<div class="panel passport76-hero"><h2>📘 文学パスポート</h2><div class="meta">読んだ作品を、文学世界を旅した記録として刻む。</div><div class="passport76-kpis"><div><b>${visited}/${total}</b><small>訪問国・文学圏</small></div><div><b>${read}</b><small>世界文学読了</small></div><div><b>${Math.round(visited/Math.max(1,total)*100)}%</b><small>世界踏破率</small></div></div></div><div class="panel"><h3 class="section-title">🧭 地域別の旅</h3><div class="passport76-region-grid">${regions.map(([g,x])=>{const r=x.reduce((n,y)=>n+y.read,0),all=x.reduce((n,y)=>n+y.books.length,0),v=x.filter(y=>y.read>0).length;return `<article class="passport76-region"><div class="passport76-region-head"><h3>${REGION_ICON[g]||'📍'} ${esc(g)}</h3><b>${v}/${x.length}圏</b></div><div class="passport76-bar"><i style="width:${Math.round(r/Math.max(1,all)*100)}%"></i></div><div class="meta">${r}/${all}冊読了</div></article>`}).join('')}</div></div><div class="panel"><h3 class="section-title">🛂 パスポートスタンプ</h3><div class="passport76-country-list">${ds.map(x=>{const st=status(x);return `<button class="passport76-country" onclick="openPassportCountry76('${encodeURIComponent(x.name)}')"><b>${x.read?'✓ ':''}${esc(x.name)}</b><small>${x.read}/${x.books.length}冊｜${[...x.authors].slice(0,2).map(esc).join('・')}</small><span class="passport76-stamp ${st[1]}">${st[0]}</span></button>`}).join('')}</div></div><div class="panel"><h3 class="section-title">🏅 パスポート実績</h3><div class="passport76-achievements">${ach.map(a=>`<div class="passport76-achievement ${a[3]?'unlocked':''}"><b>${a[3]?'✅':'🔒'} ${a[0]} ${a[1]}</b><small>${a[2]}</small></div>`).join('')}</div></div><div class="panel passport76-actions"><button class="passport76-map" onclick="setView('world')">🌍 世界地図へ</button><button class="passport76-home" onclick="setView('home')">🏠 HOMEへ</button></div>`}
+ window.openPassportCountry76=function(encoded){const name=decodeURIComponent(encoded),x=data().find(y=>y.name===name);if(!x)return;document.getElementById('passport76Modal')?.remove();const unread=x.books.filter(b=>!entry(b.no).got).sort((a,b)=>(Number(a.difficulty)||3)-(Number(b.difficulty)||3)||({'短':1,'中':2,'長':3,'超長':4}[a.length]||2)-({'短':1,'中':2,'長':3,'超長':4}[b.length]||2)),read=x.books.filter(b=>entry(b.no).got),st=status(x),el=document.createElement('div');el.id='passport76Modal';el.className='passport76-modal';el.onclick=e=>{if(e.target===el)el.remove()};el.innerHTML=`<div class="passport76-sheet"><div class="passport76-sheet-head"><div><div class="meta">PASSPORT ENTRY</div><h2>${esc(name)}</h2><span class="passport76-stamp ${st[1]}">${st[0]}・${x.read}/${x.books.length}冊</span></div><button class="passport76-close" onclick="document.getElementById('passport76Modal').remove()">×</button></div><div class="panel"><h3>📖 次の入門作品</h3>${unread.slice(0,5).map(b=>`<div class="passport76-book"><div><b>${esc(b.title)}</b><div class="meta">${esc(b.author)}｜難易度${b.difficulty}｜${esc(b.length)}</div></div><button onclick="document.getElementById('passport76Modal').remove();openDetail(${b.no})">詳細</button></div>`).join('')||'<div class="empty">登録作品をすべて読了しました。</div>'}</div>${read.length?`<div class="panel"><h3>✅ 読了作品</h3>${read.slice(0,10).map(b=>`<div class="passport76-book"><div><b>${esc(b.title)}</b><div class="meta">${esc(b.author)}</div></div><button onclick="document.getElementById('passport76Modal').remove();openDetail(${b.no})">開く</button></div>`).join('')}</div>`:''}<button class="passport76-entry" onclick="document.getElementById('passport76Modal').remove();openPassportRegion76('${encodeURIComponent(x.group)}')">${esc(x.group)}の旅を見る</button></div>`;document.body.appendChild(el)}
+ window.openPassportRegion76=function(encoded){const g=decodeURIComponent(encoded);if(g==='日本'){setView('passport');return}setView('world');setTimeout(()=>{if(typeof openWorld73==='function')openWorld73(g)},40)}
+ const oldSetView=setView;setView=function(v){if(v!=='passport')return oldSetView(v);document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));passportView.classList.remove('hidden');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));renderPassport76();scrollTo({top:0,behavior:'auto'})};
+ const oldHome=renderHome;renderHome=function(){oldHome();const menu=homeView.querySelector('.v703-home-tools .mini-nav-grid')||homeView.querySelector('.mini-nav-grid');if(menu&&!menu.querySelector('[data-go-passport76]')){menu.insertAdjacentHTML('beforeend','<button data-go-passport76>📘 文学パスポート</button>');menu.querySelector('[data-go-passport76]').onclick=()=>setView('passport')}};
+ const oldWorld=renderWorld;renderWorld=function(){oldWorld();if(worldView&&!worldView.querySelector('[data-go-passport76]')){const hero=worldView.querySelector('.map-hero');hero?.insertAdjacentHTML('beforeend','<button data-go-passport76 style="width:100%;margin-top:11px;border:1px solid #ffffff55;border-radius:11px;padding:10px;background:#ffffff18;color:#fff;font-weight:900">📘 文学パスポートを開く</button>');hero?.querySelector('[data-go-passport76]')?.addEventListener('click',()=>setView('passport'))}};
+ window.literatureRpgV76={render:renderPassport76,data};
 })();
 </script>
 
