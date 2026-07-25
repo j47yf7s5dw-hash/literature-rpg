@@ -1828,4 +1828,70 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setView(b.datas
  window.literatureRpgV702={restoreClassicHome:restoreClassicHomeV702};
 })();
 </script>
+
+
+<style id="v703-style">
+/* Ver.7.0.3: HOMEには上部ナビにない機能だけを残す */
+#homeView .v703-home-tools{margin-top:10px}
+#homeView .v703-home-tools .mini-nav-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#homeView .v703-home-tools button{min-height:44px}
+@media(max-width:390px){#homeView .v703-home-tools .mini-nav-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="v703-script">
+(function(){
+ const TOP_NAV_VIEWS=new Set(['phases','ex','books','authors','timeline','bosses','backup']);
+ const HOME_TOOLS=[
+  ['achievements','🏅 実績'],
+  ['titles','👑 称号'],
+  ['collections','🏛 コレクション館'],
+  ['world','🌍 世界地図'],
+  ['analytics','📊 読書分析'],
+  ['profile','👤 プロフィール'],
+  ['glossary','📖 文学用語'],
+  ['themes','🏷 テーマ']
+ ];
+ function htmlToElements(html){
+  const t=document.createElement('template');t.innerHTML=html||'';return [...t.content.children];
+ }
+ function insertAfter(anchor,el){anchor&&anchor.parentNode?anchor.insertAdjacentElement('afterend',el):document.getElementById('homeView')?.appendChild(el)}
+ function restoreHomeV703(){
+  const home=document.getElementById('homeView');if(!home)return;
+  // Ver.7.0で非表示にされた既存HOMEカードを復元する。
+  home.querySelectorAll(':scope > .panel').forEach(panel=>{panel.style.display=''});
+  // 上部ナビへの重複ボタンだけを個別に除去し、パネル全体は消さない。
+  home.querySelectorAll('button[onclick]').forEach(btn=>{
+   const m=(btn.getAttribute('onclick')||'').match(/setView\(['"]([^'"]+)['"]\)/);
+   if(m&&TOP_NAV_VIEWS.has(m[1]))btn.remove();
+  });
+  home.querySelectorAll('.mini-nav-grid').forEach(grid=>{if(!grid.children.length)grid.closest('.panel')?.remove()});
+
+  const hero=home.querySelector('.rpg-hero');
+  // 7.0.1で削除された「完成に近いパック」「攻略中パック」を復元。
+  if(typeof nearPackHTML==='function'&&!home.querySelector('.near-pack')){
+   const els=htmlToElements(nearPackHTML());let anchor=hero;els.forEach(el=>{insertAfter(anchor,el);anchor=el});
+  }
+  if(typeof pinnedPacksHTML==='function'&&!([...home.querySelectorAll('h3')].some(h=>h.textContent.includes('攻略中パック')))){
+   const els=htmlToElements(pinnedPacksHTML());let anchor=home.querySelector('.near-pack')?.closest('.panel')||hero;els.forEach(el=>{insertAfter(anchor,el);anchor=el});
+  }
+  // 上部ナビにないHOME専用機能をまとめて復元。
+  home.querySelector('#v703HomeTools')?.remove();
+  const tools=document.createElement('div');tools.id='v703HomeTools';tools.className='panel v703-home-tools';
+  tools.innerHTML='<h3 class="section-title">🧭 冒険メニュー</h3><div class="mini-nav-grid">'+HOME_TOOLS.map(([v,l])=>`<button onclick="setView('${v}')">${l}</button>`).join('')+'</div>';
+  const randomPanel=[...home.querySelectorAll(':scope > .panel')].find(p=>(p.querySelector('h3')?.textContent||'').includes('作品召喚'));
+  if(randomPanel)randomPanel.insertAdjacentElement('beforebegin',tools);else home.appendChild(tools);
+
+  // 連続クエストは上部ナビにないためHOME導線を復元。
+  if(typeof openStoryQuests70==='function'&&!document.getElementById('v703StoryQuest')){
+   const q=document.createElement('div');q.id='v703StoryQuest';q.className='panel';
+   q.innerHTML='<h3 class="section-title">⚔️ 連続クエスト</h3><p class="meta">作品を順番に読み、文学の問いを一本の旅として攻略する。</p><button class="random" onclick="openStoryQuests70()">クエスト一覧を開く</button>';
+   tools.insertAdjacentElement('afterend',q);
+  }
+ }
+ const previous=window.renderHome;
+ window.renderHome=function(){previous.apply(this,arguments);restoreHomeV703()};
+ setTimeout(restoreHomeV703,0);
+ window.literatureRpgV703={restoreHome:restoreHomeV703};
+})();
+</script>
+
 </body></html>
