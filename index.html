@@ -142,6 +142,19 @@ button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px soli
 #modal .detail-section,#modal .record-hub{content-visibility:auto;contain-intrinsic-size:220px}
 #modal .related-books{content-visibility:auto;contain-intrinsic-size:280px}
 .regional-pack-group>summary{background:linear-gradient(145deg,#f7f2eb,#eee7dc);border-color:#d9cdbd}.dark .regional-pack-group>summary{background:linear-gradient(145deg,#332f2b,#403932);border-color:#5d544b}
+
+/* ===== Ver.4.0 文学冒険システム ===== */
+.rank-banner{display:flex;align-items:center;gap:12px;margin-top:12px;padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.18)}
+.rank-emblem{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:25px;background:rgba(255,255,255,.15)}
+.rank-banner b{display:block;font-size:18px}.rank-banner .meta{color:#ead8ca}
+.quest-board{display:grid;gap:9px}.quest-card{border:1px solid var(--line);border-radius:14px;padding:11px;background:var(--paper)}
+.quest-card.done{border-color:#b48a36;background:linear-gradient(145deg,#fffdf8,#fff5d9)}.quest-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.quest-reward{font-size:11px;font-weight:900;color:#8b641f;white-space:nowrap}
+.quest-meter{display:flex;align-items:center;gap:9px;margin-top:8px}.quest-meter .progress{flex:1}.quest-meter b{font-size:11px;min-width:42px;text-align:right}
+.rpg-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.rpg-summary{background:rgba(255,255,255,.9);color:var(--ink);border-radius:13px;padding:10px;text-align:center}.rpg-summary b{display:block;font-size:20px}
+.bonus-strip{display:flex;gap:7px;overflow:auto;margin-top:10px;padding-bottom:2px}.bonus-chip{flex:0 0 auto;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);border-radius:999px;padding:6px 9px;font-size:11px}
+.achievement-toolbar{display:flex;gap:7px;overflow:auto;margin:10px 0}.achievement-toolbar button{white-space:nowrap;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 10px}.achievement-toolbar button.active{background:var(--ink);color:var(--paper)}
+.adventure-log{display:grid;gap:7px}.adventure-log-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding:7px 0}.adventure-log-row:last-child{border:0}
+@media(max-width:430px){.rpg-summary-grid{grid-template-columns:1fr 1fr}.rpg-summary-grid .rpg-summary:last-child{grid-column:1/-1}.rank-banner{padding:10px}.achievement-grid{grid-template-columns:1fr 1fr}}
 </style>
 <style id="ver33-styles">
 .pack-pin{border:1px solid var(--line);background:var(--paper);color:var(--muted);border-radius:999px;padding:6px 9px;font-size:12px;white-space:nowrap}.pack-pin.on{background:#f2d98f;color:#4f3b14;border-color:#c8a94e}.pack-card.pinned{box-shadow:0 0 0 2px rgba(190,145,40,.28),var(--shadow)}
@@ -177,7 +190,7 @@ button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px soli
 .stage-pack-grid .pack-card summary{padding:11px 10px}
 @media(max-width:600px){.genre-major>summary{padding:14px 12px}.genre-major-body{padding:0 7px 9px}.genre-journey>summary{padding:11px 10px}.genre-journey-body{padding:0 6px 8px}}
 </style>
-<!-- Ver.3.16: author and award packs grouped into two-level regional navigation -->
+<!-- Ver.4.0: Literary Adventure expansion -->
 </head><body><header><div class="title">📚 文学RPG <small>Ver.3.16</small></div><div class="sub">500冊の本編＋EX570作品を冒険する文学RPG</div><button id="themeToggle" class="theme-toggle" type="button" aria-label="表示テーマを切り替える">◐</button><nav aria-label="メインナビゲーション">
 <button data-view="home" class="active">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="backup">保存</button>
 </nav></header><main>
@@ -584,6 +597,74 @@ function renderWorld(){let c=stats(),visited=MAP_REGIONS.filter(([r])=>(c.region
 function render(v){({home:renderHome,phases:renderPhases,ex:renderEx,books:renderBooks,analytics:renderAnalytics,profile:renderProfile,authors:renderAuthors,timeline:renderTimeline,glossary:renderGlossary,themes:renderThemes,collections:renderCollections,titles:renderTitles,achievements:renderAchievements,world:renderWorld,backup:renderBackup}[v])()}
 function applyTheme(mode){document.body.classList.toggle('dark',mode==='dark');localStorage.setItem('literature-rpg-theme',mode);document.querySelector('meta[name=theme-color]')?.setAttribute('content',mode==='dark'?'#171310':'#1c1714')}
 const themeToggle=document.getElementById('themeToggle');applyTheme(localStorage.getItem('literature-rpg-theme')||'light');themeToggle?.addEventListener('click',()=>applyTheme(document.body.classList.contains('dark')?'light':'dark'));
+
+
+/* ===== Ver.4.0 runtime expansion ===== */
+const V4_BASE_STATS=stats;
+function adventureRank(c){
+  const ranks=[
+    [0,'F','📖','見習い読書家'],[5,'E','🪶','物語の旅人'],[15,'D','🗺️','文学探索者'],[35,'C','⚔️','書庫の冒険者'],
+    [75,'B','🏰','文学騎士'],[150,'A','🧭','世界文学航海士'],[300,'S','🐉','大図書館の英雄'],[500,'SS','👑','文学界の勇者'],[800,'EX','🌌','物語の守護者']
+  ];
+  let current=ranks[0],next=null;
+  for(let i=0;i<ranks.length;i++){if(c.n>=ranks[i][0])current=ranks[i];else{next=ranks[i];break}}
+  return{grade:current[1],icon:current[2],name:current[3],next:next?next[0]:null};
+}
+function v4CompletedCollections(){return collectionData().filter(x=>x.books.length&&x.books.every(b=>entry(b.no).got)).length}
+stats=function(){let c=V4_BASE_STATS();let packs=completedPackIds().size,collections=v4CompletedCollections();c.packs=packs;c.collections=collections;c.baseXp=c.xp;c.xp+=packs*300+collections*200+c.phases*250;return c};
+levelInfo=function(xp){let level=Math.floor(Math.sqrt(xp/90))+1,start=90*(level-1)*(level-1),next=90*level*level;return{level,start,next,into:xp-start,need:next-start,pct:Math.min(100,Math.round((xp-start)/(next-start)*100))}};
+
+function addV4Achievement(a){if(!ACHIEVEMENTS.some(x=>x.id===a.id))ACHIEVEMENTS.push(a)}
+// 作品数の細かな節目
+[2,4,6,8,12,20,25,40,50,60,90,120,180,225,275,325,350,375,425,450,475,550,600,700,900,1000].forEach((n,i)=>addV4Achievement(extraAchievement('v4-count-'+n,['📘','📙','📕','📗','🪶','🧭','🏕️','🗝️','🏛️','🛡️','🌙','⛵','⚜️','🗺️','🏰','🐲','🔱','💎','🌠','👑','🪐','🌌','☄️','🏆','🕯️','📚'][i%26],`${n}冊の足跡`,`${n}冊読破する`,n<25?'common':n<120?'rare':n<400?'epic':'legendary',`${n}冊の旅人`,c=>c.n,n)));
+// 日本・海外の段階実績
+[['jp','日本文学',c=>c.jp,'🗾'],['world','海外文学',c=>c.world,'🌍']].forEach(([key,label,get,icon])=>[5,20,30,40,60,80,125,150,200,250,300,400].forEach(n=>addV4Achievement(extraAchievement(`v4-${key}-${n}`,icon,`${label}${n}景`,`${label}を${n}冊読む`,n<30?'common':n<100?'rare':n<250?'epic':'legendary',`${label}${n}景`,get,n))));
+// パック・コレクション制覇
+[1,3,5,10,15,20,30,40,50,75,100].forEach(n=>addV4Achievement(extraAchievement('v4-pack-'+n,'🎒',`${n}パック制覇`,`${n}個の読書パックを完成する`,n<5?'common':n<20?'rare':n<50?'epic':'legendary',`${n}パックの覇者`,c=>c.packs||0,n)));
+[1,3,5,8,10].forEach(n=>addV4Achievement(extraAchievement('v4-collection-'+n,'🗃️',`${n}コレクション完成`,`${n}個の文学コレクションを完成する`,n<3?'rare':n<8?'epic':'legendary',`蒐集家ランク${n}`,c=>c.collections||0,n)));
+// 作家ごとの読破実績（登録作品3作以上の作家）
+(function(){
+  let by={};
+  ALL_BOOKS.forEach(b=>(by[b.author]??=[]).push(b));
+  Object.entries(by).filter(([,bs])=>bs.length>=3).sort((a,b)=>b[1].length-a[1].length).slice(0,90).forEach(([author,bs],i)=>{
+    let target=Math.min(bs.length,5);
+    addV4Achievement({id:'v4-author-'+i,icon:'✒️',name:`${author}への入門`,desc:`${author}を${target}冊読む`,rarity:target<=3?'common':'rare',title:`${author}の読者`,test:c=>bs.filter(b=>entry(b.no).got).length>=target,progress:c=>[bs.filter(b=>entry(b.no).got).length,target]});
+  });
+})();
+// ジャンル・地域の追加段階
+(function(){let genres=[...new Set(ALL_BOOKS.map(b=>b.genre).filter(Boolean))].slice(0,55);genres.forEach((g,i)=>[3,7].forEach(n=>addV4Achievement({id:`v4-genre-${i}-${n}`,icon:'🎭',name:`${g} ${n}冊`,desc:`${g}を${n}冊読む`,rarity:n===3?'common':'rare',title:`${g}の旅人`,test:c=>ALL_BOOKS.filter(b=>entry(b.no).got&&b.genre===g).length>=n,progress:c=>[ALL_BOOKS.filter(b=>entry(b.no).got&&b.genre===g).length,n]})));})();
+// 300個までXP・ノート・評価の段階目標を自動補充
+(function(){let i=1;while(ACHIEVEMENTS.length<300){let target=i*10,mode=i%3;if(mode===0)addV4Achievement(extraAchievement('v4-auto-note-'+i,'📝',`余韻の記録 ${target}`,`${target}作品に文学ノートを書く`,target<50?'common':target<150?'rare':'epic',`記録者 ${target}`,c=>c.notes,target));else if(mode===1)addV4Achievement(extraAchievement('v4-auto-rating-'+i,'⭐',`星読み ${target}`,`${target}作品を評価する`,target<50?'common':target<150?'rare':'epic',`星の鑑定士 ${target}`,c=>c.ratings,target));else addV4Achievement(extraAchievement('v4-auto-xp-'+i,'💠',`${target*500}の経験`,`${(target*500).toLocaleString()}XPを獲得する`,target<50?'common':target<150?'rare':'legendary',`経験の継承者 ${target}`,c=>c.xp,target*500));i++}})();
+
+function questDefinitions(){
+ let c=stats(),today=new Date(),seed=Math.floor(today.getTime()/86400000),week=Math.floor(seed/7);
+ let daily=dailyChallenge();
+ let phaseTarget=Math.min(20,(Object.entries(c.phaseDone).find(([,v])=>!v)||[20])[0]);
+ let phaseBooks=BOOKS.filter(b=>b.phase==phaseTarget),phaseDone=phaseBooks.filter(b=>entry(b.no).got).length;
+ let nearest=nearestIncompletePack(),pn=nearest?packReadCount(nearest):0,pt=nearest?packTotalCount(nearest):1;
+ let rotating=[
+   {name:'未知の国へ',desc:'まだ読んでいない地域の作品を1冊読む',now:Math.min(1,new Set(ALL_BOOKS.filter(b=>entry(b.no).got).map(b=>normRegion(b.region))).size-(state.profile?.questRegionBase||0)),target:1,reward:180},
+   {name:'文学ノート作戦',desc:'文学ノートを3件記録する',now:c.notes%3,target:3,reward:150},
+   {name:'星の鑑定',desc:'作品を5作評価する',now:c.ratings%5,target:5,reward:140}
+ ][week%3];
+ return [
+  {icon:'☀️',name:daily.name,desc:daily.desc,now:daily.done?1:0,target:1,reward:100,done:daily.done},
+  {icon:'🏰',name:`Phase ${phaseTarget} 攻略`,desc:`このPhaseを完成へ近づける`,now:phaseDone,target:phaseBooks.length,reward:500,done:phaseDone>=phaseBooks.length},
+  nearest?{icon:nearest.icon||'🎒',name:`${nearest.name} 制覇`,desc:`残り${Math.max(0,pt-pn)}冊`,now:pn,target:pt,reward:800,done:pn>=pt}:{icon:'👑',name:'全パック制覇',desc:'すべてのパックを完成済み',now:1,target:1,reward:1000,done:true},
+  {icon:'⚔️',...rotating,done:rotating.now>=rotating.target}
+ ];
+}
+function questBoardHTML(){return `<div class="panel"><h3 class="section-title">⚔️ 冒険者ギルド</h3><div class="quest-board">${questDefinitions().map(q=>`<div class="quest-card ${q.done?'done':''}"><div class="quest-head"><div><b>${q.icon} ${esc(q.name)}</b><div class="meta">${esc(q.desc)}</div></div><span class="quest-reward">+${q.reward} XP</span></div><div class="quest-meter"><div class="progress"><i style="width:${pct(Math.min(q.now,q.target),q.target)}%"></i></div><b>${Math.min(q.now,q.target)}/${q.target}</b></div></div>`).join('')}</div><p class="meta" style="margin-bottom:0">クエストXPは目標を示す演出です。読了・ノート・評価・パック制覇によって実際のXPが加算されます。</p></div>`}
+
+let achievementFilter='all';
+function setAchievementFilter(v){achievementFilter=v;renderAchievements()}
+renderAchievements=function(){let c=stats(),u=unlockedAchievements(),titles=u.map(a=>a.title),list=ACHIEVEMENTS.filter(a=>achievementFilter==='all'||(achievementFilter==='done'?a.test(c):achievementFilter==='todo'?!a.test(c):a.rarity===achievementFilter));achievementsView.innerHTML=`<div class="panel rpg-hero"><h2 style="margin-top:0">🏅 冒険実績図鑑</h2><b>${u.length} / ${ACHIEVEMENTS.length} 解除</b><div class="xpbar"><i style="width:${pct(u.length,ACHIEVEMENTS.length)}%"></i></div><div class="meta" style="color:#ead8ca">Ver.4.0で実績を300種類へ拡張</div></div><div class="panel"><h3 class="section-title">装備する称号</h3><select class="profile-title" onchange="setTitle(this.value)">${titles.map(t=>`<option ${t===equippedTitle()?'selected':''}>${esc(t)}</option>`).join('')}</select><div class="achievement-toolbar">${[['all','すべて'],['todo','未解除'],['done','解除済み'],['common','COMMON'],['rare','RARE'],['epic','EPIC'],['legendary','LEGEND']].map(([v,n])=>`<button class="${achievementFilter===v?'active':''}" onclick="setAchievementFilter('${v}')">${n}</button>`).join('')}</div><div class="meta">${list.length}件を表示</div></div><div class="achievement-grid">${list.map(a=>{let ok=a.test(c),pr=a.progress(c),value=Math.min(pr[0],pr[1]);return `<div class="achievement-card ${ok?'unlocked':'locked-card'}"><div class="rarity ${a.rarity}">${a.rarity}</div><div class="achievement-icon">${a.icon}</div><div class="achievement-name">${esc(a.name)}</div><div class="achievement-desc">${esc(a.desc)}</div><div class="achievement-progress">${ok?'達成済み':'進行中'}　${value} / ${pr[1]}</div></div>`}).join('')}</div>`};
+
+renderHome=function(){ensureProfile();let c=stats(),li=levelInfo(c.xp),u=unlockedAchievements(),b=nextUnread(),rank=adventureRank(c),nextRank=rank.next;homeView.innerHTML=`<div class="panel rpg-hero"><div class="level-row"><div class="level-orb"><div>Lv.<br><b>${li.level}</b></div></div><div style="flex:1"><div class="meta" style="color:#ead8ca">装備中の称号</div><h2 style="margin:3px 0 6px">${esc(equippedTitle())}</h2><div>${c.xp.toLocaleString()} XP</div><div class="xpbar"><i style="width:${li.pct}%"></i></div><div class="meta" style="color:#ead8ca">次のレベルまで ${li.next-c.xp} XP</div></div></div><div class="rank-banner"><div class="rank-emblem">${rank.icon}</div><div style="flex:1"><div class="meta">冒険者ランク ${rank.grade}</div><b>${rank.name}</b>${nextRank?`<div class="meta">次ランクまであと${nextRank-c.n}冊</div>`:'<div class="meta">最高ランク到達</div>'}</div></div><div class="rpg-summary-grid"><div class="rpg-summary">総読破<b>${c.n}</b></div><div class="rpg-summary">実績<b>${u.length}/300</b></div><div class="rpg-summary">制覇パック<b>${c.packs}</b></div></div><div class="bonus-strip"><span class="bonus-chip">📚 読書XP ${c.baseXp.toLocaleString()}</span><span class="bonus-chip">🎒 パックボーナス +${(c.packs*300).toLocaleString()}</span><span class="bonus-chip">🏰 Phaseボーナス +${(c.phases*250).toLocaleString()}</span><span class="bonus-chip">🗃 コレクション +${(c.collections*200).toLocaleString()}</span></div></div>${questBoardHTML()}${nearPackHTML()}${pinnedPacksHTML()}<div class="panel"><h3 class="section-title">🧭 冒険メニュー</h3><div class="mini-nav-grid"><button onclick="setView('phases')">🏰 Phase攻略</button><button onclick="setView('ex')">🎒 パック冒険</button><button onclick="setView('achievements')">🏅 実績300</button><button onclick="setView('titles')">👑 称号装備</button><button onclick="setView('collections')">🗃 コレクション</button><button onclick="setView('world')">🌍 世界地図</button><button onclick="setView('analytics')">📊 読書分析</button><button onclick="setView('profile')">👤 プロフィール</button></div></div><div class="panel"><h3 class="section-title">🎲 作品召喚</h3><button class="random" onclick="randomBook()">未読作品からランダム召喚</button></div>${(()=>{let rs=ALL_BOOKS.filter(x=>entry(x.no).reading.status==='読書中');return rs.length?`<div class="panel now-reading"><h3 class="section-title">📖 現在の冒険</h3>${rs.slice(0,3).map(miniCard).join('')}</div>`:''})()}<div class="panel"><h3 class="section-title">📖 次の一冊</h3>${b?miniCard(b):'<div class="empty">全作品コンプリート！</div>'}</div><div class="panel"><h3 class="section-title">🏅 最近獲得した実績</h3>${u.slice(-8).reverse().map(a=>`<span class="badge">${a.icon} ${esc(a.name)}</span>`).join('')||'<div class="empty">最初の一冊を読んで実績を解除しよう。</div>'}</div>`};
+
+// バックアップ表記をVer.4.0へ
+const V4_EXPORT=exportData;
+exportData=function(){let payload={app:'文学RPG',version:'4.0',exportedAt:new Date().toISOString(),data:state},blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`文学RPG_Ver4_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
 
 renderHome();
 </script></body></html>
