@@ -2443,5 +2443,75 @@ openDetail=function(no){ver73OldOpenDetail(no);const b=ALL_BOOKS.find(x=>x.no===
  window.literatureRpgV725={catalog:true,detailLayout:true,mobileAudit:true};
 })();
 </script>
+
+<style id="ver726-catalog-stability-style">
+.catalog726-more{width:100%;margin:14px 0 24px;padding:13px 16px;border-radius:14px;border:1px solid var(--line,#d8d2c4);background:var(--panel,#fff);font-weight:800;font-size:15px;box-shadow:0 3px 12px #0000000d}
+.catalog726-more:active{transform:translateY(1px)}
+.catalog726-more small{display:block;margin-top:3px;font-weight:500;opacity:.68}
+</style>
+<script id="ver726-catalog-stability">
+(function(){
+  let rafId=0;
+  let renderGeneration=0;
+  let currentList=[];
+  let visibleCount=0;
+  const PAGE_SIZE=80;
+
+  function cancelCatalogRender726(){
+    renderGeneration++;
+    if(rafId){cancelAnimationFrame(rafId);rafId=0}
+  }
+
+  function appendRange726(host,start,end,generation){
+    if(generation!==renderGeneration||!host||!host.isConnected)return;
+    let html='';
+    for(let i=start;i<end;i++)html+=bookHTML(currentList[i]);
+    host.insertAdjacentHTML('beforeend',html);
+  }
+
+  function updateMoreButton726(host){
+    host.querySelector('.catalog726-more')?.remove();
+    if(visibleCount>=currentList.length)return;
+    const remain=currentList.length-visibleCount;
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='catalog726-more';
+    button.innerHTML=`さらに表示<small>残り ${remain} 作品</small>`;
+    button.addEventListener('click',()=>{
+      const generation=renderGeneration;
+      const start=visibleCount;
+      visibleCount=Math.min(visibleCount+PAGE_SIZE,currentList.length);
+      appendRange726(host,start,visibleCount,generation);
+      updateMoreButton726(host);
+    },{once:true});
+    host.appendChild(button);
+  }
+
+  renderBookListChunked=function(list){
+    cancelCatalogRender726();
+    const host=document.getElementById('bookList');
+    if(!host)return;
+    const generation=renderGeneration;
+    currentList=Array.isArray(list)?list.slice():[];
+    visibleCount=Math.min(PAGE_SIZE,currentList.length);
+    host.replaceChildren();
+    rafId=requestAnimationFrame(()=>{
+      rafId=0;
+      appendRange726(host,0,visibleCount,generation);
+      if(generation===renderGeneration)updateMoreButton726(host);
+    });
+  };
+
+  const previousSetView726=window.setView;
+  window.setView=function(view){
+    if(view!=='books')cancelCatalogRender726();
+    return previousSetView726.apply(this,arguments);
+  };
+
+  window.addEventListener('pagehide',cancelCatalogRender726);
+  window.literatureRpgV726={catalogMemoryFix:true,pageSize:PAGE_SIZE};
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
