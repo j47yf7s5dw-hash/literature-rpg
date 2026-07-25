@@ -1950,4 +1950,30 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setView(b.datas
 })();
 </script>
 
-</body></html>
+
+<script>
+window.questData=window.questData||[
+{name:'ロシア文学への旅',steps:['地下室の手記','罪と罰','カラマーゾフの兄弟'],intro:'人間の内面、罪、信仰へと潜る旅',progress:1},
+{name:'不条理の入口',steps:['異邦人','変身','城'],intro:'不条理文学を巡る旅',progress:0}
+];
+function openQuestHub(){
+ const bg=document.createElement('div');
+ bg.style='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;overflow:auto';
+ let h='<div style="max-width:720px;margin:40px auto;background:#fff;border-radius:16px;padding:20px;font-family:sans-serif">';
+ h+='<h2>⚔️ 連続クエスト</h2>';
+ questData.forEach(q=>{
+  h+=`<div style="border:1px solid #ddd;border-radius:12px;padding:12px;margin:12px 0">
+  <h3>${q.name}</h3><p style="color:#666">${q.intro}</p>
+  <div style="background:#eee;height:8px;border-radius:5px"><div style="width:${(q.progress/q.steps.length)*100}%;height:8px;background:#4b7;border-radius:5px"></div></div>
+  <p>STEP ${q.progress+1}/${q.steps.length}</p><ol>`;
+  q.steps.forEach((s,i)=>{
+   let st=i<q.progress?'✅':i==q.progress?'➡️':'🔒';
+   h+=`<li>${st} ${s}</li>`;
+  });
+  h+='</ol><p><b>報酬:</b> 称号・文学史・豆知識</p></div>';
+ });
+ h+='<button onclick="this.closest('div').parentNode.remove()">閉じる</button></div>';
+ bg.innerHTML=h;document.body.appendChild(bg);
+}
+</script>
+<button onclick="openQuestHub()" style="position:fixed;right:16px;bottom:16px;z-index:999;background:#2f6fed;color:#fff;border:none;border-radius:999px;padding:12px 16px">⚔️ クエスト</button></body></html>
