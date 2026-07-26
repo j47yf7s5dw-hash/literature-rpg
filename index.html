@@ -5001,6 +5001,67 @@ window.literatureRpgV1235={version:'12.3.5',routeLookup:'lexical-all-books',phas
 <style id="ver1235-style">
 .collection-summary{gap:8px;flex-wrap:wrap}.phase-escape-1235{border:0;border-radius:999px;padding:8px 11px;background:var(--accent);color:#fff;font-weight:900;font-size:12px}
 </style>
+
+<!-- Ver.12.4: EX pack coverage completion + 15-book subdivision -->
+<script id="v124-pack-coverage-and-split">
+(()=>{
+ const MAX_PACK_BOOKS=15;
+ const STAGES=['入門','基礎','発展','深淵'];
+ const STAGE_LABEL={入門:'入門編',基礎:'基礎',発展:'発展',深淵:'深淵'};
+ const ROMAN=['','Ⅱ','Ⅲ','Ⅳ','Ⅴ','Ⅵ','Ⅶ','Ⅷ','Ⅸ','Ⅹ'];
+ const regionGroup=(b)=>{
+   const r=String(b.region||'');
+   if(/ナイジェリア|ガーナ|シエラレオネ|ケニア|南アフリカ|エジプト|スーダン|ジンバブエ|セネガル|モロッコ|アルジェリア|アフリカ/.test(r))return ['アフリカ文学','🌍','世界文学'];
+   if(/インド|パキスタン|バングラデシュ|スリランカ|ネパール|南アジア/.test(r))return ['南アジア文学','🪷','世界文学'];
+   if(/インドネシア|マレーシア|ベトナム|タイ|フィリピン|ミャンマー|カンボジア|シンガポール|東南アジア/.test(r))return ['東南アジア文学','🌴','世界文学'];
+   if(/イラン|イラク|レバノン|パレスチナ|イスラエル|トルコ|シリア|ヨルダン|中東|アラブ/.test(r))return ['中東・アラブ文学','🕌','世界文学'];
+   if(/ポーランド|チェコ|スロバキア|ハンガリー|ルーマニア|ブルガリア|セルビア|クロアチア|ボスニア|アルバニア|ウクライナ|ベラルーシ|リトアニア|ラトビア|エストニア|東欧/.test(r))return ['東欧文学','🏰','世界文学'];
+   if(/カリブ|ジャマイカ|トリニダード|ハイチ/.test(r))return ['カリブ文学','🌊','世界文学'];
+   return ['越境・ポストコロニアル文学','🧭','世界文学'];
+ };
+ const score=(b)=>typeof readingScore==='function'?readingScore(b):(Number(b.difficulty||3)*10+({'短':0,'短編':0,'中':2,'中編':2,'長':4,'長編':4,'超長':5,'超長編':5}[b.length]??2));
+ const stageOf=(i,n)=>typeof stageForIndex==='function'?stageForIndex(i,n):((i+1)/Math.max(1,n)<=.25?'入門':(i+1)/Math.max(1,n)<=.55?'基礎':(i+1)/Math.max(1,n)<=.82?'発展':'深淵');
+ const cleanNos=p=>[...new Set((p.nos||[]).filter(no=>ALL_BOOKS.some(b=>b.no===no)))];
+ const assignedBefore=new Set(EX_WORLD_PACKS.flatMap(p=>cleanNos(p)));
+ const unassigned=EX_BOOKS.filter(b=>!assignedBefore.has(b.no));
+ const grouped=new Map();
+ unassigned.forEach(b=>{const [name,icon,group]=regionGroup(b);if(!grouped.has(name))grouped.set(name,{name,icon,group,books:[]});grouped.get(name).books.push(b)});
+ grouped.forEach(g=>{
+   const ordered=[...g.books].sort((a,b)=>score(a)-score(b)||(a.year||9999)-(b.year||9999)||a.no-b.no);
+   STAGES.forEach((stage,stageOrder)=>{
+     const nos=ordered.filter((b,i)=>stageOf(i,ordered.length)===stage).map(b=>b.no);
+     EX_WORLD_PACKS.push({
+       id:'v124-'+g.name+'-'+stage,
+       type:'ジャンルパック',group:g.group,journey:g.name+'の旅',stage,stageOrder,
+       shortName:STAGE_LABEL[stage],icon:g.icon,
+       name:g.name+'の旅【'+STAGE_LABEL[stage]+'】',
+       desc:'既存パックに未所属だった作品を補完し、'+g.name+'を4段階でたどるVer.12.4追加パック。',
+       nos,
+       titles:{beginner:g.name+'入門者',mid:g.name+'の旅人',master:g.name+'マスター'}
+     });
+   });
+ });
+ const split=[];
+ EX_WORLD_PACKS.forEach(p=>{
+   const nos=cleanNos(p);
+   if(nos.length<=MAX_PACK_BOOKS){split.push({...p,nos});return}
+   for(let i=0;i<nos.length;i+=MAX_PACK_BOOKS){
+     const part=i/MAX_PACK_BOOKS;
+     const mark=ROMAN[part]||String(part+1);
+     split.push({...p,id:part===0?p.id:p.id+'-part-'+(part+1),name:part===0?p.name:p.name+' '+mark,shortName:part===0?p.shortName:(p.shortName||p.stage||'続編')+' '+mark,nos:nos.slice(i,i+MAX_PACK_BOOKS)});
+   }
+ });
+ EX_WORLD_PACKS.splice(0,EX_WORLD_PACKS.length,...split);
+ const assignedAfter=new Set(EX_WORLD_PACKS.flatMap(p=>cleanNos(p)));
+ const remaining=EX_BOOKS.filter(b=>!assignedAfter.has(b.no));
+ const overLimit=EX_WORLD_PACKS.filter(p=>cleanNos(p).length>MAX_PACK_BOOKS);
+ window.literatureRpgV124={version:'12.4',maxPackBooks:MAX_PACK_BOOKS,unassignedBefore:unassigned.length,unassignedAfter:remaining.length,addedJourneys:[...grouped.keys()],packCount:EX_WORLD_PACKS.length,overLimit:overLimit.length};
+ document.title='文学RPG Ver.12.4';
+ setTimeout(()=>{const label=document.querySelector('.title small');if(label)label.textContent='Ver.12.4';const marker=document.createElement('div');marker.id='v124-audit';marker.hidden=true;marker.dataset.unassigned=String(remaining.length);marker.dataset.overLimit=String(overLimit.length);marker.dataset.max=String(MAX_PACK_BOOKS);document.body.appendChild(marker);},0);
+ console.info('[文学RPG Ver.12.4]',window.literatureRpgV124);
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
 
