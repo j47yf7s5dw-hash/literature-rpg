@@ -3126,5 +3126,75 @@ button,[role="button"],select,input{touch-action:manipulation}
 })();
 </script>
 
+
+<!-- Ver.8.6：作品詳細を「読む決断→読書→読後→次の探索」の順に再整理。新規保存項目なし。 -->
+<style id="v86-detail-style">
+.ver86-detail .detail-hero{margin-bottom:10px}
+.v86-statusbar{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:11px 12px;margin:10px 0}
+.v86-statusbar b{display:block;font-size:13px}.v86-statusbar .meta{margin-top:3px}
+.v86-status-pill{display:inline-flex;align-items:center;justify-content:center;min-height:34px;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:900;background:#ece4da;color:var(--ink);white-space:nowrap}
+.v86-status-pill.done{background:#f3d682;color:#49330d}.v86-status-pill.reading{background:#dce9e1;color:#244a37}
+.v86-block{background:var(--paper);border:1px solid var(--line);border-radius:18px;margin-top:12px;overflow:hidden}
+.v86-block-title{padding:13px 15px 11px;font-size:16px;font-weight:900;border-bottom:1px solid var(--line);background:rgba(185,134,44,.055)}
+.v86-block-body{padding:0 13px 13px}
+.v86-block .detail-section{border:0;border-radius:0;box-shadow:none;margin:0;padding:14px 2px;border-top:1px solid var(--line);background:transparent}
+.v86-block .detail-section:first-child{border-top:0}
+.v86-block .detail-section h3{font-size:14px;margin-bottom:7px}
+.v86-explore{margin-top:12px;background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.v86-explore>summary{list-style:none;cursor:pointer;padding:14px 15px;font-weight:900;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.v86-explore>summary::-webkit-details-marker{display:none}.v86-explore[open]>summary{border-bottom:1px solid var(--line)}
+.v86-explore-body{padding:0 13px 13px}.v86-explore .detail-section{border:0;border-top:1px solid var(--line);border-radius:0;margin:0;padding:14px 2px;background:transparent}
+.v86-explore .detail-section:first-child{border-top:0}
+.ver86-detail .v70-reading-why{display:none!important}
+.ver86-detail .detail-taste{margin-top:10px}
+.ver86-detail .detail-actions{position:sticky;bottom:0;z-index:4;background:rgba(243,236,226,.96);backdrop-filter:blur(8px);padding:9px 0 calc(9px + env(safe-area-inset-bottom));margin-bottom:-9px;border-top:1px solid rgba(223,209,194,.8)}
+@media(max-width:480px){.v86-statusbar{grid-template-columns:1fr}.v86-status-pill{justify-self:start}.v86-block-title{font-size:15px}.v86-block-body,.v86-explore-body{padding-left:11px;padding-right:11px}}
+.dark .v86-statusbar,.dark .v86-block,.dark .v86-explore{background:var(--paper)}
+</style>
+<script id="v86-detail-script">
+(function(){
+ 'use strict';
+ const VERSION='8.6';
+ function heading(section){return (section?.querySelector('h3')?.textContent||'').trim()}
+ function makeBlock(title,items,cls=''){
+   const block=document.createElement('section');block.className='v86-block '+cls;
+   block.innerHTML=`<div class="v86-block-title">${title}</div><div class="v86-block-body"></div>`;
+   const body=block.querySelector('.v86-block-body');items.filter(Boolean).forEach(x=>body.appendChild(x));return block;
+ }
+ function restructure(no){
+   const wrap=document.querySelector('#modal .detail-wrap');if(!wrap||wrap.classList.contains('ver86-detail'))return;
+   const b=ALL_BOOKS.find(x=>Number(x.no)===Number(no));if(!b)return;const e=entry(no),r=e.reading||{};
+   wrap.classList.add('ver86-detail');
+   const actions=wrap.querySelector('.detail-actions');
+   if(actions){
+     const status=document.createElement('div');status.className='v86-statusbar';
+     const state=e.got?'読了済み':r.status==='読書中'||r.startDate?'読書中':'未読';
+     const cls=e.got?'done':state==='読書中'?'reading':'';
+     status.innerHTML=`<div><b>読むための基本情報</b><div class="meta">${esc(b.length)}｜難易度 ${esc(String(b.difficulty))}｜${esc(b.genre)}</div></div><span class="v86-status-pill ${cls}">${state}</span>`;
+     actions.insertAdjacentElement('beforebegin',status);
+   }
+   const sections=[...wrap.querySelectorAll(':scope > .detail-section')];
+   const find=(...keys)=>sections.find(s=>keys.some(k=>heading(s).includes(k)));
+   const data=find('作品データ'),synopsis=find('あらすじ'),appeal=find('面白さ'),recommend=find('おすすめ'),before=find('読む前'),mood=find('雰囲気'),question=find('読後に考えたい問い'),why=find('選ばれた理由','収録された理由'),related=find('文学的なつながり'),next=find('次に読むなら'),records=sections.find(s=>s.classList.contains('record-hub'));
+   const anchor=actions||wrap.querySelector('.detail-taste')||wrap.querySelector('.detail-hero');
+   const first=makeBlock('① まず知りたい',[data,synopsis,mood]);
+   const reason=makeBlock('② この作品を読む理由',[appeal,recommend,why]);
+   const journey=makeBlock('③ 読む前と読んだ後',[before,question,records]);
+   const explore=document.createElement('details');explore.className='v86-explore';explore.innerHTML='<summary><span>④ 次の探索を見る</span><span aria-hidden="true">＋</span></summary><div class="v86-explore-body"></div>';
+   const eb=explore.querySelector('.v86-explore-body');[next,related].filter(Boolean).forEach(x=>eb.appendChild(x));
+   [first,reason,journey,explore].forEach(x=>anchor.insertAdjacentElement('afterend',x));
+   // insertAdjacentElement afterend reverses order, so restore intended sequence.
+   const nodes=[first,reason,journey,explore];nodes.forEach(x=>wrap.appendChild(x));
+   const readMark=wrap.querySelector('.read-mark');if(readMark){readMark.title=e.got?'読了を解除':'読了として記録';readMark.setAttribute('aria-label',readMark.title)}
+ }
+ const oldOpen=window.openDetail;
+ window.openDetail=function(no){oldOpen.apply(this,arguments);setTimeout(()=>restructure(no),20)};openDetail=window.openDetail;
+ const oldExport=window.exportData;
+ window.exportData=function(){let payload={app:'文学RPG',version:VERSION,exportedAt:new Date().toISOString(),data:state},blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`文学RPG_Ver${VERSION}_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};exportData=window.exportData;
+ document.title='文学RPG Ver.8.6 作品詳細再設計';const small=document.querySelector('.title small');if(small)small.textContent='Ver.8.6';
+ window.literatureRpgV86={version:VERSION,feature:'作品詳細再設計',newPages:0,newStorageKeys:0,compatibleFrom:'8.5'};
+ console.info('[文学RPG Ver.8.6 作品詳細再設計]',window.literatureRpgV86);
+})();
+</script>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
