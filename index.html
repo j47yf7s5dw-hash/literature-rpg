@@ -3257,7 +3257,7 @@ button,[role="button"],select,input{touch-action:manipulation}
 </script>
 
 
-<!-- Ver.8.8：文学パスポートを「読書の旅の記録」に整理。新規保存項目なし。 -->
+<!-- Ver.8.9.1：HOMEをVer.8.8の構成へ復元。World Map・Passport・従来のXP／実績表示を維持。 -->
 <style id="v88-passport-style">
 .passport88-hero{position:relative;overflow:hidden;background:linear-gradient(145deg,#173d48,#326a6c);color:#fff;border:0}
 .passport88-hero:after{content:'📘';position:absolute;right:8px;top:-15px;font-size:108px;opacity:.07;pointer-events:none}
@@ -3305,48 +3305,9 @@ button,[role="button"],select,input{touch-action:manipulation}
  window.renderPassport88=render;
  const prevSetView=setView;setView=function(v){prevSetView(v);if(v==='passport')render()};window.setView=setView;
  const oldExport=window.exportData;window.exportData=function(){const payload={app:'文学RPG',version:VERSION,exportedAt:new Date().toISOString(),data:state},blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`文学RPG_Ver${VERSION}_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};exportData=window.exportData;
- document.title='文学RPG Ver.8.8 Passport強化';const small=document.querySelector('.title small');if(small)small.textContent='Ver.8.8';
+ document.title='文学RPG Ver.8.9.1 HOME復元';const small=document.querySelector('.title small');if(small)small.textContent='Ver.8.9.1';
  window.literatureRpgV88={version:VERSION,feature:'Passport強化',newPages:0,newStorageKeys:0,compatibleFrom:'8.7'};
- console.info('[文学RPG Ver.8.8 Passport強化]',window.literatureRpgV88);
-})();
-</script>
-
-<!-- Ver.8.9：HOMEを「次の一手」に集中させる。新規保存項目なし。 -->
-<style id="v89-home-style">
-#homeView .v89-home-focus{background:linear-gradient(145deg,#2d514e,#594334);color:#fff;border:0;overflow:hidden;position:relative}
-#homeView .v89-home-focus:after{content:'📖';position:absolute;right:-8px;top:-25px;font-size:120px;opacity:.07;pointer-events:none}
-.v89-home-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.v89-home-head h2{margin:0 0 5px;font-size:21px}.v89-home-head .meta{color:#e7ece9}.v89-level{min-width:58px;text-align:center;background:#ffffff16;border:1px solid #ffffff26;border-radius:13px;padding:8px}.v89-level b{display:block;font-size:21px}
-.v89-focus-book{margin-top:13px;background:#ffffff12;border:1px solid #ffffff24;border-radius:15px;padding:12px}.v89-focus-book small,.v89-focus-book b,.v89-focus-book span{display:block}.v89-focus-book small{font-weight:900;color:#f0dcae}.v89-focus-book b{font-size:17px;line-height:1.45;margin:5px 0}.v89-focus-book span{font-size:11px;color:#e7ece9}
-.v89-primary{width:100%;margin-top:11px;border:0;border-radius:12px;min-height:46px;background:#f3d682;color:#49330d;font-weight:900;font-size:14px}
-.v89-quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.v89-quick button{min-height:43px;border:1px solid #ffffff30;background:#ffffff12;color:#fff;border-radius:11px;font-weight:900}
-.v89-progress{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:11px}.v89-progress div{background:#ffffff10;border-radius:10px;padding:8px;text-align:center}.v89-progress b{display:block;font-size:16px}.v89-progress small{font-size:9px;color:#dce7e4}
-#homeView .v89-collapsed{border:1px solid var(--line);border-radius:15px;background:var(--paper);overflow:hidden;margin-bottom:10px}#homeView .v89-collapsed summary{list-style:none;cursor:pointer;padding:12px 13px;font-weight:900;display:flex;justify-content:space-between;gap:8px}#homeView .v89-collapsed summary::-webkit-details-marker{display:none}#homeView .v89-collapsed[open] summary{border-bottom:1px solid var(--line)}#homeView .v89-collapsed-body{padding:10px}
-#homeView.v89-ready>.rpg-hero,#homeView.v89-ready>#nextAdventurePanel,#homeView.v89-ready>#reflectionPanel,#homeView.v89-ready>#readingCompassPanel{display:none!important}
-@media(max-width:390px){.v89-home-head{align-items:center}.v89-progress{grid-template-columns:1fr 1fr}.v89-progress div:last-child{grid-column:1/-1}.v89-quick{grid-template-columns:1fr}}
-</style>
-<script id="v89-home-script">
-(function(){
- 'use strict';
- const VERSION='8.9';
- function readingBooks89(){return ALL_BOOKS.filter(b=>{const r=entry(b.no).reading||{};return r.status==='読書中'&&!entry(b.no).got})}
- function planned89(){return (Array.isArray(state.readingPlan)?state.readingPlan:[]).map(no=>ALL_BOOKS.find(b=>Number(b.no)===Number(no))).filter(b=>b&&!entry(b.no).got)}
- function focus89(){const reading=readingBooks89()[0];if(reading)return{label:'NOW｜読書中',book:reading,button:'続きを読む'};const plan=planned89()[0];if(plan)return{label:'NEXT｜次に読む',book:plan,button:'作品を開く'};const next=typeof nextUnread==='function'?nextUnread():ALL_BOOKS.find(b=>!entry(b.no).got);return{label:'NEXT｜次の候補',book:next,button:'作品を開く'}}
- function moveLegacyPanels(home,details){['nextAdventurePanel','reflectionPanel','readingCompassPanel'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.display='';details.querySelector('.v89-collapsed-body').appendChild(el)}})}
- function decorate(){
-  const home=document.getElementById('homeView');if(!home)return;home.querySelector('#v89HomeFocus')?.remove();home.querySelector('#v89More')?.remove();home.classList.add('v89-ready');
-  const c=stats(),li=levelInfo(c.xp),f=focus89(),b=f.book;
-  const hero=document.createElement('section');hero.id='v89HomeFocus';hero.className='panel v89-home-focus';hero.innerHTML=`<div class="v89-home-head"><div><h2>🏠 今日の冒険</h2><div class="meta">開いたら、まず次の一手だけ決める。</div></div><div class="v89-level"><small>Lv.</small><b>${li.level}</b></div></div><div class="v89-focus-book"><small>${esc(f.label)}</small>${b?`<b>『${esc(b.title)}』</b><span>${esc(b.author)}｜${esc(b.genre||b.bigGenre||'文学')}</span><button class="v89-primary" onclick="openDetail(${b.no})">${esc(f.button)}</button>`:`<b>全作品を読破しました</b><span>文学の旅は記録と再読へ続きます。</span>`}</div><div class="v89-quick"><button onclick="openReadingCompass()">🧭 読書コンパス</button><button onclick="randomBook()">🎲 未読から召喚</button></div><div class="v89-progress"><div><b>${c.n}</b><small>総読破</small></div><div><b>${c.packs}</b><small>制覇パック</small></div><div><b>${c.xp.toLocaleString()}</b><small>XP</small></div></div>`;
-  home.prepend(hero);
-  const more=document.createElement('details');more.id='v89More';more.className='v89-collapsed';more.innerHTML='<summary><span>📚 計画・振り返りを見る</span><span>＋</span></summary><div class="v89-collapsed-body"></div>';
-  hero.insertAdjacentElement('afterend',more);moveLegacyPanels(home,more);
-  const redundant=['作品召喚','現在の冒険','次の一冊','最近獲得した実績','冒険メニュー','攻略中パック'];home.querySelectorAll(':scope > .panel').forEach(p=>{if(p===hero)return;const h=p.querySelector('h3')?.textContent||'';if(redundant.some(x=>h.includes(x)))p.remove()});
- }
- const oldHome=window.renderHome;window.renderHome=function(){const r=oldHome.apply(this,arguments);requestAnimationFrame(decorate);return r};
- const oldExport=window.exportData;window.exportData=function(){const payload={app:'文学RPG',version:VERSION,exportedAt:new Date().toISOString(),data:state},blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`文学RPG_Ver${VERSION}_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};exportData=window.exportData;
- document.title='文学RPG Ver.8.9 HOME最終整理';const small=document.querySelector('.title small');if(small)small.textContent='Ver.8.9';
- if(document.querySelector('nav button.active')?.dataset.view==='home')requestAnimationFrame(decorate);
- window.literatureRpgV89={version:VERSION,feature:'HOME最終整理',newPages:0,newStorageKeys:0,compatibleFrom:'8.8'};
- console.info('[文学RPG Ver.8.9 HOME最終整理]',window.literatureRpgV89);
+ console.info('[文学RPG Ver.8.9.1 HOME復元]',window.literatureRpgV88);
 })();
 </script>
 
