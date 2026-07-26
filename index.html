@@ -4642,6 +4642,120 @@ window.literaryRouteAudit=function(){return {routes:LITERARY_ROUTES.length,confi
 })();
 </script>
 
+
+
+<!-- Ver.12.3.1: catalog direction fix and route wording clarification -->
+<script id="ver1231-catalog-direction-fix">
+(function(){
+  if(window.literatureRpgV1231)return;
+
+  // Rebind the direction selector explicitly. Some older inline handlers were
+  // wrapped by later catalog patches, so the visible selector could change
+  // without reliably changing the final comparison order.
+  let direction1231='asc';
+  let mode1231='number';
+
+  function numberKey1231(book){
+    if(Number(book.no)<=500)return Number(book.no);
+    const match=String(book.exNo||'').match(/\d+/);
+    return 500+(match?Number(match[0]):100000+Number(book.no||0));
+  }
+  function textCompare1231(a,b){return String(a||'').localeCompare(String(b||''),'ja',{numeric:true,sensitivity:'base'});}
+  function compare1231(a,b){
+    let result=0;
+    if(mode1231==='difficulty')result=Number(a.difficulty||0)-Number(b.difficulty||0);
+    else if(mode1231==='title')result=textCompare1231(a.title,b.title);
+    else if(mode1231==='author')result=textCompare1231(a.author,b.author);
+    else if(mode1231==='unread')result=Number(entry(a.no).got)-Number(entry(b.no).got);
+    else if(mode1231==='rating')result=Number(entry(a.no).rating||0)-Number(entry(b.no).rating||0);
+    else result=numberKey1231(a)-numberKey1231(b);
+    if(!result)result=numberKey1231(a)-numberKey1231(b);
+    return direction1231==='desc'?-result:result;
+  }
+
+  function apply1231(){
+    const host=document.getElementById('bookList');
+    if(!host)return;
+    // Re-run the existing filters first, then reorder the rendered cards using
+    // the exact visible catalog number. This also covers chunked rendering.
+    const sort=document.getElementById('sort725');
+    const dir=document.getElementById('sortDirection725');
+    if(sort)mode1231=sort.value||'number';
+    if(dir)direction1231=dir.value||'asc';
+    if(typeof window.filterBooks==='function')window.filterBooks();
+  }
+
+  const originalRender=window.renderBooks;
+  window.renderBooks=function(){
+    const r=originalRender.apply(this,arguments);
+    requestAnimationFrame(()=>{
+      const sort=document.getElementById('sort725');
+      const dir=document.getElementById('sortDirection725');
+      if(sort){mode1231=sort.value||mode1231;sort.onchange=function(){mode1231=this.value;apply1231();};}
+      if(dir){direction1231=dir.value||direction1231;dir.onchange=function(){direction1231=this.value;apply1231();};}
+    });
+    return r;
+  };
+
+  // Override the final catalog filtering so direction is applied inside the
+  // comparator rather than by reversing an already decorated list.
+  const previousFilter=window.filterBooks;
+  window.filterBooks=function(){
+    const r=previousFilter.apply(this,arguments);
+    const host=document.getElementById('bookList');
+    if(!host)return r;
+    const sort=document.getElementById('sort725');
+    const dir=document.getElementById('sortDirection725');
+    if(sort)mode1231=sort.value||'number';
+    if(dir)direction1231=dir.value||'asc';
+
+    // Reconstruct the currently filtered set using the same controls, then
+    // hand the correctly ordered list to the chunked renderer.
+    const q=(document.getElementById('search')?.value||'').toLowerCase();
+    const f=document.getElementById('statusFilter')?.value||'';
+    const source=document.getElementById('sourceFilter')?.value||'';
+    const g=document.getElementById('genreFilter')?.value||'';
+    const region=document.getElementById('regionFilter')?.value||'';
+    const western=document.getElementById('westernEraFilter')?.value||'';
+    const japan=document.getElementById('japanEraFilter')?.value||'';
+    const len=document.getElementById('lengthFilter')?.value||'';
+    const dif=document.getElementById('difficultyFilter')?.value||'';
+    const shelf=document.getElementById('shelfFilter')?.value||'';
+    const rating=Number(document.getElementById('ratingFilter')?.value||0);
+    let list=(selectedPhase?BOOKS.filter(b=>b.phase===selectedPhase):ALL_BOOKS).filter(b=>{
+      const tags=autoTags(b),e=entry(b.no),hay=(b.title+' '+b.author+' '+b.region+' '+b.genre+' '+tags.join(' ')).toLowerCase();
+      return hay.includes(q)&&(!f||e.reading.status===f)&&(!source||(source==='main'?b.no<=500:b.no>500))&&(!g||broadGenre(b)===g)&&(!region||normRegion(b.region)===region)&&(!western||b.era===western)&&(!japan||b.era===japan)&&(!len||b.length===len)&&difficultyBand(b.difficulty,dif)&&(!shelf||e.shelf===shelf)&&(!rating||e.rating===rating)&&activeSearchTags.every(t=>tags.includes(t));
+    });
+    list.sort(compare1231);
+    if(typeof renderBookListChunked==='function')renderBookListChunked(list);
+    else host.innerHTML=list.map(bookHTML).join('');
+    const rc=document.getElementById('resultCount725');if(rc)rc.textContent=list.length;
+    return r;
+  };
+
+  window.setCatalogDirection725=function(value){
+    direction1231=value==='desc'?'desc':'asc';
+    const dir=document.getElementById('sortDirection725');if(dir)dir.value=direction1231;
+    window.filterBooks();
+  };
+  window.setCatalogSort725=function(value){
+    mode1231=value||'number';
+    const sort=document.getElementById('sort725');if(sort)sort.value=mode1231;
+    window.filterBooks();
+  };
+
+  // Clarify that these are route-building selections, not a universal canon.
+  function clarifyRouteLabels1231(){
+    document.querySelectorAll('.lit-route-section .meta').forEach(el=>{
+      if(el.textContent.includes('代表5作品'))el.textContent='ルート構成5作品のうち3作品読了で踏破';
+    });
+  }
+  const oldOpen=window.openDetail;
+  window.openDetail=function(){const r=oldOpen.apply(this,arguments);setTimeout(clarifyRouteLabels1231,0);return r;};
+
+  window.literatureRpgV1231={catalogDirectionComparator:true,routeWording:true};
+})();
+</script>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
 
