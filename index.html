@@ -4031,6 +4031,8 @@ console.info('[文学RPG Ver.10.6.1] EXナビを再接続しました');
  }
  function modalBossName(){return txt(document,'#modal h2')||txt(document,'#modal h3')}
  function enhanceModal(){
+  // Ver.10.9 uses its own unified battle panel. Do not inject the legacy BOSS ENCOUNTER HP panel.
+  if(window.literatureRpgV109)return;
   const card=document.querySelector('#modal .modal-card');if(!card||card.dataset.v108||!document.querySelector('#modal [id^="b82"],#modal [data-b82-used],#modal .boss82-section'))return;
   card.dataset.v108='1';const name=modalBossName();const p=window.state?.themeBossBattles?Object.values(window.state.themeBossBattles).find(()=>false):null;
   const sections=[...card.querySelectorAll('.boss82-section')];const heading=sections.map(x=>txt(x,'h3')).find(Boolean)||'';const stage=Math.max(1,Math.min(4,Number((heading.match(/^[1-4]/)||['1'])[0])));
@@ -4187,9 +4189,9 @@ console.info('[文学RPG Ver.10.6.1] EXナビを再接続しました');
  function flash109(main,sub){const f=document.createElement('div');f.className='v109-flash';f.innerHTML=`<div>${esc(main)}<small>${esc(sub)}</small></div>`;document.body.appendChild(f);setTimeout(()=>f.remove(),1300)}
  const prevRender=window.render||render;window.render=function(v){if(v==='bosses')return render109();return prevRender(v)};render=window.render;window.renderBosses=render109;window.openBoss=open109;
  document.addEventListener('click',e=>{if(e.target.closest('[data-view="bosses"]'))setTimeout(render109,0)});
- const small=document.querySelector('.title small');if(small)small.textContent='Ver.10.9';document.title='文学RPG Ver.10.9 ボス戦完成版';
- window.literatureRpgV109={version:'10.9',feature:'ボス戦完成版',storageKey:'themeBossBattles',newStorageKeys:0,storageCompatible:true,hpEvents:['読了','最終回答提出','撃破']};
- console.info('[文学RPG Ver.10.9] ボス一覧・物語・固有台詞・演出・HP内訳・ボス図鑑を統合。',window.literatureRpgV109);
+ const small=document.querySelector('.title small');if(small)small.textContent='Ver.10.9.1';document.title='文学RPG Ver.10.9.1 ボスHP一本化';
+ window.literatureRpgV109={version:'10.9.1',feature:'ボス戦完成版・HP一本化',storageKey:'themeBossBattles',newStorageKeys:0,storageCompatible:true,hpEvents:['読了','最終回答提出','撃破']};
+ console.info('[文学RPG Ver.10.9.1] 旧BOSS ENCOUNTER HP表示を停止し、BOSS APPEARSのHPへ一本化。',window.literatureRpgV109);
 })();
 </script>
 </body></html>
