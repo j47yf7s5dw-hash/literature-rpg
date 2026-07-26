@@ -4586,6 +4586,62 @@ setTimeout(()=>{sync120(false);if(!document.getElementById('v120-version-note'))
 })();
 </script>
 
+
+<style id="ver123-literary-routes">
+.lit-route-section{background:linear-gradient(150deg,color-mix(in srgb,var(--paper) 93%,#b9862c 7%),var(--paper));border-color:color-mix(in srgb,var(--line) 72%,#b9862c 28%)}
+.lit-route-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.lit-route-kicker{font-size:10px;font-weight:900;letter-spacing:.13em;color:var(--gold)}
+.lit-route-head h3{margin:3px 0 4px!important;font-size:18px!important}.lit-route-count{flex:0 0 auto;border:1px solid color-mix(in srgb,var(--line) 65%,#b9862c 35%);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;background:var(--paper)}
+.lit-route-progress{height:9px;border-radius:999px;background:color-mix(in srgb,var(--line) 65%,transparent);overflow:hidden;margin:11px 0 5px}.lit-route-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:inherit}
+.lit-route-question{font-family:serif;font-size:14px!important;line-height:1.8!important;margin:10px 0!important}.lit-route-grid{display:grid;gap:8px;margin-top:12px}.lit-route-card{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:9px;align-items:center;border:1px solid var(--line);border-radius:13px;padding:10px;background:var(--paper)}
+.lit-route-card.read{border-color:#c39131;background:color-mix(in srgb,var(--paper) 88%,#f4c65b 12%)}.lit-route-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 78%,var(--gold) 22%);font-size:15px}.lit-route-type{font-size:9px;font-weight:900;color:var(--accent);letter-spacing:.06em}.lit-route-title{font-weight:900;line-height:1.35;margin-top:2px}.lit-route-author{font-size:10px;color:var(--muted);margin-top:2px}.lit-route-open{border:0;border-radius:10px;background:#302721;color:#fff;padding:8px 9px;font-size:11px;font-weight:800}.lit-route-reward{margin-top:11px;border-left:4px solid var(--gold);padding:9px 10px;background:color-mix(in srgb,var(--paper) 82%,#f4c65b 18%);border-radius:9px;font-size:12px;line-height:1.6}.lit-route-reward.locked{filter:none;opacity:.72}.lit-route-library{margin-top:10px;display:flex;gap:6px;overflow:auto;scrollbar-width:none}.lit-route-node{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;padding:6px 9px;background:var(--paper);font-size:10px}.lit-route-node.read{background:#f4c65b33;border-color:#c39131}
+@media(max-width:430px){.lit-route-card{grid-template-columns:30px minmax(0,1fr) auto;padding:9px 8px}.lit-route-icon{width:30px;height:30px}.lit-route-open{padding:8px 7px}.lit-route-title{font-size:13px}}
+</style>
+
+<script id="ver123-literary-routes-script">
+(function(){
+'use strict';
+const LITERARY_ROUTES=[{"id": "alienation", "name": "疎外の道", "title": "孤独の観測者", "question": "社会の「普通」から外れた人間は、何を失い、何を守れるのか。", "books": ["コンビニ人間", "推し、燃ゆ", "異邦人", "地下室の手記", "人間失格"]}, {"id": "surveillance", "name": "監視社会の道", "title": "監視を見返す者", "question": "安全と秩序のために、個人の自由はどこまで差し出せるのか。", "books": ["一九八四年", "すばらしい新世界", "華氏451度", "動物農場", "侍女の物語"]}, {"id": "guilt", "name": "罪と救済の道", "title": "魂の審問者", "question": "罪を犯した人間は、理解や赦しによって生まれ直せるのか。", "books": ["罪と罰", "カラマーゾフの兄弟", "白痴", "悪霊", "レ・ミゼラブル"]}, {"id": "family", "name": "家族という牢獄", "title": "血縁を越える者", "question": "家族は人を守る場所か、それとも逃れにくい役割の体系か。", "books": ["こころ", "細雪", "痴人の愛", "金閣寺", "万延元年のフットボール"]}, {"id": "empire", "name": "帝国と植民地の道", "title": "帝国の地図を破る者", "question": "他者を語る権利は誰にあり、支配された側はどう言葉を取り戻すのか。", "books": ["闇の奥", "崩れゆく絆", "半分のぼった黄色い太陽", "真夜中の子供たち", "小さきものたちの神"]}, {"id": "memory", "name": "記憶の迷宮", "title": "記憶の継承者", "question": "過去は保存されるものか、それとも語るたびに作り直されるものか。", "books": ["失われた時を求めて", "日の名残り", "わたしを離さないで", "ノルウェイの森", "クララとお日さま"]}, {"id": "women", "name": "女性と規範の道", "title": "規範を書き換える者", "question": "社会が決めた女性像から外れて生きることは、何を要求するのか。", "books": ["高慢と偏見", "ジェイン・エア", "嵐が丘", "ボヴァリー夫人", "かくも長き手紙"]}, {"id": "absurd", "name": "不条理の門", "title": "不条理を歩く者", "question": "意味の見つからない世界で、それでも生きる理由は作れるのか。", "books": ["変身", "審判", "城", "ペスト", "砂の女"]}, {"id": "latin", "name": "現実と幻想の境界", "title": "神話を読む者", "question": "歴史の暴力や共同体の記憶を、幻想は現実以上に語れるのか。", "books": ["百年の孤独", "予告された殺人の記録", "ペドロ・パラモ", "伝奇集", "精霊たちの家"]}, {"id": "war", "name": "戦争と証言の道", "title": "消されない記憶", "question": "極限の暴力を経験していない者は、その記憶をどう受け取るべきか。", "books": ["夜と霧", "スローターハウス5", "怒りの葡萄", "ロード", "バグダードのフランケンシュタイン"]}];
+const ROUTE_XP_PER_BOOK=20, ROUTE_COMPLETE_XP=150;
+function routeBook(title){return (window.ALL_BOOKS||[]).find(b=>b.title===title)||null}
+function routeForBook(book){return book&&LITERARY_ROUTES.find(r=>r.books.includes(book.title))}
+function routeBooks(route){return route.books.map(routeBook).filter(Boolean)}
+function routeRead(route){return routeBooks(route).filter(b=>entry(b.no).got)}
+function ensureRouteState(){if(!state.literaryRoutes||typeof state.literaryRoutes!=='object')state.literaryRoutes={};return state.literaryRoutes}
+function syncRouteCompletion(route,quiet){
+ const rs=ensureRouteState(),read=routeRead(route),done=read.length>=3;
+ if(done&&!rs[route.id]?.completedAt){rs[route.id]={completedAt:new Date().toISOString(),title:route.title};saveState();if(!quiet)toast('文学ルート踏破！ 称号「'+route.title+'」を獲得')}
+ return done;
+}
+function recsFor(book,route){
+ const books=routeBooks(route),idx=books.findIndex(b=>b.no===book.no),n=books.length;
+ if(idx<0||n<4)return [];
+ const picks=[
+  ['次に読むなら','🧭',books[(idx+1)%n],'読みやすさや問題意識をつなぎ、同じ問いを一歩先へ進める。'],
+  ['比較して読むなら','⚖️',books[(idx+2)%n],'異なる時代・地域・語り方を並べ、共通点と違いを確かめる。'],
+  ['さらに深く進むなら','🔭',books[(idx+3)%n],'より複雑な構成や思想へ進み、このルートの核心に近づく。']
+ ];
+ return picks;
+}
+function routeHTML(book,route){
+ const books=routeBooks(route),read=routeRead(route),done=syncRouteCompletion(route,true),recs=recsFor(book,route),pct=Math.min(100,Math.round(read.length/3*100));
+ return `<div class="detail-section lit-route-section" data-literary-route="${route.id}"><div class="lit-route-head"><div><div class="lit-route-kicker">LITERARY ROUTE</div><h3>🗺 ${esc(route.name)}</h3><div class="meta">代表5作品のうち3作品読了で踏破</div></div><div class="lit-route-count">${read.length} / 3</div></div><div class="lit-route-progress"><i style="width:${pct}%"></i></div><p class="lit-route-question">${esc(route.question)}</p><div class="lit-route-grid">${recs.map(([type,icon,b,reason])=>`<div class="lit-route-card ${entry(b.no).got?'read':''}"><div class="lit-route-icon">${entry(b.no).got?'✓':icon}</div><div><div class="lit-route-type">${esc(type)}</div><div class="lit-route-title">『${esc(b.title)}』</div><div class="lit-route-author">${esc(b.author)}</div><div class="meta">${esc(reason)}</div></div><button class="lit-route-open" onclick="openDetail(${b.no})">詳細</button></div>`).join('')}</div><div class="lit-route-library">${books.map(b=>`<span class="lit-route-node ${entry(b.no).got?'read':''}">${entry(b.no).got?'✓':'○'} ${esc(b.title)}</span>`).join('')}</div><div class="lit-route-reward ${done?'':'locked'}">${done?`🏆 踏破済み｜称号「${esc(route.title)}」・ボーナス ${ROUTE_COMPLETE_XP}XP`:`🔒 あと${Math.max(0,3-read.length)}作品で称号「${esc(route.title)}」と${ROUTE_COMPLETE_XP}XP`}</div></div>`;
+}
+function decorateDetail(no){
+ const book=(window.ALL_BOOKS||[]).find(b=>b.no===no),route=routeForBook(book),wrap=modal&&modal.querySelector('.detail-wrap');if(!route||!wrap)return;
+ [...wrap.querySelectorAll('.detail-section')].forEach(sec=>{const h=sec.querySelector('h3');if(h&&h.textContent.trim()==='🧭 次に読むなら')sec.remove()});
+ const sections=[...wrap.querySelectorAll('.detail-section')],appeal=sections.find(sec=>sec.querySelector('h3')?.textContent.includes('この作品の面白さ'));
+ const holder=document.createElement('div');holder.innerHTML=routeHTML(book,route);const el=holder.firstElementChild;
+ if(appeal)appeal.insertAdjacentElement('afterend',el);else wrap.appendChild(el);
+}
+const originalOpenDetail=window.openDetail;
+if(typeof originalOpenDetail==='function')window.openDetail=function(no){const result=originalOpenDetail.apply(this,arguments);decorateDetail(no);return result};
+const originalStats=window.stats;
+if(typeof originalStats==='function')window.stats=function(){const c=originalStats.apply(this,arguments),uniqueRead=new Set(),completed=[];LITERARY_ROUTES.forEach(r=>{routeRead(r).forEach(b=>uniqueRead.add(b.no));if(syncRouteCompletion(r,true))completed.push(r.id)});c.routeBooks=uniqueRead.size;c.routes=completed.length;c.xp=(c.xp||0)+uniqueRead.size*ROUTE_XP_PER_BOOK+completed.length*ROUTE_COMPLETE_XP;return c};
+window.LITERARY_ROUTES=LITERARY_ROUTES;
+window.literaryRouteAudit=function(){return {routes:LITERARY_ROUTES.length,configured:LITERARY_ROUTES.reduce((n,r)=>n+r.books.length,0),resolved:LITERARY_ROUTES.reduce((n,r)=>n+routeBooks(r).length,0),duplicates:LITERARY_ROUTES.flatMap(r=>r.books).filter((x,i,a)=>a.indexOf(x)!==i)}};
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
 
