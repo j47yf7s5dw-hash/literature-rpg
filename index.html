@@ -4306,5 +4306,67 @@ console.info('[文学RPG Ver.10.6.1] EXナビを再接続しました');
 })();
 </script>
 
+
+<!-- Ver.11.2：大型アップデート前の総点検・統合版。保存キーと既存記録形式を維持。 -->
+<style id="v112-stability-style">
+.v112-health{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.v112-health>div{border:1px solid var(--line);border-radius:13px;background:var(--paper);padding:10px}.v112-health b,.v112-health small{display:block}.v112-health b{font-size:18px}.v112-health small{font-size:10px;color:var(--muted);margin-top:2px}.v112-ok{color:#26734a}.v112-warn{color:#a35d17}.v112-diagnostic-list{display:grid;gap:7px;margin-top:10px}.v112-diagnostic-row{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:8px 2px;font-size:12px}.v112-diagnostic-row:last-child{border-bottom:0}.v112-diagnostic-row span:last-child{font-weight:900}.v112-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.v112-actions button{min-height:43px;border-radius:12px;border:1px solid var(--line);font-weight:900;background:var(--paper);color:var(--ink)}.v112-actions .primary{background:#315c58;color:#fff;border-color:#315c58}.v112-note{font-size:11px;color:var(--muted);line-height:1.65;margin-top:9px}.v112-backup-badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;background:#eaf5ee;color:#276442}.dark .v112-backup-badge{background:#253c30;color:#bde5c9}
+@media(max-width:420px){.v112-health{grid-template-columns:1fr 1fr}.v112-actions{grid-template-columns:1fr}}
+</style>
+<script id="v112-stability-script">
+(function(){
+'use strict';
+const VERSION='11.2', VALID_READING=['未読','読書中','読了','再読予定'];
+const originalEntry=window.entry;
+function blankNotes(e){return {summary:'',scene:'',character:'',theme:'',question:'',ratingReason:'',quotes:'',reflection:e.note||''}}
+function normalizeEntry112(no){
+ if(!state.books||typeof state.books!=='object')state.books={};
+ const key=String(no);let e=state.books[key]||state.books[no];
+ if(!e||typeof e!=='object'||Array.isArray(e))e={got:false,rating:0,note:'',date:'',shelf:''};
+ state.books[key]=e;
+ if(e.shelf==null)e.shelf='';if(e.date==null)e.date='';if(e.note==null)e.note='';if(e.rating==null)e.rating=0;
+ if(!e.notes||typeof e.notes!=='object'||Array.isArray(e.notes))e.notes=blankNotes(e);
+ else {for(const k of Object.keys(blankNotes(e)))if(e.notes[k]==null)e.notes[k]='';if(e.note&&!e.notes.reflection)e.notes.reflection=e.note}
+ if(!Array.isArray(e.sessions))e.sessions=[];
+ e.sessions=e.sessions.filter(x=>x&&typeof x==='object'&&String(x.date||'').trim()).map(x=>({ ...x,date:String(x.date).slice(0,10),type:x.type||'初読'}));
+ const seen=new Set();e.sessions=e.sessions.filter(x=>{const k=x.date+'|'+x.type;if(seen.has(k))return false;seen.add(k);return true}).sort((a,b)=>a.date.localeCompare(b.date));
+ if(!e.reading||typeof e.reading!=='object'||Array.isArray(e.reading))e.reading={status:e.got?'読了':'未読',startDate:'',currentPage:0,totalPages:0};
+ if(e.reading.status==='中断')e.reading.status='再読予定';
+ const legacyDone=Boolean(e.got)||e.reading.status==='読了'||Boolean(e.date)||e.sessions.length>0;
+ if(legacyDone){e.got=true;e.reading.status='読了';if(!e.date&&e.sessions.length)e.date=e.sessions[e.sessions.length-1].date;if(e.date&&!e.sessions.some(x=>x.date===e.date))e.sessions.push({date:e.date,type:e.sessions.length?'再読':'初読'})}
+ else {e.got=false;if(!VALID_READING.includes(e.reading.status))e.reading.status=(e.reading.startDate||Number(e.reading.currentPage)>0)?'読書中':'未読';if(e.reading.status==='読了')e.reading.status='未読'}
+ e.reading.startDate=String(e.reading.startDate||'').slice(0,10);e.reading.currentPage=Math.max(0,Number(e.reading.currentPage)||0);e.reading.totalPages=Math.max(0,Number(e.reading.totalPages)||0);
+ return e
+}
+window.entry=function(no){return normalizeEntry112(no)};entry=window.entry;
+window.litReadingStatus=function(no){const e=normalizeEntry112(no);return e.got?'done':(e.reading.status==='読書中'||e.reading.startDate||e.reading.currentPage>0?'reading':e.reading.status==='再読予定'?'planned':'unread')};
+function validNos(){return new Set(ALL_BOOKS.map(b=>String(b.no)))}
+function noteFilled(e){return Boolean(e.note||Object.values(e.notes||{}).some(v=>String(v||'').trim()))}
+function defeatedCount(){const x=state.themeBossBattles||{};return Object.values(x).filter(v=>v&&v.defeatedAt).length}
+function diagnostics112(){
+ const valid=validNos(),keys=Object.keys(state.books||{}),entries=keys.map(k=>[k,normalizeEntry112(k)]),invalid=keys.filter(k=>!valid.has(String(k))),mismatch=entries.filter(([,e])=>(e.got&&e.reading.status!=='読了')||(!e.got&&e.reading.status==='読了'));
+ let duplicateSessions=0;entries.forEach(([,e])=>{const a=e.sessions||[],u=new Set(a.map(x=>x.date+'|'+x.type));duplicateSessions+=Math.max(0,a.length-u.size)});
+ const memories=(state.passportV110&&Array.isArray(state.passportV110.memories)?state.passportV110.memories:[]).filter(Boolean),orphanMemories=memories.filter(no=>!valid.has(String(no))).length;
+ const raw=JSON.stringify(state),last=state.appMeta&&state.appMeta.lastSavedAt||'';
+ return {read:ALL_BOOKS.filter(b=>normalizeEntry112(b.no).got).length,reading:ALL_BOOKS.filter(b=>window.litReadingStatus(b.no)==='reading').length,notes:ALL_BOOKS.filter(b=>noteFilled(normalizeEntry112(b.no))).length,bosses:defeatedCount(),invalid:invalid.length,mismatch:mismatch.length,duplicateSessions,orphanMemories,bytes:new Blob([raw]).size,last,healthy:!invalid.length&&!mismatch.length&&!duplicateSessions&&!orphanMemories}
+}
+window.literatureDiagnostics112=diagnostics112;
+const previousSave=window.saveState;
+window.saveState=function(){
+ state.appMeta=state.appMeta&&typeof state.appMeta==='object'?state.appMeta:{};state.appMeta.lastSavedAt=new Date().toISOString();state.appMeta.lastVersion=VERSION;
+ try{localStorage.setItem(KEY,JSON.stringify(state));return true}catch(err){console.error('[文学RPG Ver.11.2] 保存失敗',err);toast('保存できませんでした。バックアップを書き出してください。');return false}
+};saveState=window.saveState;
+window.repairData112=function(){Object.keys(state.books||{}).forEach(normalizeEntry112);if(state.passportV110&&Array.isArray(state.passportV110.memories)){const v=validNos();state.passportV110.memories=state.passportV110.memories.map(no=>no&&v.has(String(no))?Number(no):null).slice(0,3)}saveState();renderBackup();toast('記録の整合性を確認しました')};
+function healthHTML112(){const d=diagnostics112(),issues=d.invalid+d.mismatch+d.duplicateSessions+d.orphanMemories;return `<div class="panel"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3 class="section-title" style="margin:0">🩺 データ診断</h3><span class="v112-backup-badge">Ver.11.2 統合判定</span></div><p class="meta">読了・読書中・文学ノート・ボス記録が同じ保存データを参照できているか確認します。</p><div class="v112-health"><div><b>${d.read}</b><small>読了作品</small></div><div><b>${d.reading}</b><small>読書中</small></div><div><b>${d.notes}</b><small>文学ノートあり</small></div><div><b>${d.bosses}</b><small>ボス撃破</small></div></div><div class="v112-diagnostic-list"><div class="v112-diagnostic-row"><span>不正な作品ID</span><span class="${d.invalid?'v112-warn':'v112-ok'}">${d.invalid}件</span></div><div class="v112-diagnostic-row"><span>読了状態の矛盾</span><span class="${d.mismatch?'v112-warn':'v112-ok'}">${d.mismatch}件</span></div><div class="v112-diagnostic-row"><span>重複した読了履歴</span><span class="${d.duplicateSessions?'v112-warn':'v112-ok'}">${d.duplicateSessions}件</span></div><div class="v112-diagnostic-row"><span>無効な思い出作品</span><span class="${d.orphanMemories?'v112-warn':'v112-ok'}">${d.orphanMemories}件</span></div><div class="v112-diagnostic-row"><span>保存データ容量</span><span>${(d.bytes/1024).toFixed(1)} KB</span></div><div class="v112-diagnostic-row"><span>最終保存</span><span>${d.last?new Date(d.last).toLocaleString('ja-JP'):'未記録'}</span></div></div><div class="v112-actions"><button class="primary" onclick="repairData112()">整合性を再確認</button><button onclick="exportData()">今すぐバックアップ</button></div><div class="v112-note">${issues?'問題候補があります。「整合性を再確認」で既存記録を消さずに正規化します。':'現在、機械的に検出できる記録矛盾はありません。'}</div></div>`}
+const previousRenderBackup=window.renderBackup;
+window.renderBackup=function(){previousRenderBackup();backupView.insertAdjacentHTML('afterbegin',healthHTML112());const old=[...backupView.querySelectorAll('.panel')].find(x=>x.textContent.includes('Ver.3.10.1について'));if(old)old.querySelector('h3').textContent='Ver.11.2について';if(old){const p=old.querySelector('p');if(p)p.textContent='読書状態を共通判定へ統一し、データ診断と安全な復元処理を追加しました。保存キーと既存の読書記録形式は変更していません。'}};renderBackup=window.renderBackup;
+window.exportData=function(){const payload={app:'文学RPG',version:VERSION,exportedAt:new Date().toISOString(),data:state},blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=`文学RPG_Ver${VERSION}_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};exportData=window.exportData;
+window.importData=function(ev){const f=ev.target.files&&ev.target.files[0];if(!f)return;const before=JSON.stringify(state),rd=new FileReader();rd.onload=()=>{try{const raw=JSON.parse(rd.result),incoming=raw&&raw.data&&raw.app==='文学RPG'?raw.data:raw;if(!incoming||typeof incoming!=='object'||Array.isArray(incoming)||!incoming.books||typeof incoming.books!=='object'||Array.isArray(incoming.books))throw new Error('invalid');if(!confirm('現在の記録を、このバックアップで置き換えますか？'))return;state=JSON.parse(JSON.stringify(incoming));if(typeof migrateExState31==='function')migrateExState31();if(typeof ensurePackState==='function')ensurePackState();Object.keys(state.books||{}).forEach(normalizeEntry112);if(typeof syncPackCompletions==='function')syncPackCompletions();if(typeof ensureProfile==='function')ensureProfile();if(!saveState())throw new Error('save failed');toast('バックアップを復元しました');renderBackup()}catch(e){console.error('[文学RPG Ver.11.2] 復元失敗',e);try{state=JSON.parse(before);saveState()}catch(_){}alert('文学RPGの有効なバックアップを読み込めませんでした。現在の記録は保持されています。')}finally{ev.target.value=''}};rd.onerror=()=>{alert('ファイルを読み込めませんでした。現在の記録は変更されていません。');ev.target.value=''};rd.readAsText(f)};importData=window.importData;
+const previousOpenDetail=window.openDetail;window.openDetail=function(no){previousOpenDetail.apply(this,arguments);setTimeout(()=>{const wrap=document.querySelector('#modal .detail-wrap');if(!wrap)return;wrap.classList.remove('state-unread','state-reading','state-done');const s=window.litReadingStatus(no);wrap.classList.add(s==='done'?'state-done':s==='reading'?'state-reading':'state-unread')},120)};openDetail=window.openDetail;
+Object.keys(state.books||{}).forEach(normalizeEntry112);saveState();
+document.title='文学RPG Ver.11.2';const small=document.querySelector('.title small');if(small)small.textContent='Ver.11.2';
+window.literatureRpgV112={version:VERSION,feature:'総点検・読書状態統合・データ診断',newStorageKeys:0,storageKey:KEY,compatibleFrom:'11.1'};
+console.info('[文学RPG Ver.11.2]',window.literatureRpgV112);
+})();
+</script>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
