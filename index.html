@@ -4756,6 +4756,61 @@ window.literaryRouteAudit=function(){return {routes:LITERARY_ROUTES.length,confi
   window.literatureRpgV1231={catalogDirectionComparator:true,routeWording:true};
 })();
 </script>
+
+
+<!-- Ver.12.3.2: Literary Routes hub -->
+<style id="ver1232-literary-routes-hub-style">
+.lit-routes-hub-head{background:linear-gradient(135deg,#241c35,#49365d);color:#fff;border-color:#6d5781}.lit-routes-hub-head p{color:#e8dff0}.lit-routes-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.lit-routes-summary>div{background:#ffffff12;border:1px solid #ffffff22;border-radius:12px;padding:10px;text-align:center}.lit-routes-summary b{display:block;font-size:20px}.lit-routes-summary small{font-size:10px;color:#e8dff0}.lit-routes-grid{display:grid;gap:10px}.lit-routes-card{border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:12px;box-shadow:0 3px 12px #0000000a}.lit-routes-card.done{border-color:#b98b2e;background:linear-gradient(135deg,#fffaf0,#fff4cd)}.lit-routes-card-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}.lit-routes-card h3{margin:0 0 4px;font-size:15px}.lit-routes-card .question{font-size:11px;line-height:1.65;color:var(--muted)}.lit-routes-card-count{font-weight:900;font-size:13px;white-space:nowrap}.lit-routes-card-progress{height:7px;border-radius:999px;background:#00000012;overflow:hidden;margin:10px 0 7px}.lit-routes-card-progress i{display:block;height:100%;background:linear-gradient(90deg,#b67a2c,#e0b44e);border-radius:inherit}.lit-routes-card-books{display:flex;gap:6px;overflow:auto;padding-bottom:2px;scrollbar-width:none}.lit-routes-book{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:var(--bg);padding:6px 9px;font-size:10px;cursor:pointer}.lit-routes-book.read{border-color:#b98b2e;background:#f6df9f55}.lit-routes-card-foot{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:9px}.lit-routes-title{font-size:10px;color:var(--muted)}.lit-routes-open{border:0;border-radius:10px;background:var(--accent);color:#fff;padding:8px 11px;font-weight:800}.home-route-hub{background:linear-gradient(135deg,#fff9e8,#f3e8ff)}.home-route-hub-row{display:flex;justify-content:space-between;gap:12px;align-items:center}.home-route-hub button,.explore-route-entry{border:0;border-radius:11px;background:#49365d;color:#fff;padding:10px 12px;font-weight:900}.explore-route-entry-wrap{margin:10px 0}.routes-back{margin-bottom:10px;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:9px 11px;font-weight:800}
+@media(max-width:430px){.lit-routes-summary{grid-template-columns:repeat(3,1fr)}.lit-routes-summary b{font-size:17px}.lit-routes-card{padding:10px}.home-route-hub-row{align-items:flex-start}.home-route-hub button{flex:0 0 auto}}
+</style>
+<script id="ver1232-literary-routes-hub-script">
+(function(){
+'use strict';
+if(window.literatureRpgV1232)return;
+function routes1232(){return Array.isArray(window.LITERARY_ROUTES)?window.LITERARY_ROUTES:[]}
+function findBook1232(title){return (window.ALL_BOOKS||[]).find(b=>b.title===title)}
+function routeBooks1232(route){return (route.books||[]).map(findBook1232).filter(Boolean)}
+function readCount1232(route){return routeBooks1232(route).filter(b=>entry(b.no).got).length}
+function routeDone1232(route){return readCount1232(route)>=3}
+function ensureRoutesView1232(){
+ let view=document.getElementById('routesView');
+ if(!view){view=document.createElement('section');view.id='routesView';view.className='hidden';document.querySelector('main')?.appendChild(view)}
+ return view;
+}
+function routeCard1232(route){
+ const bs=routeBooks1232(route),read=readCount1232(route),done=read>=3,pct=Math.min(100,Math.round(read/3*100));
+ return `<article class="lit-routes-card ${done?'done':''}"><div class="lit-routes-card-top"><div><h3>${done?'🏆':'🗺'} ${esc(route.name)}</h3><div class="question">${esc(route.question||'')}</div></div><div class="lit-routes-card-count">${read} / 3</div></div><div class="lit-routes-card-progress"><i style="width:${pct}%"></i></div><div class="lit-routes-card-books">${bs.map(b=>`<button class="lit-routes-book ${entry(b.no).got?'read':''}" data-route-book="${b.no}">${entry(b.no).got?'✓':'○'} ${esc(b.title)}</button>`).join('')}</div><div class="lit-routes-card-foot"><div class="lit-routes-title">${done?`称号「${esc(route.title)}」獲得済み`:`あと${Math.max(0,3-read)}作で称号「${esc(route.title)}」`}</div><button class="lit-routes-open" data-route-first="${bs[0]?.no||''}">入口作品</button></div></article>`;
+}
+function renderRoutes1232(){
+ const view=ensureRoutesView1232(),rs=routes1232(),done=rs.filter(routeDone1232).length,unique=new Set(rs.flatMap(r=>routeBooks1232(r).map(b=>b.no))),read=[...unique].filter(no=>entry(no).got).length;
+ view.innerHTML=`<button class="routes-back" id="routesBack1232">← 前の画面へ戻る</button><div class="panel lit-routes-hub-head"><h2>🗺 文学ルート一覧</h2><p>一冊から次の一冊へ。共通する問いをたどりながら、文学を横断する10本の読書ルートです。各ルートは構成5作品のうち3作品読了で踏破になります。</p><div class="lit-routes-summary"><div><b>${done}/${rs.length}</b><small>踏破ルート</small></div><div><b>${read}/${unique.size}</b><small>構成作品読了</small></div><div><b>${Math.round(done/Math.max(1,rs.length)*100)}%</b><small>総踏破率</small></div></div></div><div class="lit-routes-grid">${rs.map(routeCard1232).join('')}</div>`;
+ view.querySelector('#routesBack1232').onclick=()=>{const back=view.dataset.backView||'home';if(typeof setView==='function')setView(back);else{view.classList.add('hidden');document.getElementById('homeView')?.classList.remove('hidden')}};
+ view.querySelectorAll('[data-route-book]').forEach(btn=>btn.onclick=()=>openDetail(Number(btn.dataset.routeBook)));
+ view.querySelectorAll('[data-route-first]').forEach(btn=>btn.onclick=()=>{if(btn.dataset.routeFirst)openDetail(Number(btn.dataset.routeFirst))});
+}
+window.openLiteraryRoutes=function(backView){
+ const view=ensureRoutesView1232();view.dataset.backView=backView||document.querySelector('nav button.active')?.dataset.view||'home';
+ document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));view.classList.remove('hidden');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));renderRoutes1232();scrollTo({top:0,behavior:'auto'});
+};
+function injectHome1232(){
+ const home=document.getElementById('homeView');if(!home||home.querySelector('.home-route-hub'))return;
+ const rs=routes1232(),done=rs.filter(routeDone1232).length;
+ const panel=document.createElement('div');panel.className='panel home-route-hub';panel.innerHTML=`<div class="home-route-hub-row"><div><h3 class="section-title">🗺 文学ルート</h3><div class="meta">テーマをたどる10本の読書ルート｜${done}/${rs.length}本踏破</div></div><button type="button">一覧を見る</button></div>`;panel.querySelector('button').onclick=()=>openLiteraryRoutes('home');
+ const adventure=[...home.querySelectorAll('.panel')].find(x=>x.querySelector('.section-title')?.textContent.includes('冒険メニュー'));
+ if(adventure)adventure.before(panel);else home.appendChild(panel);
+}
+function injectExplore1232(){
+ const host=document.getElementById('explore120View');if(!host||host.querySelector('.explore-route-entry-wrap'))return;
+ const hero=host.querySelector('.explore120-hero');if(!hero)return;
+ const wrap=document.createElement('div');wrap.className='explore-route-entry-wrap';wrap.innerHTML='<button class="explore-route-entry" type="button">🗺 文学ルート一覧を開く</button>';wrap.querySelector('button').onclick=()=>openLiteraryRoutes('home');hero.insertAdjacentElement('afterend',wrap);
+}
+const oldHome=window.renderHome;if(typeof oldHome==='function')window.renderHome=function(){const r=oldHome.apply(this,arguments);injectHome1232();return r};
+const oldExplore=window.renderExplore120;if(typeof oldExplore==='function')window.renderExplore120=function(){const r=oldExplore.apply(this,arguments);injectExplore1232();return r};
+const observer=new MutationObserver(()=>{injectHome1232();injectExplore1232()});observer.observe(document.querySelector('main')||document.body,{childList:true,subtree:true});
+ensureRoutesView1232();injectHome1232();injectExplore1232();
+window.literatureRpgV1232={renderRoutes:renderRoutes1232};
+})();
+</script>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
 
