@@ -3912,5 +3912,61 @@ console.info('[文学RPG Ver.10.6.1] EXナビを再接続しました');
 })();
 </script>
 
+
+
+<!-- Ver.10.7：World Mapリファイン。HOME・保存形式・Passport構造は変更しない。 -->
+<style id="v107-world-style">
+.world107-hero{position:relative;overflow:hidden;background:linear-gradient(145deg,#163c46,#3c726c);color:#fff;border:0}
+.world107-hero:after{content:'✦';position:absolute;right:18px;top:-18px;font-size:118px;opacity:.07;pointer-events:none}
+.world107-hero h2{margin:0 0 5px}.world107-hero .meta{color:#dcecea}
+.world107-overall{margin-top:13px}.world107-overall-head{display:flex;justify-content:space-between;gap:10px;align-items:end;font-size:12px}.world107-overall-head b{font-size:20px}.world107-progress{height:10px;border-radius:99px;background:#ffffff25;overflow:hidden;margin-top:7px}.world107-progress i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#f4cc79,#fff0c3)}
+.world107-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.world107-kpis>div{background:#ffffff14;border:1px solid #ffffff24;border-radius:12px;padding:9px;text-align:center}.world107-kpis b{display:block;font-size:20px}.world107-kpis small{font-size:10px}
+.world107-routebox{border:1px solid #c7a45c;background:linear-gradient(145deg,#fff9ec,#f6e9cf);border-radius:17px;padding:13px;margin:11px 0}.world107-routebox h3{margin:0 0 3px}.world107-routebox>.meta{margin-bottom:10px}
+.world107-routes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.world107-route{border:1px solid var(--line);background:var(--paper);border-radius:13px;padding:10px;text-align:left;color:var(--ink);min-width:0}.world107-route strong,.world107-route span,.world107-route small{display:block}.world107-route strong{font-size:13px}.world107-route span{margin-top:5px;font-size:12px;font-weight:900;line-height:1.4}.world107-route small{color:var(--muted);margin-top:4px}.world107-route em{display:inline-block;margin-top:7px;font-size:10px;font-style:normal;font-weight:900;color:#356664}
+.world107-section-head{display:flex;justify-content:space-between;align-items:end;gap:8px;margin:15px 2px 8px}.world107-section-head h3{margin:0}.world107-section-head small{color:var(--muted);text-align:right}
+.world107-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.world107-region{border:1px solid var(--line);background:var(--paper);border-radius:16px;padding:12px;text-align:left;color:var(--ink);min-width:0;box-shadow:0 3px 12px rgba(60,45,35,.05)}.world107-region.complete{border-color:#82a879;background:linear-gradient(145deg,var(--paper),rgba(111,155,101,.09))}.world107-region.started{border-color:#d0ad63}
+.world107-region-top{display:flex;justify-content:space-between;gap:8px;align-items:start}.world107-region h3{margin:0;font-size:15px}.world107-status{font-size:9px;font-weight:900;border-radius:999px;padding:4px 7px;background:#ece4da;color:#6f6258;white-space:nowrap}.world107-status.started{background:#fff0c7;color:#795414}.world107-status.complete{background:#dbe8d6;color:#3d6537}
+.world107-bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:9px 0 6px}.world107-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#39777a,#c49a4d)}.world107-region-numbers{display:flex;justify-content:space-between;gap:8px;font-size:11px}.world107-region-numbers b{font-size:12px}.world107-region .meta{margin-top:5px;min-height:30px}.world107-nextbook{margin-top:8px;padding:8px;border-radius:10px;background:var(--soft);font-size:11px}.world107-nextbook b{display:block;margin-bottom:2px}.world107-open{display:block;margin-top:8px;font-size:11px;font-weight:900;color:#356664}
+.world107-passport{width:100%;margin-top:11px;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--paper);color:var(--ink);font-weight:900}
+@media(max-width:600px){.world107-routes{grid-template-columns:1fr}.world107-route{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:8px}.world107-route small,.world107-route em{grid-column:1/-1}}
+@media(max-width:520px){.world107-grid{grid-template-columns:1fr}.world107-kpis{grid-template-columns:1fr 1fr}.world107-kpis>div:last-child{grid-column:1/-1}.world107-region .meta{min-height:0}}
+@media(max-width:360px){.world107-kpis{grid-template-columns:1fr}.world107-kpis>div:last-child{grid-column:auto}.world107-overall-head{align-items:start;flex-direction:column;gap:2px}}
+.dark .world107-routebox{background:#3d3425;border-color:#8e713d}.dark .world107-region.complete{background:var(--paper)}
+</style>
+<script id="v107-world-script">
+(function(){
+ 'use strict';
+ const VERSION='10.7';
+ const lenRank=v=>({'短':1,'中':2,'長':3,'超長':4}[v]||2);
+ function unreadSorted(books){return books.filter(b=>!entry(b.no).got).sort((a,b)=>(Number(a.difficulty)||3)-(Number(b.difficulty)||3)||lenRank(a.length)-lenRank(b.length)||Number(a.no)-Number(b.no))}
+ function row(r){const books=regionBooks(r),read=books.filter(b=>entry(b.no).got).length,unread=unreadSorted(books),countries=ver73CountryStats(books);return{r,books,read,unread,countries,next:unread[0],remain:Math.max(0,books.length-read)}}
+ function routeCandidates(rows){
+   const all=[];
+   rows.forEach(x=>x.unread.forEach(b=>all.push({region:x.r,book:b,progress:x.read/Math.max(1,x.books.length),started:x.read>0})));
+   const easiest=[...all].sort((a,b)=>(Number(a.book.difficulty)||3)-(Number(b.book.difficulty)||3)||lenRank(a.book.length)-lenRank(b.book.length))[0];
+   const continueOne=[...all].filter(x=>x.started).sort((a,b)=>b.progress-a.progress||(Number(a.book.difficulty)||3)-(Number(b.book.difficulty)||3))[0]||easiest;
+   const newLand=[...all].filter(x=>!x.started).sort((a,b)=>(Number(a.book.difficulty)||3)-(Number(b.book.difficulty)||3)||lenRank(a.book.length)-lenRank(b.book.length))[0]||easiest;
+   return [
+     ['はじめての世界文学',easiest,'短く・やさしい作品を優先'],
+     ['旅の続きを読む',continueOne,'進行中の地域を一歩進める'],
+     ['新しい土地へ',newLand,'まだ読んでいない地域を開く']
+   ].filter((x,i,a)=>x[1]&&a.findIndex(y=>y[1]&&y[1].book.no===x[1].book.no)===i);
+ }
+ function regionCard(x){
+   const p=Math.round(x.read/Math.max(1,x.books.length)*100),authors=[...new Set(x.books.map(b=>b.author))].slice(0,3).join('・');
+   const cls=x.remain===0?'complete':x.read>0?'started':'';
+   const label=x.remain===0?'制覇':x.read>0?'探索中':'未訪問';
+   return `<button class="world107-region ${cls}" onclick="openWorld87Region('${encodeURIComponent(x.r)}')"><div class="world107-region-top"><h3>${esc(x.r)}</h3><span class="world107-status ${cls}">${label}</span></div><div class="world107-bar"><i style="width:${p}%"></i></div><div class="world107-region-numbers"><b>${p}%</b><span>${x.read}/${x.books.length}冊・残り${x.remain}冊</span></div><div class="meta">${x.countries.length}文学圏｜${esc(authors||'登録作家なし')}</div>${x.next?`<div class="world107-nextbook"><b>次に読む候補</b>『${esc(x.next.title)}』<br><span class="meta">${esc(x.next.author)}｜難易度${x.next.difficulty}｜${esc(x.next.length)}</span></div>`:'<div class="world107-nextbook"><b>地域制覇済み</b>登録作品をすべて読了しました。</div>'}<span class="world107-open">地域を探索 →</span></button>`
+ }
+ function render(){
+   const rows=MAP_REGIONS.map(([r])=>row(r)),all=rows.flatMap(x=>x.books),read=all.filter(b=>entry(b.no).got).length,total=all.length,visited=rows.filter(x=>x.read>0).length,completed=rows.filter(x=>x.remain===0&&x.books.length).length,countries=new Set(all.map(b=>b.region).filter(Boolean)).size,p=Math.round(read/Math.max(1,total)*100),routes=routeCandidates(rows);
+   worldView.innerHTML=`<div class="panel world107-hero"><h2>🌍 文学世界地図</h2><div class="meta">地域や文学圏をたどり、次に読む一冊を見つける場所。</div><div class="world107-overall"><div class="world107-overall-head"><span>世界文学の踏破率</span><b>${p}%</b></div><div class="world107-progress"><i style="width:${p}%"></i></div></div><div class="world107-kpis"><div><b>${visited}/${rows.length}</b><small>訪問地域</small></div><div><b>${total-read}</b><small>未読作品</small></div><div><b>${completed}</b><small>制覇地域</small></div></div></div><section class="world107-routebox"><h3>🧭 おすすめ読書ルート</h3><div class="meta">目的に合わせて、次の一冊をすぐ選べます。</div><div class="world107-routes">${routes.map(([title,x,desc])=>`<button class="world107-route" onclick="openDetail(${x.book.no})"><strong>${title}</strong><span>『${esc(x.book.title)}』</span><small>${esc(x.book.author)}｜${esc(x.region)}｜難易度${x.book.difficulty}</small><em>${desc} →</em></button>`).join('')}</div></section><div class="world107-section-head"><div><h3>地域から探す</h3><small>${countries}文学圏・全${total}作品</small></div><small>読了率と残り冊数を表示</small></div><div class="world107-grid">${rows.map(regionCard).join('')}</div><button class="world107-passport" onclick="setView('passport')">📘 読了の記録・スタンプは文学パスポートへ</button>`;
+ }
+ renderWorld=render;window.renderWorld=render;
+ const small=document.querySelector('.title small');if(small)small.textContent='Ver.10.7';document.title='文学RPG Ver.10.7 World Mapリファイン';
+ window.literatureRpgV107={version:VERSION,feature:'World Mapリファイン',newPages:0,newStorageKeys:0,compatibleFrom:'10.6.1'};
+ console.info('[文学RPG Ver.10.7 World Mapリファイン]',window.literatureRpgV107);
+})();
+</script>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
