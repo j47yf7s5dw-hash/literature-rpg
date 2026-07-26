@@ -4826,8 +4826,100 @@ window.literatureRpgV1232={renderRoutes:renderRoutes1232};
 })();
 </script>
 
-<script id="ver1233-hotfix-route-and-catalog">
-window.literatureRpgV1233={version:'12.3.3',routeEntryButtonFixed:true,catalogDirectionFixed:true};
+<script id="ver1234-route-and-catalog-final-fix">
+(function(){
+'use strict';
+if(window.literatureRpgV1234)return;
+
+/*
+ * 作品図鑑の最終描画をここで一本化する。
+ * 旧Ver.12.2.3のラッパーは図鑑番号を常に昇順へ戻していたため、
+ * それより後でグローバル描画関数そのものを置き換える。
+ */
+let catalogRenderGeneration1234=0;
+const CATALOG_PAGE_SIZE_1234=80;
+function renderCatalogFinal1234(list){
+  const host=document.getElementById('bookList');
+  if(!host)return;
+  const generation=++catalogRenderGeneration1234;
+  const rows=Array.isArray(list)?list.slice():[];
+  let shown=Math.min(CATALOG_PAGE_SIZE_1234,rows.length);
+  host.replaceChildren();
+  function append(start,end){
+    if(generation!==catalogRenderGeneration1234||!host.isConnected)return;
+    let html='';
+    for(let i=start;i<end;i++)html+=bookHTML(rows[i]);
+    host.insertAdjacentHTML('beforeend',html);
+  }
+  function addMore(){
+    host.querySelector('.catalog726-more')?.remove();
+    if(shown>=rows.length)return;
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='catalog726-more';
+    btn.innerHTML=`さらに表示<small>残り ${rows.length-shown} 作品</small>`;
+    btn.onclick=()=>{const start=shown;shown=Math.min(shown+CATALOG_PAGE_SIZE_1234,rows.length);append(start,shown);addMore();};
+    host.appendChild(btn);
+  }
+  requestAnimationFrame(()=>{append(0,shown);addMore();});
+}
+window.renderBookListChunked=renderCatalogFinal1234;
+try{renderBookListChunked=renderCatalogFinal1234}catch(_e){}
+
+// インライン onchange から必ずこの関数へ来るよう、最終版を再定義する。
+window.setCatalogDirection725=function(value){
+  const direction=value==='desc'?'desc':'asc';
+  const dir=document.getElementById('sortDirection725');
+  if(dir)dir.value=direction;
+  // Ver.12.3.1 の filterBooks はDOMの値を読み、比較関数へ方向を反映する。
+  if(typeof window.filterBooks==='function')window.filterBooks();
+  requestAnimationFrame(()=>document.getElementById('bookList')?.scrollIntoView({block:'start',behavior:'auto'}));
+};
+
+// 再描画でselectが作り直されても確実に反応させる。
+document.addEventListener('change',function(ev){
+  const target=ev.target;
+  if(target&&target.id==='sortDirection725'){
+    ev.stopImmediatePropagation();
+    window.setCatalogDirection725(target.value);
+  }
+},true);
+
+/* 文学ルート作品ボタン：イベント委譲で描画のたびに確実に有効化する。 */
+window.openRouteBook1234=function(no){
+  const n=Number(no);
+  const book=(window.ALL_BOOKS||[]).find(b=>Number(b.no)===n);
+  if(!book){if(typeof window.toast==='function')window.toast('作品を開けませんでした');return false;}
+  const routes=document.getElementById('routesView');
+  if(routes)routes.classList.add('hidden');
+  if(typeof window.openDetail==='function'){
+    window.openDetail(book.no);
+    return true;
+  }
+  return false;
+};
+document.addEventListener('click',function(ev){
+  const btn=ev.target.closest?.('[data-route-book],[data-route-first]');
+  if(!btn)return;
+  ev.preventDefault();ev.stopImmediatePropagation();
+  const no=btn.dataset.routeBook||btn.dataset.routeFirst;
+  window.openRouteBook1234(no);
+},true);
+
+// 既に描画済みのボタンにも、JS無効化競合を避けるため直接onclickを付ける。
+function bindRouteButtons1234(){
+  document.querySelectorAll('[data-route-book],[data-route-first]').forEach(btn=>{
+    btn.type='button';
+    btn.onclick=function(ev){ev?.preventDefault();return window.openRouteBook1234(this.dataset.routeBook||this.dataset.routeFirst);};
+  });
+}
+const routeObserver1234=new MutationObserver(bindRouteButtons1234);
+routeObserver1234.observe(document.body,{childList:true,subtree:true});
+bindRouteButtons1234();
+
+document.title='文学RPG Ver.12.3.4';
+setTimeout(()=>{const label=document.querySelector('.title small');if(label)label.textContent='Ver.12.3.4';},0);
+window.literatureRpgV1234={version:'12.3.4',routeButtons:'delegated-and-direct',catalogDirection:'final-renderer-replaced'};
+})();
 </script>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
