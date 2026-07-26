@@ -4053,5 +4053,91 @@ console.info('[文学RPG Ver.10.6.1] EXナビを再接続しました');
 })();
 </script>
 
+
+<style id="v1081-boss-compact-hp-style">
+/* Ver.10.8.1 — compact boss list and data-driven HP */
+#bossesView .boss82-hero{padding:12px!important;margin-bottom:8px}
+#bossesView .boss82-hero h2{margin:0 0 4px;font-size:18px}
+#bossesView .boss82-hero>p{margin:3px 0 7px;line-height:1.5}
+#bossesView .boss82-summary{margin-top:7px;gap:6px}
+#bossesView .boss82-summary>div{padding:7px 5px;border-radius:10px;font-size:10px}
+#bossesView .boss82-summary b{font-size:15px;margin-top:1px}
+#bossesView .b108-banner{margin-bottom:4px}
+#bossesView .b108-guide{display:none}
+#bossesView .boss82-grid{gap:8px}
+#bossesView .boss82-card{padding:10px;border-radius:14px}
+#bossesView .boss82-card.ready,#bossesView .boss82-card.defeated,#bossesView .boss82-card.locked{border-left-width:4px}
+#bossesView .boss82-head{gap:8px;align-items:center}
+#bossesView .boss82-icon{width:38px;height:38px;border-radius:11px;font-size:20px}
+#bossesView .boss82-head h3{font-size:15px;margin:0 0 2px}
+#bossesView .boss82-status{margin-top:5px;padding:3px 7px;font-size:9px}
+#bossesView .b108-card-badge{margin:6px 0 3px}
+#bossesView .b108-rank{padding:3px 6px;font-size:9px}
+#bossesView .boss82-progress{margin:6px 0 3px;height:7px}
+#bossesView .boss82-stats{margin-top:6px;gap:4px}
+#bossesView .boss82-stat{padding:5px 3px;border-radius:8px;font-size:9px}
+#bossesView .boss82-stat b{font-size:12px}
+#bossesView .boss82-tags{display:none}
+#bossesView .b108-attack-preview{display:none}
+#bossesView .b108-weakness{margin:6px 0;padding:6px 8px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#bossesView .b108-weakness b{display:inline;margin-right:5px}
+#bossesView .boss85-next{margin:5px 0 0;padding:6px 8px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#bossesView .boss82-actions{margin-top:7px;gap:6px}
+#bossesView .boss82-actions button{min-height:38px;font-size:11px;padding:7px}
+#modal .b108-stage-power span.done{background:#e3f0e7;color:#27543b;border-color:#bdd8c5}
+#modal .b108-stage-power span.current{box-shadow:inset 0 0 0 2px #3b3140}
+@media(min-width:700px){#bossesView .boss82-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){
+ #bossesView .boss82-hero>p{font-size:11px}
+ #bossesView .boss82-card{padding:9px}
+ #bossesView .b108-weakness,#bossesView .boss85-next{-webkit-line-clamp:1}
+ #bossesView .boss82-actions{grid-template-columns:1fr 1fr!important}
+ #bossesView .boss82-actions button{min-height:36px}
+}
+</style>
+<script id="v1081-boss-compact-hp-script">
+(function(){
+ 'use strict';
+ if(window.literatureRpgV1081)return;
+ const VERSION='10.8.1';
+ function numbers(s){return (String(s||'').match(/\d+/g)||[]).map(Number)}
+ function currentBoss(){
+  const name=(document.querySelector('#modal .boss82-head h2')?.textContent||'').trim();
+  return (window.THEME_BOSS_BATTLES||[]).find(b=>b.name===name)||null;
+ }
+ function bossRecord(b){return (window.state?.themeBossBattles&&window.state.themeBossBattles[b.id])||{}}
+ function actualBattleState(b){
+  const kpis=[...document.querySelectorAll('#modal .boss82-kpis>div')];
+  const readNums=numbers(kpis.find(x=>x.textContent.includes('読了作品'))?.textContent);
+  const minNums=numbers(kpis.find(x=>x.textContent.includes('最低挑戦冊数'))?.textContent);
+  const read=readNums[0]||0,min=Math.max(1,minNums[0]||b.min||1),p=bossRecord(b);
+  const hasAnswer=!!String(p.finalAnswer||'').trim(),defeated=!!p.defeatedAt;
+  const readingDamage=Math.round(Math.min(read,min)/min*70);
+  const answerDamage=hasAnswer?20:0;
+  const finishDamage=defeated?10:0;
+  return{read,min,hasAnswer,defeated,hp:Math.max(0,100-readingDamage-answerDamage-finishDamage)};
+ }
+ function refreshBattlePanel(){
+  const panel=document.querySelector('#modal .b108-battle-panel');
+  const b=currentBoss();if(!panel||!b)return;
+  const s=actualBattleState(b),bar=panel.querySelector('.b108-hp i'),label=panel.querySelector('.b108-hp-label strong');
+  if(bar)bar.style.width=s.hp+'%';if(label)label.textContent='HP '+s.hp+'%';
+  panel.classList.toggle('b108-victory',s.defeated);
+  const log=panel.querySelector('.b108-command-log');
+  if(log)log.innerHTML=s.defeated?'撃破完了。読了・最終回答・撃破記録がそろい、HPを0にした。':s.hasAnswer?`最終回答を保存済み。残りHPは <strong>${s.hp}%</strong>。撃破記録を確定すると決着する。`:s.read?`読了した中核作品 <strong>${s.read}冊</strong> がダメージになっている。タブ移動ではHPは変化しない。`:'まだ作品を読了していないため、Boss HPは100%のまま。';
+  const stages=[s.read>=1,s.read>=s.min,s.hasAnswer,s.defeated];
+  document.querySelectorAll('#modal .b108-stage-power span').forEach((el,i)=>{el.classList.toggle('done',!!stages[i]);});
+ }
+ const observer=new MutationObserver(()=>requestAnimationFrame(refreshBattlePanel));
+ observer.observe(document.body,{childList:true,subtree:true});
+ document.addEventListener('click',e=>{if(e.target.closest('[data-b82-stage],#b82SaveAnswer,#b82DefeatBtn,[data-b82-open]'))setTimeout(refreshBattlePanel,40)});
+ setTimeout(refreshBattlePanel,80);
+ const small=document.querySelector('.title small');if(small)small.textContent='Ver.10.8.1';
+ document.title='文学RPG Ver.10.8.1 ボス戦コンパクト化・HP修正';
+ window.literatureRpgV1081={version:VERSION,compactBossList:true,hpSource:'read-record-answer-defeat',tabNavigationAffectsHp:false,storageCompatible:true,newStorageKeys:0};
+ console.info('[文学RPG Ver.10.8.1] ボス一覧を圧縮し、HPを読了・回答・撃破記録のみで計算。',window.literatureRpgV1081);
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
