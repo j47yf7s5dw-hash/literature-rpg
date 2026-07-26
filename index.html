@@ -371,7 +371,7 @@ img,svg,canvas,video{max-width:100%;height:auto}
  .data-grid{grid-template-columns:1fr!important}
 }
 </style>
-</head><body><header><div class="title">📚 文学RPG <small>Ver.8.0</small></div><div class="sub">500冊の本編＋EX612作品を巡る、全1112作品の文学RPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
+</head><body><header><div class="title">📚 文学RPG <small>Ver.8.1</small></div><div class="sub">500冊の本編＋EX612作品を巡る、全1112作品の文学RPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
 <button class="active" data-view="home">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="bosses">ボス戦</button><button data-view="backup">保存</button>
 </nav></header><main>
 <section id="homeView"></section><section class="hidden" id="phasesView"></section><section class="hidden" id="exView"></section><section class="hidden" id="booksView"></section><section class="hidden" id="authorsView"></section><section class="hidden" id="timelineView"></section>
@@ -2868,5 +2868,71 @@ nav button,.mini-nav-grid button,.v727-role-strip button,.record-actions button,
 })();
 </script>
 <!-- Ver.8.0 完成版：Ver.7.32の完成度監査を継承。機能・作品データ・保存形式の互換性を維持した正式完成版。 -->
+
+<style id="v810-author-style">
+/* Ver.8.1 — Author Encyclopedia: Core 50 */
+.author-core-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;background:#4c2f24;color:#fff6e9;font-size:10px;font-weight:800;white-space:nowrap}
+.author-rank{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:12px}
+.author-rank>div{background:rgba(255,255,255,.78);border:1px solid rgba(91,58,43,.14);border-radius:12px;padding:9px 7px;text-align:center;font-size:11px}
+.author-rank b{display:block;font-size:13px;margin-top:3px}.author-rank .active{background:#4c2f24;color:#fff6e9}
+.author-deep-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.author-deep-card{background:var(--panel,#fff);border:1px solid rgba(91,58,43,.14);border-radius:15px;padding:14px}.author-deep-card h4{margin:0 0 8px;font-size:14px}.author-deep-card p{margin:0;line-height:1.85;font-size:13px}
+.author-compare{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}.author-compare-book{border:1px solid rgba(91,58,43,.16);border-radius:13px;padding:12px;background:rgba(255,255,255,.7)}.author-compare-book b{display:block;margin-bottom:6px}.author-compare-vs{display:flex;align-items:center;font-weight:900;opacity:.55}
+.author-question81{font-size:17px;line-height:1.85;font-weight:700;padding:15px;border-left:4px solid #8a5a44;background:rgba(138,90,68,.08);border-radius:0 12px 12px 0}
+.author-core-filter{display:flex;gap:7px;margin:10px 0 2px}.author-core-filter button{flex:1}.author-core-filter button.active{background:#4c2f24;color:white}
+@media(max-width:560px){.author-deep-grid{grid-template-columns:1fr}.author-rank{grid-template-columns:1fr 1fr}.author-compare{grid-template-columns:1fr}.author-compare-vs{justify-content:center}.author-core-badge{font-size:9px}}
+</style>
+<script id="v810-author-upgrade">
+(function(){
+ if(window.literatureRpgV810)return;
+ const CORE50=[
+ '夏目漱石','森鴎外','樋口一葉','芥川龍之介','谷崎潤一郎','川端康成','太宰治','三島由紀夫','安部公房','大江健三郎','宮沢賢治','江戸川乱歩','松本清張','小川洋子','吉本ばなな','村上春樹','村田沙耶香','川上未映子','遠藤周作','井伏鱒二','志賀直哉','林芙美子','小林多喜二','中上健次','多和田葉子',
+ 'フランツ・カフカ','フョードル・ドストエフスキー','レフ・トルストイ','アントン・チェーホフ','アーネスト・ヘミングウェイ','ヴァージニア・ウルフ','ジェイムズ・ジョイス','ウィリアム・フォークナー','ジョージ・オーウェル','アルベール・カミュ','ガブリエル・ガルシア＝マルケス','ホルヘ・ルイス・ボルヘス','カズオ・イシグロ','トニ・モリスン','マーガレット・アトウッド','アーシュラ・K・ル＝グウィン','ウィリアム・シェイクスピア','チャールズ・ディケンズ','ギュスターヴ・フローベール','マルセル・プルースト','トーマス・マン','ウラジーミル・ナボコフ','イタロ・カルヴィーノ','魯迅','スティーヴン・キング'];
+ const CORE=new Set(CORE50);
+ const originalProfile=window.authorProfile;
+ function deepProfile(a){
+  const p=originalProfile(a), books=authorSortedBooks(a), first=books[0], second=books[1]||first, last=books[books.length-1]||first;
+  const style=(p.style||[]).join('・'), themes=(p.themes||[]).join('・');
+  return {...p,core:CORE.has(a.name),
+   life:p.life||`${a.name}の作品は、作者の生きた${dominant(a.eras)}という時代と切り離せない。伝記的事実を答えとして作品へ当てはめるのではなく、時代の圧力や個人的経験が、語り方・人物像・主題へどう変換されたかを見るとよい。`,
+   evolution:p.evolution||`入口では${first?'『'+first.title+'』':''}の分かりやすい魅力をつかみ、${second&&second!==first?'『'+second.title+'』で別の語り口を比較し、':''}${last&&last!==first?'『'+last.title+'』まで進んで':''}、${style||'作風'}が作品ごとにどう変奏されるかを確かめたい。`,
+   focus:p.focus||`筋だけでなく、${(p.style||[])[0]||'文体'}が人物との距離をどう作るか、そして「${(p.themes||[])[0]||'個人と社会'}」が結末までにどう変化するかに注目する。`,
+   question:p.question||`${a.name}は、登場人物を救おうとしているのか。それとも、救いの難しさそのものを描こうとしているのか。`,
+   compare:p.compare||[first,second].filter(Boolean)
+  };
+ }
+ window.authorProfile=deepProfile;
+ function mastery(read,total){if(!read)return ['未遭遇','まず1冊'];if(read===total)return ['作家マスター','登録作読破'];if(read>=5)return ['研究者','5冊以上'];if(read>=3)return ['理解者','3冊以上'];return ['邂逅','1冊読了']}
+ function rankHTML(read,total){let levels=[['邂逅',1],['理解者',3],['研究者',5],['マスター',total]],now=mastery(read,total)[0];return `<div class="author-rank">${levels.map(([n,k])=>`<div class="${read>=Math.min(k,total)?'active':''}">${n}<b>${n==='マスター'?total:k}冊</b></div>`).join('')}</div><p class="meta" style="margin-top:7px">現在：${now}</p>`}
+ function comparisonHTML(p){let arr=(p.compare||[]).filter(Boolean).slice(0,2);if(arr.length<2)return '';return `<div class="panel"><h3 class="section-title">⚖️ 代表作を比べる</h3><div class="author-compare"><div class="author-compare-book"><b>『${esc(arr[0].title)}』</b><span class="meta">難易度${arr[0].difficulty}・${esc(arr[0].length)}</span><p>${esc(arr[0].hook||arr[0].why||'入口として作風をつかむ作品。')}</p><button class="open-btn" onclick="openDetail(${arr[0].no})">作品詳細</button></div><div class="author-compare-vs">VS</div><div class="author-compare-book"><b>『${esc(arr[1].title)}』</b><span class="meta">難易度${arr[1].difficulty}・${esc(arr[1].length)}</span><p>${esc(arr[1].hook||arr[1].why||'別の角度から作家像を深める作品。')}</p><button class="open-btn" onclick="openDetail(${arr[1].no})">作品詳細</button></div></div></div>`}
+ let coreOnly=false;
+ const oldRender=window.renderAuthors;
+ window.setAuthorCoreFilter=function(v){coreOnly=!!v;selectedAuthor='';renderAuthors()};
+ window.renderAuthors=function(){
+  let groups=authorGroups();
+  if(selectedAuthor){
+   let a=groups.find(x=>x.name===selectedAuthor);if(!a){selectedAuthor='';return renderAuthors()}
+   let read=authorRead(a),books=authorSortedBooks(a),next=authorNextBook(a),avg=(a.books.reduce((n,b)=>n+Number(b.difficulty||0),0)/a.books.length).toFixed(1),p=authorProfile(a),related=existingRelated(p,groups),m=mastery(read,a.books.length);
+   authorsView.innerHTML=`<button class="library-back" onclick="closeAuthor()">← 作家一覧へ</button><div class="panel author-hero"><div class="meta" style="color:#ead8ca">作家図鑑 ${p.core?'・重点攻略作家':'・詳細解説'}</div><h2>${esc(a.name)} ${p.core?'<span class="author-core-badge">CORE 50</span>':''}</h2><div>${esc(dominant(a.regions))}・${esc(dominant(a.eras))}</div><p class="author-lead">${esc(p.tag)}</p><div class="xpbar"><i style="width:${pct(read,a.books.length)}%"></i></div><b>${read} / ${a.books.length}作品 読了</b> <span class="master-badge">${esc(m[0])}</span>${rankHTML(read,a.books.length)}</div>
+   <div class="profile-grid"><div class="stat-card">登録作品<b>${a.books.length}作</b></div><div class="stat-card">制覇率<b>${pct(read,a.books.length)}%</b></div><div class="stat-card">平均難易度<b>${avg}</b></div><div class="stat-card">主要ジャンル<b style="font-size:14px">${esc(dominant(a.genres))}</b></div></div>
+   <div class="panel" style="margin-top:12px"><h3 class="section-title">👤 どんな作家？</h3><p class="author-summary">${esc(p.overview)}</p></div>
+   <div class="author-knowledge-grid"><div class="author-knowledge"><h4>✒️ 作風</h4><div class="author-chips">${p.style.map(x=>`<span class="author-chip">${esc(x)}</span>`).join('')}</div></div><div class="author-knowledge"><h4>🔍 主なテーマ</h4><div class="author-chips">${p.themes.map(x=>`<span class="author-chip">${esc(x)}</span>`).join('')}</div></div></div>
+   <div class="author-deep-grid"><div class="author-deep-card"><h4>🧬 生涯と作品の関係</h4><p>${esc(p.life)}</p></div><div class="author-deep-card"><h4>📈 作風の変化と広がり</h4><p>${esc(p.evolution)}</p></div><div class="author-deep-card"><h4>👁 読むときの注目点</h4><p>${esc(p.focus)}</p></div><div class="author-deep-card"><h4>🏛 文学史での位置</h4><p>${esc(p.history)}</p></div></div>
+   <div class="panel"><h3 class="section-title">🪜 おすすめ読書ルート</h3><p class="meta">入口から、作家の核心と広がりへ進む順番。</p><div class="author-route">${authorReadingRoute(a,p)}</div></div>${comparisonHTML(p)}
+   <div class="panel"><h3 class="section-title">❓ 作家を読み終えて考えたい問い</h3><div class="author-question81">${esc(p.question)}</div></div>
+   <div class="panel author-next"><h3 class="section-title">🧭 次に読むなら</h3><p class="meta">${entry(next.no).got?'登録作品をすべて読了済み。再読の入口としておすすめ。':'未読作品から、作家攻略の次の一冊を選択。'}</p>${miniCard(next)}</div>
+   ${related.length?`<div class="panel"><h3 class="section-title">🔗 関連作家</h3><div class="author-related">${related.map(r=>`<button onclick="openAuthor(decodeURIComponent('${encodeURIComponent(r.name)}'))">${esc(r.name)}</button>`).join('')}</div></div>`:''}
+   <div class="panel"><h3 class="section-title">📚 登録作品</h3><div class="author-books">${books.map(b=>`<div class="author-book"><span>${entry(b.no).got?'✅':'📕'}</span><div><b>『${esc(b.title)}』</b><div class="meta">${b.no<=500?'本編 No.'+b.no:exBookLabel(b)}・${b.no<=500?'Phase '+b.phase:'EX'}・${esc(b.era)}・難易度${b.difficulty}</div></div><button class="open-btn" onclick="openDetail(${b.no})">詳細</button></div>`).join('')}</div></div>`;return;
+  }
+  let q=authorQuery.toLowerCase(),sort=authorSortMode,base=coreOnly?groups.filter(a=>CORE.has(a.name)):groups,filtered=filterAuthors(base,q,sort),curated=groups.filter(a=>AUTHOR_PROFILES[a.name]).length,readAuthors=groups.filter(a=>authorRead(a)>0).length,mastered=groups.filter(a=>authorRead(a)===a.books.length).length;
+  authorsView.innerHTML=`<div class="panel"><h2 class="section-title">✍️ 作家図鑑</h2><p class="meta">主要50作家を重点攻略対象として、作風・文学史・代表作比較・読む順番まで深く案内。</p><div class="encyclopedia-meter"><div>重点攻略<b>${groups.filter(a=>CORE.has(a.name)).length}名</b></div><div>出会った作家<b>${readAuthors}名</b></div><div>作家制覇<b>${mastered}名</b></div></div><div class="author-core-filter"><button class="${!coreOnly?'active':''}" onclick="setAuthorCoreFilter(false)">全作家</button><button class="${coreOnly?'active':''}" onclick="setAuthorCoreFilter(true)">CORE 50</button></div><div class="author-toolbar" style="margin-top:10px"><input id="authorSearch" class="search" placeholder="作家名・地域・時代・ジャンルで検索" value="${esc(authorQuery)}" autocomplete="off" enterkeyhint="search"><select id="authorSort" class="filter"><option value="name" ${sort==='name'?'selected':''}>名前順</option><option value="count" ${sort==='count'?'selected':''}>登録作品数順</option><option value="progress" ${sort==='progress'?'selected':''}>制覇率順</option></select></div><div id="authorCount" class="meta">${filtered.length}名を表示／全${groups.length}名</div></div><div id="authorGrid" class="author-grid">${authorCards(filtered)}</div>`;
+  document.querySelectorAll('#authorGrid .author-card').forEach((card,i)=>{let a=filtered[i];if(a&&CORE.has(a.name)){let top=card.querySelector('.author-card-top');if(top&&!top.querySelector('.author-core-badge'))top.insertAdjacentHTML('beforeend','<span class="author-core-badge">CORE 50</span>')}});bindAuthorSearch();
+ };
+ window.literatureRpgV810={version:'8.1',coreAuthors:CORE50.length,authorMastery:true,comparison:true,deepGuide:true};
+ if(document.querySelector('.title small'))document.querySelector('.title small').textContent='Ver.8.1';
+ console.info('[文学RPG Ver.8.1 作家図鑑強化]',window.literatureRpgV810);
+})();
+</script>
+<!-- Ver.8.1：主要50作家を重点攻略対象化。作家マスター段階、作風変化、生涯と作品、代表作比較、注目点、読後の問いを追加。 -->
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
