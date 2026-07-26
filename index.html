@@ -5066,3 +5066,80 @@ window.literatureRpgV1235={version:'12.3.5',routeLookup:'lexical-all-books',phas
 <!-- Ver.7.25: removed persistent quest floating button -->
 
 <!-- Ver.12.2.4：作品図鑑・EXパック・作家図鑑の並び替えに昇順／降順を追加。 -->
+
+
+<!-- Ver.12.4.1: ジャンルパック分類整理 -->
+<style id="v1241-genre-pack-style">
+.genre-policy-1241{background:linear-gradient(145deg,#f7f0e6,#eee1cf);border:1px solid #d8c5ad}
+.genre-policy-1241 h3{margin:0 0 7px}.genre-policy-grid-1241{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:11px}
+.genre-policy-grid-1241 div{background:#fff9;border:1px solid #d9c7b1;border-radius:12px;padding:10px}.genre-policy-grid-1241 b{display:block;margin-bottom:3px}.genre-policy-grid-1241 small{line-height:1.55}
+@media(max-width:520px){.genre-policy-grid-1241{grid-template-columns:1fr}}
+</style>
+<script id="v1241-genre-pack-reorganization">
+(()=>{
+ const MAX=15,STAGES=['入門','基礎','発展','深淵'],ROMAN=['','Ⅱ','Ⅲ','Ⅳ','Ⅴ','Ⅵ','Ⅶ','Ⅷ','Ⅸ','Ⅹ'];
+ const baseJourney=p=>String(p.journey||p.name||'').replace(/の旅$/,'').replace(/\s*入門ルート$/,'').replace(/の旅【.*$/,'').trim();
+ const groupFor=name=>{
+   if(['SF','世界SF','ディストピア文学'].includes(name))return 'SF・ディストピア';
+   if(['ミステリー','世界ミステリー'].includes(name))return 'ミステリー';
+   if(['ファンタジー','ホラー','ゴシック文学'].includes(name))return '幻想・怪奇';
+   if(['純文学','私小説'].includes(name))return '日本文学・思想';
+   if(['マジックリアリズム','不条理文学','実存主義文学','ポストモダン文学','古典文学'].includes(name))return '世界文学・潮流';
+   if(['時代小説','歴史小説','神話・叙事詩'].includes(name))return '歴史・社会・神話';
+   if(['青春小説','恋愛小説','児童文学'].includes(name))return '青春・恋愛・児童';
+   if(['戯曲','短編集','エッセイ・随筆'].includes(name))return '形式別';
+   return '国・地域文学';
+ };
+ const groupDefs={
+  'SF・ディストピア':['SF','世界SF','ディストピア文学'],
+  'ミステリー':['ミステリー','世界ミステリー'],
+  '幻想・怪奇':['ファンタジー','ホラー','ゴシック文学'],
+  '日本文学・思想':['純文学','私小説'],
+  '世界文学・潮流':['マジックリアリズム','不条理文学','実存主義文学','ポストモダン文学','古典文学'],
+  '歴史・社会・神話':['時代小説','歴史小説','神話・叙事詩'],
+  '青春・恋愛・児童':['青春小説','恋愛小説','児童文学'],
+  '形式別':['戯曲','短編集','エッセイ・随筆'],
+  '国・地域文学':['ロシア文学','フランス文学','イギリス文学','ドイツ文学','アメリカ文学','ラテンアメリカ文学','中国文学','韓国文学','北欧文学','アフリカ文学','南アジア文学','東南アジア文学','中東・アラブ文学','東欧文学','カリブ文学','越境・ポストコロニアル文学']
+ };
+ Object.keys(EX_GENRE_GROUPS).forEach(k=>delete EX_GENRE_GROUPS[k]);
+ Object.entries(groupDefs).forEach(([k,v])=>EX_GENRE_GROUPS[k]=v);
+ const nonGenre=EX_WORLD_PACKS.filter(p=>p.type!=='ジャンルパック');
+ const genre=EX_WORLD_PACKS.filter(p=>p.type==='ジャンルパック');
+ const merged=new Map();
+ genre.forEach(p=>{
+   const j=baseJourney(p),stage=STAGES.includes(p.stage)?p.stage:'入門',key=j+'|'+stage;
+   if(!merged.has(key))merged.set(key,{...p,group:groupFor(j),journey:j+'の旅',stage,stageOrder:STAGES.indexOf(stage),nos:[]});
+   const x=merged.get(key); x.nos.push(...(p.nos||[]));
+   x.group=groupFor(j); x.journey=j+'の旅';
+   x.desc=({
+    '世界文学・潮流':'国境を越えて広がった文学潮流・思想を、作品の技法と問いからたどる。',
+    '国・地域文学':'特定の国・地域の歴史、文化、言語、植民地経験や社会背景を深掘りする。',
+    '日本文学・思想':'日本文学における純文学・私小説の表現と思想をたどる。'
+   }[x.group]||String(p.desc||''));
+ });
+ const rebuilt=[];
+ merged.forEach((p,key)=>{
+   const nos=[...new Set(p.nos)].filter(no=>ALL_BOOKS.some(b=>b.no===no));
+   for(let i=0;i<Math.max(1,nos.length);i+=MAX){
+     const part=Math.floor(i/MAX),chunk=nos.slice(i,i+MAX),mark=ROMAN[part]||String(part+1);
+     const suffix=p.stage==='入門'?'入門編':p.stage;
+     rebuilt.push({...p,id:'g1241-'+encodeURIComponent(baseJourney(p))+'-'+p.stage+(part?'-'+(part+1):''),shortName:suffix+(part?' '+mark:''),name:baseJourney(p)+'の旅【'+suffix+(part?' '+mark:'')+'】',nos:chunk});
+     if(!nos.length)break;
+   }
+ });
+ EX_WORLD_PACKS.splice(0,EX_WORLD_PACKS.length,...rebuilt,...nonGenre);
+ const assigned=new Set(EX_WORLD_PACKS.flatMap(p=>p.nos||[]));
+ const unassigned=EX_BOOKS.filter(b=>!assigned.has(b.no));
+ const over=EX_WORLD_PACKS.filter(p=>(p.nos||[]).length>MAX);
+ const duplicateStage=[...merged.entries()].filter(([k,p])=>new Set(p.nos).size!==p.nos.length).length;
+ const oldRenderEx=renderEx;
+ renderEx=function(){
+   oldRenderEx();
+   const head=exView.querySelector('.ex-world-head');
+   if(head&&!exView.querySelector('.genre-policy-1241'))head.insertAdjacentHTML('afterend',`<div class="panel genre-policy-1241"><h3>🧭 ジャンルパックの分類基準</h3><div class="meta">4段階制と1パック15作上限は維持。作品は複数の切り口に所属できます。</div><div class="genre-policy-grid-1241"><div><b>🌐 世界文学・潮流</b><small>不条理、実存主義、ポストモダン、マジックリアリズムなど、国境を越えて共有された文学運動・思想。</small></div><div><b>🗺 国・地域文学</b><small>アフリカ、南アジア、ロシア、フランスなど、土地固有の歴史・文化・社会背景を深掘りする分類。</small></div></div></div>`);
+ };
+ document.title='文学RPG Ver.12.4.1';
+ setTimeout(()=>{const label=document.querySelector('.title small');if(label)label.textContent='Ver.12.4.1';const m=document.createElement('div');m.id='v1241-audit';m.hidden=true;m.dataset.unassigned=String(unassigned.length);m.dataset.overLimit=String(over.length);m.dataset.genrePacks=String(rebuilt.length);m.dataset.mergedDuplicates=String(duplicateStage);document.body.appendChild(m);},0);
+ window.literatureRpgV1241={version:'12.4.1',genreGroups:Object.keys(groupDefs),genrePacks:rebuilt.length,unassigned:unassigned.length,overLimit:over.length,mergedDuplicateStages:duplicateStage};
+})();
+</script>
