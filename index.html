@@ -3827,5 +3827,90 @@ console.info('[文学RPG Ver.10.5]',window.literatureRpgV105);
 })();
 </script>
 
+<!-- Ver.10.6：EXジャンル集中精査 第1弾（ラテンアメリカ文学30作） -->
+<style id="v106-style">
+.v106-panel{border:1px solid var(--line);border-radius:15px;padding:13px;margin-top:12px;background:var(--paper)}.v106-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:11px 0}.v106-stat{padding:10px 7px;border:1px solid var(--line);border-radius:12px;background:#fff;text-align:center}.v106-stat b{display:block;font-size:20px}.v106-stat span{font-size:11px;color:var(--muted)}.v106-note{padding:10px;border-radius:11px;background:#edf5ef;border:1px solid #bfd4c5;font-size:12px;line-height:1.65}.v106-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.v106-list span{font-size:11px;background:#f0e5d8;border-radius:999px;padding:5px 8px}@media(max-width:430px){.v106-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script id="v106-script">
+(function(){
+'use strict';
+const VERSION106='10.6';
+const PATCHES106={"1376":{"appeal":"奇跡や怪異の華やかさより、異郷で老い、病み、制度や言葉に阻まれる人々の孤独が深く残る。十二編を貫くのは、故郷から離れても消えない記憶と、ヨーロッパの日常へ入り込むラテンアメリカ的想像力の緊張である。"},"1377":{"appeal":"数ページの断章に、無限、時間、夢、鏡、作者という問題が圧縮されている。形式は小さいのに、一つの像が別の文学作品や記憶へ連鎖し、読者が自分で迷宮を組み立てる感覚を味わえる。"},"1378":{"appeal":"コロンブスの航海を荘厳な英雄譚ではなく、神話、欲望、誤読、猥雑な笑いが渦巻く巨大な茶番として描き直す。歴史的事実を意図的に歪める文体が、征服者の記録そのものに潜む暴力を露出させる。"},"1379":{"appeal":"死を求める老作家、革命の土地を背負う将軍、過去から逃れたい女性の三角関係が、米墨の歴史的緊張を個人の感情へ落とし込む。国境を越えることが自由ではなく、別の記憶へ踏み込む行為だと分かる。"},"1380":{"appeal":"屋敷の内部で子どもが大人の支配を模倣し、語り手まで物語へ侵入するため、現実と演劇の境界が崩れていく。家族寓話の異様さを通して、階級社会や独裁が自らを正当化する仕組みを悪夢のように体験させる。"},"1381":{"appeal":"波乱に富む成長物語の読みやすさと、独裁や貧困を生き抜く女性の自己形成が両立している。エバが語る物語は現実逃避ではなく、周囲の人々へ居場所と別の未来を渡す実践として働き、脇役にも強い生命が宿る。"},"1383":{"appeal":"怪異を説明せず、日常の規則がほんの少しずれた瞬間だけを鋭く捉える。子どもの遊び、身体への視線、家の内部の気配が、結末で一つの答えに閉じず、読み終えた後の現実の見え方そのものを変える。"},"1384":{"appeal":"音楽、反復、視点のずれが、人物自身も把握できない過去を徐々に浮かび上がらせる。物語の真相を説明するのではなく、読者の記憶と理解を組み替えることで、暴力が現在へ戻る感覚を形式そのものに刻む。"},"1385":{"appeal":"直線的な筋を外れ、旅、記憶、夢、別の可能性が互いを呼び込む迷宮的な読書体験が中心となる。断片をどう接続するかで“彼方”の形が変わり、読者自身が移動の主体にされるコルタサルらしい実験性が際立つ。"},"1387":{"appeal":"貧民の共同体、政府軍、新聞記者、政治家、革命家を多数の視点から描き、誰も全体像を持てないまま戦争が拡大する恐怖を示す。巨大な群像と戦闘の迫力が、誤解や言葉の断絶こそ大量暴力の原因になると伝える。"},"1388":{"appeal":"独裁を官邸や軍隊の問題だけでなく、父娘関係、忠誠競争、性的暴力、沈黙へ浸透する権力として描く。現在と暗殺前夜を往復する構成により、独裁者の死後にも被害者の身体へ残る支配が重く迫る。"},"1389":{"appeal":"川、石、音楽が生命を持つケチュア的感覚と、寄宿学校や町を支配する人種・階級秩序が同じ視野に置かれる。政治的現実を理念で説明せず、二つの言語世界を生きる少年の感覚として伝える詩的な力がある。"},"1390":{"appeal":"音、色、反復の強い散文によって、物語を読むより口承の神話を聞くような感覚が生まれる。マヤの神々と植民地後のキリスト教世界が重なり、文化の混成が豊かさだけでなく征服の傷も抱えることを示す。"},"1391":{"appeal":"ヨーロッパ文化を愛しながら自国民を暴力で支配する独裁者の矛盾を、華麗な長文と音楽的反復で風刺する。複数の実在独裁者を合成した人物像により、“文明化”を掲げる権力の野蛮さが鮮明になる。"},"1392":{"appeal":"会話、手紙、噂、独白だけを並べ、説明役なしに人物関係と権力の偏りを浮かび上がらせる。映画や流行歌から借りた言葉が、個人の恋愛を支えると同時に、階級や性の規範へ人を閉じ込める過程が見える。"},"1393":{"appeal":"ほぼ二人の会話と語られる映画だけで、敵対、警戒、親密さ、裏切りの可能性が繊細に変化する。映画という逃避が現実を忘れさせるだけでなく、政治的英雄像やジェンダー規範をほどく力になる点が鮮やかである。"},"1394":{"appeal":"会話、日記、作文、手紙など複数の形式を使い、語り手を置かずに少年と地方都市の全体像を立ち上げる。銀幕の台詞が感情を表す言葉になる一方、現実の階級や性規範を覆い隠す危うさも見えてくる。"},"1395":{"appeal":"殺人を告白した男の論理を内側から追わせるため、読者も彼の疑念と推理へ一度は巻き込まれる。理解されたいという切実な願いが、相手の沈黙や自由を許さない監視と支配へ変わる過程が短い作品に凝縮されている。"},"1396":{"appeal":"恋愛小説、家族史、政治小説、ゴシック幻想が一冊の内部で衝突し、とりわけ「盲人についての報告」が読者を妄想の深部へ引き込む。個人の狂気と国家の歴史的分裂が互いを映し合う巨大な構成が圧倒的である。"},"1397":{"appeal":"簡潔な日記形式で、退屈だった文章の調子が恋によって少しずつ変わるため、主人公の幸福が説明以上に伝わる。平凡な会社員の日常を扱いながら、限られた幸福が人生全体へ与える意味を切実に残す。"},"1398":{"appeal":"都市の日常を聖書や古典神話の象徴へ接続し、恋愛、知識、救済をめぐる精神的遍歴として描く。哲学と神学の重さにユーモアが混じり、過去を振り返る行為が自己理解にも停滞にもなる二面性を示す。"},"1399":{"appeal":"鉱物、樹木、海、山脈まで歴史の証人として立ち上げる比喩とリズムが圧倒的である。個人の抒情を大陸規模の叙事詩へ広げ、自然賛歌、先住民文明、労働者の闘争、反植民地主義を一つの声へ束ねる。"},"1408":{"appeal":"幽霊や呪いを社会的暴力の単純な比喩へ回収せず、貧困、失踪、忘れられた死と同じ現実の層に置く。都市のありふれた場所が突然不穏に変わり、誰の身体や記憶が社会から見えなくされているかを突きつける。"},"1409":{"synopsis":"寝煙草、古いホテル、郊外の家、観光地といった日常的な場所に、説明しきれない危険が潜む短編集。登場人物たちは不安の徴候を感じながら、それを無視したり、逆に魅了されて境界の向こうへ近づいたりする。幽霊や呪いだけでなく、貧困、家族の傷、子どもへの暴力、独裁政権が残した記憶が恐怖の背景にあり、現実と怪異の区別は最後まで揺らぐ。安全に見える生活の内部から、すでに起きていた暴力が姿を現す。","appeal":"短編ごとに異なる怪異を描きながら、家庭や都市の底に残る暴力を共通の冷気として感じさせる。説明を絞った結末が不安を閉じず、読者の日常へ恐怖を持ち帰らせる構成が鋭い。"},"1410":{"appeal":"フェミニズム、都市の貧困、独裁の記憶、怪談を一つの強烈なイメージへ結びつける。怪異より社会の現実の方が恐ろしいという単純な逆転にせず、両者が互いを増幅し、抑圧された身体の怒りを忘れがたい像へ変える。"},"1411":{"synopsis":"七つの短編に登場する家々は、安心できる居場所であるより、家族の距離や沈黙を増幅する奇妙な容器として描かれる。母と娘、夫婦、きょうだい、隣人は、ありふれた会話のなかですれ違い、部屋の配置や家具の存在が心の偏りを露出させる。ある人物は空の家へ執着し、ある家族は他人の物を持ち帰り、別の夫婦は説明できない行動へ傾いていく。大事件が起こらなくても、何かが決定的に壊れている感覚が少しずつ広がり、家庭という制度の不安定さが見えてくる。","appeal":"説明を削った短い文と、人物の位置を狂わせる空間設計によって、家庭内部の不安を鮮明にする。家そのものが登場人物の心理を映すだけでなく、隠してきた亀裂を増幅する装置として働く。"},"1412":{"synopsis":"病院のベッドに横たわるアマンダは、少年ダビッドの問いに促され、娘ニナと田舎を訪れた数日前を語り直す。母は子どもとの間に、危険を察知して救えるぎりぎりの距離を常に測っていた。隣人カルラは、農薬に汚染された水を飲んだ息子を救うため、土地の女に魂を移す処置を頼んだと話す。やがてニナにも異変が起こり、アマンダの記憶は焦りと混乱で崩れていく。環境汚染、母性の恐怖、超自然的な説明が途切れる対話の中で重なり、何が子どもたちを変えたのか最後まで確定しない。","appeal":"途切れる対話だけで真相へ迫り、母が測り続ける“救出の距離”を読者にも身体的な緊張として感じさせる。農薬汚染という現実と超自然的な語りが分離せず、守りたい愛の限界を息苦しく描く。"},"1413":{"synopsis":"神話的な半人半馬の像、夢、欲望、死の気配が、濃密な言葉のなかで互いに姿を変えていく詩的作品。物語は現実の出来事を直線的に追うより、身体の動き、古代神話、宗教的象徴、官能的なイメージを連鎖させる。ケンタウロスは人間と動物、精神と肉体、秩序と衝動の境界に立ち、語りの中で何度も別の意味を帯びる。読者は筋を理解するというより、像が像を呼び、言葉そのものが世界を増殖させる感覚へ導かれる。意味を一つに固定できないこと自体が作品の運動になる。","appeal":"バロック的な文体と官能的なイメージが、筋の理解より先に読者の感覚へ働きかける。ケンタウロスという混成の身体を中心に、言葉が別の像を呼び続ける迷宮を歩くような読書になる。"},"1415":{"synopsis":"中米の町や森、動物園のような閉ざされた空間で、人間と動物、犯罪と日常の境界が不穏に揺れる。簡潔な語りの背後には、内戦後の社会に残る暴力、権力への恐れ、誰も口にしない犯罪の記憶が潜む。人物たちは多くを説明しないまま、動物の売買、監禁、逃走、危険な取引へ近づいていく。夜の闇に浮かぶ動物の姿は、自由の象徴にも、人間社会の残酷さを映す鏡にも見える。語られない部分が大きいほど、暴力が日常へ浸透している感覚が強まる。","appeal":"短く冷たい文章と大きな余白によって、政治的暴力を直接説明せずに感じさせる。夜の動物の姿が、人間の自由への欲望と監禁の残酷さを同時に映し、沈黙そのものを物語の緊張へ変える。"},"1416":{"synopsis":"ロシア革命に憧れる青年と、キューバ出身の女性舞踊家は、二十世紀の革命と戦争の波に巻き込まれながら、モスクワ、パリ、スペイン、カリブ海を移動する。芸術と政治への情熱は二人を結びつける一方、スターリン体制、スペイン内戦、亡命、キューバ革命の現実が理想を試す。舞踊家の身体は時代の理念を表現する場であると同時に、戦争や政治によって傷つけられる個人の身体でもある。二人の愛と離反を通して、革命を信じること、幻滅した後も歴史へ関わり続けることの困難を描く。","appeal":"音楽と舞踊の躍動を保ちながら、複数の革命と戦争を大陸規模で結ぶ歴史長編。政治思想を抽象的な議論にせず、愛、亡命、踊る身体の変化を通して、理想が歴史の現実に試される過程を描く。"}};
+function len106(v){return [...String(v||'').replace(/\s+/g,'').trim()].length}
+function norm106(v){return String(v||'').replace(/[\s　\n\r。、，,.!！?？「」『』（）()【】\-—―・]/g,'').toLowerCase()}
+function assess106(b){
+ const r=[];let s=len106(b.synopsis),a=len106(b.appeal),w=len106(b.why),bf=len106(b.before),q=len106(b.question);
+ ['title','author','synopsis','appeal','recommend','before','question'].forEach(k=>{if(!String(b[k]||'').trim())r.push({type:'critical',label:k+'が空欄',score:100})});
+ if(norm106(b.synopsis)===norm106(b.appeal)&&a>20)r.push({type:'critical',label:'あらすじと魅力が同文',score:85});
+ if(s<80)r.push({type:'critical',label:'あらすじが極端に短い',score:75});else if(s<150)r.push({type:'content',label:'あらすじを補強',score:35});else if(s>360)r.push({type:'content',label:'あらすじを整理',score:22});
+ if(a<35)r.push({type:'content',label:'魅力が薄い',score:35});else if(a<55)r.push({type:'light',label:'魅力がやや短い',score:12});
+ if(w<25)r.push({type:'content',label:'選定理由が薄い',score:28});else if(w<35)r.push({type:'light',label:'選定理由がやや短い',score:10});
+ if(bf<25)r.push({type:'content',label:'読む前のポイントが薄い',score:28});else if(bf<35)r.push({type:'light',label:'読む前のポイントがやや短い',score:10});
+ if(q<25)r.push({type:'content',label:'読後の問いが薄い',score:32});else if(q<35)r.push({type:'light',label:'読後の問いがやや短い',score:10});
+ if(!b.year)r.push({type:'metadata',label:'刊行年を確認',score:5});
+ const score=r.reduce((n,x)=>n+x.score,0),critical=r.filter(x=>x.type==='critical').length,content=r.filter(x=>x.type==='content').length;
+ let grade=critical?'A':(score>=70||content>=2?'B':(score>0?'C':'OK')),sub='—';
+ if(grade==='C'){const light=r.filter(x=>x.type==='light'),meta=r.filter(x=>x.type==='metadata');sub='C1';if(content)sub=(r.some(x=>x.type==='content'&&x.score>=32)||score>=40)?'C3':'C2';else if(light.length>=2)sub='C2';else if(meta.length&&light.length)sub='C1'}
+ return {book:b,reasons:r,score,grade,sub};
+}
+function snapshot106(){const all=EX_BOOKS.map(assess106),sub={C1:0,C2:0,C3:0},genres={};all.filter(x=>x.grade==='C').forEach(x=>{sub[x.sub]=(sub[x.sub]||0)+1;if(x.sub==='C2'||x.sub==='C3'){const g=x.book.genre||'未設定';genres[g]=(genres[g]||0)+1}});return {all,sub,genres}}
+const before106=snapshot106();
+const revised106=[];Object.entries(PATCHES106).forEach(([no,p])=>{const b=EX_BOOKS.find(x=>x.no===Number(no));if(!b)return;Object.assign(b,p);b.tags=[...new Set([...(Array.isArray(b.tags)?b.tags:[]),'Ver.10.6ラテンアメリカ文学精査'])];b.v106Revised=true;revised106.push(b)});
+const after106=snapshot106();
+function panel106(){const bg=before106.genres['ラテンアメリカ文学']||0,ag=after106.genres['ラテンアメリカ文学']||0;return `<div class="v106-panel"><h3>🌎 Ver.10.6 EXジャンル集中精査 第1弾</h3><p class="meta">再集計でC2・C3が最も多かった「ラテンアメリカ文学」30作を、作品ごとに個別精査しました。定型文による一括水増しは行っていません。</p><div class="v106-grid"><div class="v106-stat"><b>${revised106.length}</b><span>個別修正作品</span></div><div class="v106-stat"><b>${bg}→${ag}</b><span>同ジャンル C2+C3</span></div><div class="v106-stat"><b>${before106.sub.C2}→${after106.sub.C2}</b><span>全体 C2</span></div><div class="v106-stat"><b>${before106.sub.C3}→${after106.sub.C3}</b><span>全体 C3</span></div></div><div class="v106-note">✅ 判定はVer.10.3の保存済み結果ではなく、現在の作品データから再計算します。EX上部ナビの直接遷移、既存保存キー、読書記録・文学ノートの互換性は維持しています。</div><div class="v106-list">${revised106.map(b=>`<span>${esc(b.exNo)} ${esc(b.title)}</span>`).join('')}</div></div>`}
+const oldAudit106=window.exAuditHTML;window.exAuditHTML=function(){return oldAudit106()+panel106()};
+window.exportData=function(){const payload={app:'文学RPG',version:VERSION106,exportedAt:new Date().toISOString(),data:state},blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=`文学RPG_Ver${VERSION106}_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};exportData=window.exportData;
+document.title='文学RPG Ver.10.6 EXジャンル集中精査 第1弾';const sm106=document.querySelector('.title small');if(sm106)sm106.textContent='Ver.10.6';
+window.literatureRpgV106={version:VERSION106,feature:'EXジャンル集中精査 第1弾',genre:'ラテンアメリカ文学',revisedWorks:revised106.length,before:before106.sub,after:after106.sub,beforeGenre:(before106.genres['ラテンアメリカ文学']||0),afterGenre:(after106.genres['ラテンアメリカ文学']||0),newPages:0,newStorageKeys:0,compatibleFrom:'10.5'};
+console.info('[文学RPG Ver.10.6]',window.literatureRpgV106);
+})();
+</script>
+
+
+<!-- Ver.10.6.1：EX上部ナビの空画面化を修正。 -->
+<script id="v1061-ex-nav-fix">
+(function(){
+'use strict';
+const VERSION1061='10.6.1';
+const oldButton=document.querySelector('nav button[data-view="ex"]');
+if(!oldButton)return;
+const exButton=oldButton.cloneNode(true);
+oldButton.replaceWith(exButton);
+function showEx1061(){
+ const target=document.getElementById('exView');
+ if(!target)return false;
+ document.querySelectorAll('main>section').forEach(section=>section.classList.add('hidden'));
+ target.classList.remove('hidden');
+ document.querySelectorAll('nav button[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view==='ex'));
+ let rendered=false;
+ try{
+  if(typeof renderEx==='function'){renderEx();rendered=target.childElementCount>0||target.textContent.trim().length>0}
+ }catch(firstError){
+  console.error('[文学RPG Ver.10.6.1] EX通常描画エラー',firstError);
+  const auditBackup=window.exAuditHTML;
+  try{
+   window.exAuditHTML=()=>'';
+   if(typeof renderEx==='function'){renderEx();rendered=target.childElementCount>0||target.textContent.trim().length>0}
+  }catch(secondError){
+   console.error('[文学RPG Ver.10.6.1] EX簡易描画エラー',secondError);
+  }finally{
+   if(auditBackup)window.exAuditHTML=auditBackup;
+  }
+ }
+ if(!rendered){
+  target.innerHTML='<div class="panel"><h2>🗺️ EX文学世界</h2><p>EX画面の描画に失敗しました。ページを再読み込みしてください。</p></div>';
+ }
+ window.scrollTo({top:0,behavior:'auto'});
+ return rendered;
+}
+exButton.onclick=function(event){event.preventDefault();showEx1061()};
+window.openExView1061=showEx1061;
+document.title='文学RPG Ver.10.6.1 EXナビ修正版';
+const badge=document.querySelector('.title small');if(badge)badge.textContent='Ver.10.6.1';
+window.literatureRpgV1061={version:VERSION1061,feature:'EX上部ナビ空画面修正',newPages:0,newStorageKeys:0,compatibleFrom:'10.6'};
+console.info('[文学RPG Ver.10.6.1] EXナビを再接続しました');
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
