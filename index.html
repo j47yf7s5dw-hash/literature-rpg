@@ -5243,3 +5243,57 @@ window.literatureRpgV1242={version:'12.4.2',allPackDescriptions:true,genreDescri
  window.literatureRpgV1241={version:'12.4.1',genreGroups:Object.keys(groupDefs),genrePacks:rebuilt.length,unassigned:unassigned.length,overLimit:over.length,mergedDuplicateStages:duplicateStage};
 })();
 </script>
+
+
+<!-- Ver.12.4.3：読書パック4分類再編 -->
+<style id="v1243-reading-pack-style">
+.pack-taxonomy-1243{background:linear-gradient(145deg,#f7f0e6,#eee1cf);border:1px solid #d8c5ad}
+.pack-taxonomy-1243 h3{margin:0 0 6px}.pack-taxonomy-grid-1243{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.pack-taxonomy-grid-1243>div{background:#fff9;border:1px solid #d9c7b1;border-radius:12px;padding:10px}.pack-taxonomy-grid-1243 b{display:block;margin-bottom:3px}.pack-taxonomy-grid-1243 small{line-height:1.55}
+.genre-group-note-1243{margin:0 0 10px;padding:8px 10px;border-radius:10px;background:rgba(130,100,70,.07);font-size:11px;line-height:1.55;color:var(--muted)}
+@media(max-width:520px){.pack-taxonomy-grid-1243{grid-template-columns:1fr}}
+</style>
+<script id="v1243-reading-pack-taxonomy">
+(()=>{
+'use strict';
+const GROUPS1243={
+ 'ジャンル・主題':['SF','世界SF','ディストピア文学','ミステリー','世界ミステリー','ファンタジー','ホラー','ゴシック文学','時代小説','歴史小説','神話・叙事詩','青春小説','恋愛小説','児童文学'],
+ '文学潮流・思想':['純文学','私小説','マジックリアリズム','不条理文学','実存主義文学','ポストモダン文学','古典文学','越境・ポストコロニアル文学'],
+ '物語のかたち':['戯曲','短編集','エッセイ・随筆'],
+ '国・地域':['ロシア文学','フランス文学','イギリス文学','ドイツ文学','アメリカ文学','ラテンアメリカ文学','中国文学','韓国文学','北欧文学','アフリカ文学','南アジア文学','東南アジア文学','中東・アラブ文学','東欧文学','カリブ文学']
+};
+const NOTES1243={
+ 'ジャンル・主題':'SF、ミステリー、恋愛、歴史など、作品が何を描き、どんな読書体験を目指すかで分けた入口。',
+ '文学潮流・思想':'実存主義やマジックリアリズムなど、作品の背後にある考え方や文学史上の流れから読む分類。',
+ '物語のかたち':'戯曲、短編集、随筆など、題材ではなく文章の形式や語り方に注目して読む分類。',
+ '国・地域':'土地固有の歴史、文化、社会、言語を背景に、同じ地域の作品をつなげて読む分類。'
+};
+function baseJourney1243(p){return String(p.journey||p.name||'').replace(/の旅.*$/,'').replace(/【.*$/,'').trim()}
+function groupFor1243(name){for(const [group,names] of Object.entries(GROUPS1243))if(names.includes(name))return group;return '国・地域'}
+function applyTaxonomy1243(){
+ Object.keys(EX_GENRE_GROUPS).forEach(k=>delete EX_GENRE_GROUPS[k]);
+ Object.entries(GROUPS1243).forEach(([k,v])=>EX_GENRE_GROUPS[k]=v.slice());
+ EX_WORLD_PACKS.forEach(p=>{if(p.type==='ジャンルパック')p.group=groupFor1243(baseJourney1243(p))});
+}
+function postRender1243(){
+ const head=exView?.querySelector('.ex-world-head');
+ if(!head)return;
+ head.querySelector('p')?.replaceChildren(document.createTextNode('読書パックは「ジャンル・主題」「文学潮流・思想」「物語のかたち」「国・地域」の4分類で整理されています。作家パックと文学賞パックも、攻略中に設定して読み進められます。'));
+ exView.querySelectorAll('.genre-policy-1241,.pack-taxonomy-1243').forEach(x=>x.remove());
+ head.insertAdjacentHTML('afterend',`<div class="panel pack-taxonomy-1243"><h3>🧭 読書パックの4分類</h3><div class="meta">同じ作品が複数の分類に入ることがあります。分類ごとに、作品を見る角度が変わります。</div><div class="pack-taxonomy-grid-1243">${Object.entries(NOTES1243).map(([k,v])=>`<div><b>${k==='ジャンル・主題'?'📚':k==='文学潮流・思想'?'💭':k==='物語のかたち'?'🧩':'🗺'} ${esc(k)}</b><small>${esc(v)}</small></div>`).join('')}</div></div>`);
+ exView.querySelectorAll('.ex-pack-tools .chip').forEach(b=>{if(b.textContent.trim()==='ジャンルパック')b.textContent='読書パック'});
+ exView.querySelectorAll('.ex-category>summary>span:first-child').forEach(s=>{if(s.textContent.includes('ジャンルパック'))s.textContent='📚 読書パック'});
+ exView.querySelectorAll('.genre-major').forEach(d=>{
+   const name=d.querySelector(':scope>summary b')?.textContent?.trim();
+   const body=d.querySelector(':scope>.genre-major-body');
+   if(name&&NOTES1243[name]&&body&&!body.querySelector('.genre-group-note-1243'))body.insertAdjacentHTML('afterbegin',`<p class="genre-group-note-1243">${esc(NOTES1243[name])}</p>`);
+ });
+}
+applyTaxonomy1243();
+const oldRenderEx1243=renderEx;
+renderEx=function(){applyTaxonomy1243();const r=oldRenderEx1243();postRender1243();return r};
+document.title='文学RPG Ver.12.4.3';
+setTimeout(()=>{const x=document.querySelector('.title small');if(x)x.textContent='Ver.12.4.3';const m=document.createElement('div');m.id='v1243-audit';m.hidden=true;m.dataset.groups=String(Object.keys(GROUPS1243).length);m.dataset.genrePacks=String(EX_WORLD_PACKS.filter(p=>p.type==='ジャンルパック').length);m.dataset.unclassified=String(EX_WORLD_PACKS.filter(p=>p.type==='ジャンルパック'&&!Object.keys(GROUPS1243).includes(p.group)).length);document.body.appendChild(m)},0);
+window.literatureRpgV1243={version:'12.4.3',visibleName:'読書パック',groups:Object.keys(GROUPS1243),unclassified:EX_WORLD_PACKS.filter(p=>p.type==='ジャンルパック'&&!Object.keys(GROUPS1243).includes(p.group)).length};
+})();
+</script>
