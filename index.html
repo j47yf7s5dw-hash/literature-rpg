@@ -4921,6 +4921,86 @@ setTimeout(()=>{const label=document.querySelector('.title small');if(label)labe
 window.literatureRpgV1234={version:'12.3.4',routeButtons:'delegated-and-direct',catalogDirection:'final-renderer-replaced'};
 })();
 </script>
+
+<script id="ver1235-route-phase-fix">
+(function(){
+'use strict';
+if(window.literatureRpgV1235)return;
+
+// 文学ルート：ALL_BOOKS は window プロパティではないため、同じグローバルスコープの変数を直接参照する。
+window.openRouteBook1235=function(no){
+  const n=Number(no);
+  const source=(typeof ALL_BOOKS!=='undefined'&&Array.isArray(ALL_BOOKS))?ALL_BOOKS:
+    ((typeof BOOKS!=='undefined'&&Array.isArray(BOOKS))?BOOKS:[]);
+  const book=source.find(b=>Number(b.no)===n);
+  if(!book){if(typeof toast==='function')toast('作品を開けませんでした');return false;}
+  document.getElementById('routesView')?.classList.add('hidden');
+  if(typeof openDetail==='function'){openDetail(book.no);return true;}
+  if(typeof window.openDetail==='function'){window.openDetail(book.no);return true;}
+  if(typeof toast==='function')toast('作品詳細を開けませんでした');
+  return false;
+};
+window.openRouteBook1234=window.openRouteBook1235;
+window.openRouteBook1233=window.openRouteBook1235;
+
+// 既存のイベント競合より先に確実に処理する。
+document.addEventListener('click',function(ev){
+  const btn=ev.target.closest?.('[data-route-book],[data-route-first]');
+  if(!btn)return;
+  ev.preventDefault();
+  ev.stopImmediatePropagation();
+  window.openRouteBook1235(btn.dataset.routeBook||btn.dataset.routeFirst);
+},true);
+
+// Phase限定状態を解除して全作品図鑑へ戻す。
+window.clearPhaseCatalog1235=function(){
+  selectedPhase=null;
+  if(typeof setView==='function')setView('books');
+  requestAnimationFrame(()=>{
+    if(typeof clearFilters==='function')clearFilters();
+    const list=document.getElementById('bookList');
+    list?.scrollIntoView({block:'start',behavior:'auto'});
+  });
+};
+
+function addPhaseEscape1235(){
+  const view=document.getElementById('booksView');
+  if(!view||!selectedPhase)return;
+  const summary=view.querySelector('.collection-summary');
+  if(!summary||summary.querySelector('.phase-escape-1235'))return;
+  const btn=document.createElement('button');
+  btn.type='button';
+  btn.className='phase-escape-1235';
+  btn.textContent='全作品を表示';
+  btn.onclick=window.clearPhaseCatalog1235;
+  summary.appendChild(btn);
+
+  const clear=view.querySelector('.catalog725-clear');
+  if(clear){
+    clear.textContent='Phase絞り込みも解除';
+    clear.onclick=window.clearPhaseCatalog1235;
+  }
+}
+
+// 図鑑描画後に解除ボタンを必ず追加。
+const phaseObserver1235=new MutationObserver(addPhaseEscape1235);
+phaseObserver1235.observe(document.getElementById('booksView')||document.body,{childList:true,subtree:true});
+addPhaseEscape1235();
+
+// 上部ナビから作品図鑑へ入る場合もPhase限定を解除。
+document.addEventListener('click',function(ev){
+  const nav=ev.target.closest?.('nav button[data-view="books"]');
+  if(nav)selectedPhase=null;
+},true);
+
+document.title='文学RPG Ver.12.3.5';
+setTimeout(()=>{const label=document.querySelector('.title small');if(label)label.textContent='Ver.12.3.5';},0);
+window.literatureRpgV1235={version:'12.3.5',routeLookup:'lexical-all-books',phaseEscape:true};
+})();
+</script>
+<style id="ver1235-style">
+.collection-summary{gap:8px;flex-wrap:wrap}.phase-escape-1235{border:0;border-radius:999px;padding:8px 11px;background:var(--accent);color:#fff;font-weight:900;font-size:12px}
+</style>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
 
