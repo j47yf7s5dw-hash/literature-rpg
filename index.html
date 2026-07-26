@@ -4701,13 +4701,19 @@ window.literaryRouteAudit=function(){return {routes:LITERARY_ROUTES.length,confi
   // comparator rather than by reversing an already decorated list.
   const previousFilter=window.filterBooks;
   window.filterBooks=function(){
+    // Read the user's selection before the legacy filter runs. The legacy
+    // renderer resets the direction control to its old internal value.
+    const sortBefore=document.getElementById('sort725');
+    const dirBefore=document.getElementById('sortDirection725');
+    if(sortBefore)mode1231=sortBefore.value||mode1231||'number';
+    if(dirBefore)direction1231=dirBefore.value==='desc'?'desc':'asc';
     const r=previousFilter.apply(this,arguments);
     const host=document.getElementById('bookList');
     if(!host)return r;
     const sort=document.getElementById('sort725');
     const dir=document.getElementById('sortDirection725');
-    if(sort)mode1231=sort.value||'number';
-    if(dir)direction1231=dir.value||'asc';
+    if(sort){sort.value=mode1231;}
+    if(dir){dir.value=direction1231;}
 
     // Reconstruct the currently filtered set using the same controls, then
     // hand the correctly ordered list to the chunked renderer.
@@ -4737,6 +4743,7 @@ window.literaryRouteAudit=function(){return {routes:LITERARY_ROUTES.length,confi
     direction1231=value==='desc'?'desc':'asc';
     const dir=document.getElementById('sortDirection725');if(dir)dir.value=direction1231;
     window.filterBooks();
+    requestAnimationFrame(()=>document.getElementById('bookList')?.scrollIntoView({block:'start',behavior:'auto'}));
   };
   window.setCatalogSort725=function(value){
     mode1231=value||'number';
@@ -4781,12 +4788,19 @@ function routeCard1232(route){
  const bs=routeBooks1232(route),read=readCount1232(route),done=read>=3,pct=Math.min(100,Math.round(read/3*100));
  return `<article class="lit-routes-card ${done?'done':''}"><div class="lit-routes-card-top"><div><h3>${done?'🏆':'🗺'} ${esc(route.name)}</h3><div class="question">${esc(route.question||'')}</div></div><div class="lit-routes-card-count">${read} / 3</div></div><div class="lit-routes-card-progress"><i style="width:${pct}%"></i></div><div class="lit-routes-card-books">${bs.map(b=>`<button class="lit-routes-book ${entry(b.no).got?'read':''}" data-route-book="${b.no}">${entry(b.no).got?'✓':'○'} ${esc(b.title)}</button>`).join('')}</div><div class="lit-routes-card-foot"><div class="lit-routes-title">${done?`称号「${esc(route.title)}」獲得済み`:`あと${Math.max(0,3-read)}作で称号「${esc(route.title)}」`}</div><button class="lit-routes-open" data-route-first="${bs[0]?.no||''}">入口作品</button></div></article>`;
 }
+function openRouteBook1233(no){
+ const n=Number(no);
+ const book=(window.ALL_BOOKS||[]).find(b=>Number(b.no)===n);
+ if(!book){if(typeof window.toast==='function')window.toast('作品を開けませんでした');return}
+ if(typeof window.openDetail==='function')window.openDetail(book.no);
+ else if(typeof openDetail==='function')openDetail(book.no);
+}
 function renderRoutes1232(){
  const view=ensureRoutesView1232(),rs=routes1232(),done=rs.filter(routeDone1232).length,unique=new Set(rs.flatMap(r=>routeBooks1232(r).map(b=>b.no))),read=[...unique].filter(no=>entry(no).got).length;
  view.innerHTML=`<button class="routes-back" id="routesBack1232">← 前の画面へ戻る</button><div class="panel lit-routes-hub-head"><h2>🗺 文学ルート一覧</h2><p>一冊から次の一冊へ。共通する問いをたどりながら、文学を横断する10本の読書ルートです。各ルートは構成5作品のうち3作品読了で踏破になります。</p><div class="lit-routes-summary"><div><b>${done}/${rs.length}</b><small>踏破ルート</small></div><div><b>${read}/${unique.size}</b><small>構成作品読了</small></div><div><b>${Math.round(done/Math.max(1,rs.length)*100)}%</b><small>総踏破率</small></div></div></div><div class="lit-routes-grid">${rs.map(routeCard1232).join('')}</div>`;
  view.querySelector('#routesBack1232').onclick=()=>{const back=view.dataset.backView||'home';if(typeof setView==='function')setView(back);else{view.classList.add('hidden');document.getElementById('homeView')?.classList.remove('hidden')}};
- view.querySelectorAll('[data-route-book]').forEach(btn=>btn.onclick=()=>openDetail(Number(btn.dataset.routeBook)));
- view.querySelectorAll('[data-route-first]').forEach(btn=>btn.onclick=()=>{if(btn.dataset.routeFirst)openDetail(Number(btn.dataset.routeFirst))});
+ view.querySelectorAll('[data-route-book]').forEach(btn=>btn.onclick=()=>openRouteBook1233(btn.dataset.routeBook));
+ view.querySelectorAll('[data-route-first]').forEach(btn=>btn.onclick=()=>openRouteBook1233(btn.dataset.routeFirst));
 }
 window.openLiteraryRoutes=function(backView){
  const view=ensureRoutesView1232();view.dataset.backView=backView||document.querySelector('nav button.active')?.dataset.view||'home';
@@ -4810,6 +4824,10 @@ const observer=new MutationObserver(()=>{injectHome1232();injectExplore1232()});
 ensureRoutesView1232();injectHome1232();injectExplore1232();
 window.literatureRpgV1232={renderRoutes:renderRoutes1232};
 })();
+</script>
+
+<script id="ver1233-hotfix-route-and-catalog">
+window.literatureRpgV1233={version:'12.3.3',routeEntryButtonFixed:true,catalogDirectionFixed:true};
 </script>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
