@@ -371,6 +371,19 @@ img,svg,canvas,video{max-width:100%;height:auto}
  .data-grid{grid-template-columns:1fr!important}
 }
 </style>
+<style id="v83styles">
+/* Ver.8.3 EXパック強化：情報を増やしすぎず、次の一冊と攻略目的だけを明確化 */
+.v83-quest-strip{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
+.v83-quest-strip b{display:block;font-size:14px;line-height:1.45}.v83-quest-strip small{display:block;margin-top:3px;color:var(--muted);line-height:1.45}
+.v83-quest-strip button{border:0;border-radius:10px;padding:10px 12px;background:#3b302a;color:#fff;font-weight:900;white-space:nowrap}
+.v83-quest-strip.complete{background:#f3ead3}.v83-quest-strip.complete button{background:#78633d}
+.v83-pack-purpose{margin:0 0 9px;padding-left:10px;border-left:3px solid #8a6d3b;font-size:13px;line-height:1.65}
+.v83-boss-link{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;padding:10px 11px;border:1px dashed #9b845b;border-radius:12px;background:#fffdf7}
+.v83-boss-link div{min-width:0}.v83-boss-link b,.v83-boss-link small{display:block}.v83-boss-link small{color:var(--muted);margin-top:2px}
+.v83-boss-link button{border:1px solid #7a6339;border-radius:9px;padding:8px 10px;background:#fff;color:#5b4726;font-weight:900;white-space:nowrap}
+.v83-hero-note{margin-top:8px;font-size:12px;line-height:1.6;color:var(--muted)}
+@media(max-width:430px){.v83-quest-strip{grid-template-columns:1fr}.v83-quest-strip button{width:100%}.v83-boss-link{align-items:flex-start}.v83-boss-link button{padding:8px 9px;font-size:12px}}
+</style>
 </head><body><header><div class="title">📚 文学RPG <small>Ver.8.1</small></div><div class="sub">500冊の本編＋EX612作品を巡る、全1112作品の文学RPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
 <button class="active" data-view="home">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="bosses">ボス戦</button><button data-view="backup">保存</button>
 </nav></header><main>
@@ -2986,5 +2999,50 @@ nav button,.mini-nav-grid button,.v727-role-strip button,.record-actions button,
 </script>
 <!-- Ver.8.2.2：準備不足カードの可読性を改善し、攻略画面と関連作品一覧の導線を分離。 -->
 
+<script id="v83script">
+(()=>{
+ const V='8.3';
+ const oldRenderExPack=renderExPack;
+ function validPackBooks83(p){return (p.nos||[]).map(no=>ALL_BOOKS.find(b=>b.no===no)).filter(Boolean)}
+ function nextPackBook83(p){return plannedBooks(validPackBooks83(p)).find(b=>!entry(b.no).got)||null}
+ function purpose83(p){
+   if(p.type==='作家パック')return `${p.authorName||p.name.replace(/を知る旅.*$/,'')}の作品を横断し、作風の核と変化をつかむ。`;
+   if(p.type==='文学賞パック')return `${p.name.replace(/への旅.*$/,'')}の選考傾向を、受賞作そのものから確かめる。`;
+   const n=(p.journey||p.name).replace(/の旅.*$/,'');
+   const stage=p.stage?`「${p.stage}」の作品から`:'複数の作品から';
+   return `${stage}${n}の主題と表現の共通点を見つける。`;
+ }
+ function bossForPack83(p){
+   if(typeof THEMES==='undefined')return null;
+   const text=[p.name,p.desc,p.journey,p.authorName].filter(Boolean).join(' ');
+   const rules=[
+    ['dystopia',/ディストピア|監視|全体主義|オーウェル|アトウッド/],
+    ['absurd',/不条理|カフカ|カミュ|ベケット|安部公房/],
+    ['women-society',/女性|ジェンダー|アトウッド|村田沙耶香/],
+    ['colonialism',/植民|ポストコロニアル|ラテンアメリカ|帝国/],
+    ['war-memory',/戦争|記憶|ホロコースト|原爆/],
+    ['language-power',/言葉|権力|政治|オーウェル/],
+    ['family',/家族|家庭|母|父|親子/],
+    ['modern-self',/近代|自我|私小説|漱石|太宰|ドストエフスキー/]
+   ];
+   const hit=rules.find(([,rx])=>rx.test(text));
+   return hit?THEMES.find(b=>b.id===hit[0]):null;
+ }
+ window.openPackBoss83=function(id){setView('bosses');setTimeout(()=>{if(typeof window.openBoss==='function')window.openBoss(id)},60)};
+ window.openNextPackBook83=function(no){openDetail(Number(no))};
+ renderExPack=function(p,compactName=false){
+   let html=oldRenderExPack(p,compactName);
+   const books=validPackBooks83(p),read=books.filter(b=>entry(b.no).got).length,next=nextPackBook83(p),boss=bossForPack83(p),done=books.length>0&&read===books.length;
+   const quest=`<div class="v83-pack-purpose"><b>このパックの目的</b><br>${esc(purpose83(p))}</div><div class="v83-quest-strip ${done?'complete':''}"><div><b>${done?'🏁 パック攻略完了':next?'📖 次の一冊：'+esc(next.title):'📚 作品を確認'}</b><small>${done?'収録作品をすべて読了しました。':next?esc(next.author)+'｜'+read+'/'+books.length+'作読了':'収録作品の追加を待っています。'}</small></div>${next?`<button onclick="openNextPackBook83(${next.no})">作品詳細</button>`:''}</div>${boss?`<div class="v83-boss-link"><div><b>⚔️ 関連ボス：${esc(boss.name)}</b><small>${esc(boss.theme)}をさらに深く考える</small></div><button onclick="openPackBoss83('${boss.id}')">ボス戦へ</button></div>`:''}`;
+   return html.replace('<div class="pack-expanded-head">','<div class="pack-expanded-head">'+quest);
+ };
+ const oldRenderEx=renderEx;
+ renderEx=function(){oldRenderEx();const hero=exView.querySelector('.ex-world-head p');if(hero)hero.outerHTML='<p>EXパックは、作品を集めるだけでなく、同じ主題や作家を小さな読書クエストとして攻略する場所です。</p><div class="v83-hero-note">各パックを開くと「このパックの目的」と「次の一冊」だけを先頭に表示します。既存の作品一覧や進捗はそのまま残しています。</div>'};
+ document.title='文学RPG Ver.8.3 EXパック強化';
+ const small=document.querySelector('.title small');if(small)small.textContent='Ver.8.3';
+ window.literatureRpgV83={version:V,feature:'EXパック強化',newStorageKeys:0,compatibleFrom:'8.2.2'};
+ console.info('[文学RPG Ver.8.3 EXパック強化]',window.literatureRpgV83);
+})();
+</script>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
