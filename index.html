@@ -4532,5 +4532,56 @@ setTimeout(()=>{sync120(false);if(!document.getElementById('v120-version-note'))
 <script id="v122-release-marker">(()=>{document.title="文学RPG Ver.12.2.2";setTimeout(()=>{const s=document.querySelector('.title small');if(s)s.textContent="Ver.12.2.2"},0);window.literatureRpgV122={version:"12.2.1",feature:"EX重複監査・末尾番号固定",removedDuplicate:"幼年時代（トルストイ）／ジュライの人びと（本編と重複）",added:34,totalEx:645,storageCompatible:true};console.info("[文学RPG Ver.12.2.2]",window.literatureRpgV122)})();</script>
 
 <script id="v1221-correction-marker">(()=>{window.literatureRpgV1221={version:"12.2.1",audit:"表記ゆれを含む本編・EX重複監査",removed:"ジュライの人びと（ナディン・ゴーディマー）",existingExNumbersPreserved:true,newExRange:"EX.612-EX.645",addedUnique:34,totalEx:645};console.info("[文学RPG Ver.12.2.2]",window.literatureRpgV1221)})();</script>
+
+
+<!-- Ver.12.2.3: catalog EX display-number ordering correction -->
+<script id="ver1223-catalog-number-order-fix">
+(function(){
+  function exNumber1223(book){
+    if(!book || Number(book.no)<=500) return Number(book?.no)||0;
+    const label=String(book.exNo||'');
+    const match=label.match(/\d+/);
+    if(match) return Number(match[0]);
+    const legacy=String(window.EX_DISPLAY_INDEX?.get?.(book.no)||'');
+    const legacyMatch=legacy.match(/\d+/);
+    return legacyMatch?Number(legacyMatch[0]):Number.MAX_SAFE_INTEGER;
+  }
+  function catalogKey1223(book){
+    return Number(book?.no)<=500 ? Number(book.no) : 500+exNumber1223(book);
+  }
+
+  // 表示とソートで同じ番号を使う。古い配列位置ベースの番号を優先しない。
+  window.exBookLabel=function(book){
+    if(!book) return '';
+    if(Number(book.no)<=500) return 'No.'+Number(book.no);
+    const n=exNumber1223(book);
+    return Number.isFinite(n)&&n<Number.MAX_SAFE_INTEGER
+      ? 'EX.'+String(n).padStart(3,'0')
+      : (String(book.exNo||'EX'));
+  };
+
+  // 作品図鑑へ渡す直前にも表示番号で再ソートし、後続アップデートの内部番号に影響されないようにする。
+  const originalRenderChunked1223=window.renderBookListChunked;
+  if(typeof originalRenderChunked1223==='function'){
+    window.renderBookListChunked=function(list){
+      let rows=Array.isArray(list)?[...list]:list;
+      const sortSelect=document.getElementById('sort725');
+      const numberMode=!sortSelect || sortSelect.value==='number';
+      if(numberMode && Array.isArray(rows)){
+        rows.sort((a,b)=>catalogKey1223(a)-catalogKey1223(b)||Number(a.no)-Number(b.no));
+      }
+      return originalRenderChunked1223.call(this,rows);
+    };
+  }
+
+  window.literatureRpgV1223={
+    version:'12.2.3',
+    fix:'作品図鑑のEX表示番号と図鑑番号順ソートを統一',
+    numberSource:'book.exNo',
+    existingSaveKeysPreserved:true
+  };
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
