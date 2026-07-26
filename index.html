@@ -3741,5 +3741,91 @@ console.info('[文学RPG Ver.10.4]',window.literatureRpgV104);
 })();
 </script>
 
+<!-- Ver.10.5：Cランク再判定・優先順位整理／上部EXナビ修正。 -->
+<style id="v105-style">
+.v105-panel{border:1px solid var(--line);border-radius:15px;padding:13px;margin-top:12px;background:var(--paper)}
+.v105-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:11px 0}
+.v105-stat{padding:11px 8px;border:1px solid var(--line);border-radius:12px;background:#fff;text-align:center}
+.v105-stat b{display:block;font-size:21px}.v105-stat span{font-size:11px;color:var(--muted)}
+.v105-c1 b{color:#47765a}.v105-c2 b{color:#99701d}.v105-c3 b{color:#9b4738}
+.v105-tabs{display:flex;gap:6px;overflow:auto;padding-bottom:4px;margin:10px 0}.v105-tabs button{white-space:nowrap;border:1px solid var(--line);border-radius:999px;background:#fff;padding:8px 11px;font-weight:800}.v105-tabs button.active{background:#352b26;color:#fff;border-color:#352b26}
+.v105-row{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center;padding:10px;margin-top:7px;border:1px solid var(--line);border-radius:12px;background:#fff}.v105-row.c1{border-left:5px solid #6e987a}.v105-row.c2{border-left:5px solid #c28b2a}.v105-row.c3{border-left:5px solid #a44f40}
+.v105-reason{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.v105-reason span,.v105-priority span{font-size:11px;border-radius:999px;padding:5px 8px;background:#f0e5d8}
+.v105-priority{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.v105-next{padding:10px;border-radius:11px;background:#edf5ef;border:1px solid #bfd4c5;font-size:12px;line-height:1.65}
+.v105-empty{text-align:center;color:var(--muted);padding:12px}
+@media(max-width:430px){.v105-summary{grid-template-columns:1fr}.v105-row{grid-template-columns:1fr}.v105-row button{width:100%}}
+</style>
+<script id="v105-script">
+(function(){
+'use strict';
+const VERSION105='10.5';
+let selected105='C3';
+function cItems105(){
+ const source=(window.exQualityTriage103&&window.exQualityTriage103.all)||[];
+ return source.filter(x=>x.grade==='C').map(x=>{
+  const content=x.reasons.filter(r=>r.type==='content');
+  const light=x.reasons.filter(r=>r.type==='light');
+  const metadata=x.reasons.filter(r=>r.type==='metadata');
+  let sub='C1',why='短い項目または書誌情報のみ。現状の文章で成立';
+  if(content.length){
+   const strong=content.some(r=>r.score>=32)||x.score>=40;
+   sub=strong?'C3':'C2';
+   why=strong?'作品固有性に関わる項目を個別精査':'一項目の軽い補強で完成可能';
+  }else if(light.length>=2){sub='C2';why='複数の軽微な不足をまとめて補強可能'}
+  else if(metadata.length&&light.length){sub='C1';why='文章は成立。書誌情報または軽微な不足のみ'}
+  return {...x,sub,why};
+ });
+}
+function stats105(){const c={C1:0,C2:0,C3:0};cItems105().forEach(x=>c[x.sub]++);return c}
+function genre105(){const g={};cItems105().filter(x=>x.sub==='C3'||x.sub==='C2').forEach(x=>{const k=x.book.genre||'未設定';g[k]=(g[k]||0)+1});return Object.entries(g).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'ja'))}
+function rows105(sub){
+ const xs=cItems105().filter(x=>x.sub===sub).sort((a,b)=>b.score-a.score||a.book.no-b.book.no);
+ if(!xs.length)return '<div class="v105-empty">この分類の作品はありません。</div>';
+ return xs.slice(0,100).map(x=>`<div class="v105-row ${x.sub.toLowerCase()}"><div><b>${x.sub}｜${esc(x.book.exNo)} ${esc(x.book.title)}</b><div class="meta">${esc(x.book.author)}｜${esc(x.book.genre||'未設定')}</div><div class="v105-reason"><span>${esc(x.why)}</span>${x.reasons.slice(0,4).map(r=>`<span>${esc(r.label)}</span>`).join('')}</div></div><button class="ex-quality-open" onclick="openDetail(${x.book.no})">詳細を見る</button></div>`).join('')+(xs.length>100?`<div class="v105-empty">上位100作を表示中（該当 ${xs.length}作）</div>`:'');
+}
+function select105(sub){selected105=sub;document.querySelectorAll('.v105-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.v105===sub));const el=document.getElementById('v105-list');if(el)el.innerHTML=rows105(sub)}
+window.selectC105=select105;
+function panel105(){
+ const c=stats105(),genres=genre105(),next=genres[0];
+ return `<div class="v105-panel"><h3>🧭 Ver.10.5 Cランク再判定</h3><p class="meta">「短い＝要修正」とせず、実際に手を入れる必要度でCランクを三段階へ整理しました。</p><div class="v105-summary"><div class="v105-stat v105-c1"><b>${c.C1}</b><span>C1 修正対象外</span></div><div class="v105-stat v105-c2"><b>${c.C2}</b><span>C2 軽い補強</span></div><div class="v105-stat v105-c3"><b>${c.C3}</b><span>C3 個別精査</span></div></div><div class="v105-next">${next?`次回の最優先候補は「${esc(next[0])}」です。C2・C3を合わせて${next[1]}作あり、ジャンル単位でまとめて精査できます。`:'C2・C3はありません。現時点で追加の文章修正は不要です。'}</div><div class="v105-priority">${genres.slice(0,10).map(([g,n])=>`<span>${esc(g)} ${n}作</span>`).join('')}</div><div class="v105-tabs"><button data-v105="C3" class="active" onclick="selectC105('C3')">C3 個別精査</button><button data-v105="C2" onclick="selectC105('C2')">C2 軽い補強</button><button data-v105="C1" onclick="selectC105('C1')">C1 修正不要</button></div><div id="v105-list">${rows105('C3')}</div></div>`;
+}
+const oldAudit105=window.exAuditHTML;
+window.exAuditHTML=function(){return oldAudit105()+panel105()};
+
+// 上部ナビは最終段で一度だけ接続する。EXは画面を直接表示し、旧ハンドラへの誤転送を遮断。
+function directView105(view){
+ const id=view==='ex'?'exView':view+'View';
+ const target=document.getElementById(id);
+ if(!target){console.error('[Ver.10.5] 画面が見つかりません',view,id);return false}
+ document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));
+ target.classList.remove('hidden');
+ document.querySelectorAll('nav button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+ try{if(typeof render==='function')render(view)}catch(err){console.error('[Ver.10.5] 描画処理でエラー。画面表示は維持します',view,err)}
+ requestAnimationFrame(()=>{document.querySelector(`nav button[data-view="${view}"]`)?.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'})});
+ scrollTo({top:0,behavior:'auto'});
+ return true;
+}
+document.querySelectorAll('nav button[data-view]').forEach(btn=>{
+ btn.addEventListener('click',function(e){
+  if(this.dataset.view!=='ex')return;
+  e.preventDefault();e.stopImmediatePropagation();directView105('ex');
+ },true);
+});
+
+function navAudit105(){
+ const expected=['home','phases','ex','books','authors','timeline','bosses','backup'];
+ const issues=[];
+ expected.forEach(v=>{const b=document.querySelector(`nav button[data-view="${v}"]`),s=document.getElementById(v+'View');if(!b)issues.push('ボタン欠落:'+v);if(!s)issues.push('画面欠落:'+v)});
+ const ids=[...document.querySelectorAll('[id]')].map(x=>x.id),dup=[...new Set(ids.filter((x,i)=>ids.indexOf(x)!==i))];dup.forEach(x=>issues.push('重複ID:'+x));
+ if(issues.length)console.warn('[文学RPG Ver.10.5 ナビ自己診断]',issues);else console.info('[文学RPG Ver.10.5 ナビ自己診断] 正常');
+ return issues;
+}
+window.exportData=function(){const payload={app:'文学RPG',version:VERSION105,exportedAt:new Date().toISOString(),data:state};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');const url=URL.createObjectURL(blob);a.href=url;a.download=`文学RPG_Ver${VERSION105}_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};exportData=window.exportData;
+document.title='文学RPG Ver.10.5 Cランク再判定・EXナビ修正';const sm105=document.querySelector('.title small');if(sm105)sm105.textContent='Ver.10.5';
+window.literatureRpgV105={version:VERSION105,feature:'Cランク再判定・EXナビ修正',get counts(){return stats105()},get genrePriority(){return genre105()},navIssues:navAudit105(),newPages:0,newStorageKeys:0,compatibleFrom:'10.4'};
+console.info('[文学RPG Ver.10.5]',window.literatureRpgV105);
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
