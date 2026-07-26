@@ -4436,5 +4436,80 @@ setTimeout(()=>{sync120(false);if(!document.getElementById('v120-version-note'))
 })();
 </script>
 
+<style id="ver1201-nav-fix-style">
+.v1201-home-entry{display:flex!important;align-items:center;justify-content:center;min-height:44px}
+</style>
+<script id="ver1201-nav-fix-script">
+(function(){
+  function hideMainSections1201(){document.querySelectorAll('main>section').forEach(function(s){s.classList.add('hidden')})}
+  function clearNav1201(){document.querySelectorAll('nav button').forEach(function(b){b.classList.remove('active')})}
+  function openPassport1201(){
+    var v=document.getElementById('passportView');
+    if(!v&&window.literatureRpgV76&&typeof window.literatureRpgV76.render==='function'){
+      v=document.getElementById('passportView');
+    }
+    if(!v){if(typeof window.setView==='function')window.setView('passport');return}
+    hideMainSections1201();v.classList.remove('hidden');clearNav1201();
+    if(window.literatureRpgV110&&typeof window.literatureRpgV110.render==='function')window.literatureRpgV110.render();
+    else if(window.literatureRpgV76&&typeof window.literatureRpgV76.render==='function')window.literatureRpgV76.render();
+    window.scrollTo({top:0,behavior:'auto'});
+  }
+  function openRecord1201(){
+    var v=document.getElementById('recordView');
+    if(!v){if(typeof window.setView==='function')window.setView('record');return}
+    hideMainSections1201();v.classList.remove('hidden');clearNav1201();
+    if(window.literatureRpgV728&&typeof window.literatureRpgV728.render==='function')window.literatureRpgV728.render();
+    window.scrollTo({top:0,behavior:'auto'});
+  }
+  function openExplore1201(tab){
+    hideMainSections1201();
+    var v=document.getElementById('exploreView');
+    if(!v&&typeof window.renderExplore120==='function')window.renderExplore120(tab||'themes');
+    v=document.getElementById('exploreView');
+    if(v)v.classList.remove('hidden');
+    clearNav1201();
+    if(typeof window.renderExplore120==='function')window.renderExplore120(tab||'themes');
+    window.scrollTo({top:0,behavior:'auto'});
+  }
+  window.openPassport1201=openPassport1201;
+  window.openRecord1201=openRecord1201;
+  window.openExplore1201=openExplore1201;
+  function addHomeEntries1201(){
+    var home=document.getElementById('homeView');if(!home)return;
+    var menu=home.querySelector('.v703-home-tools .mini-nav-grid')||home.querySelector('.mini-nav-grid');if(!menu)return;
+    var items=[
+      ['passport1201','[data-go-passport76]','📘 文学パスポート',openPassport1201],
+      ['record1201','[data-go-record728]','📜 冒険記録',openRecord1201],
+      ['explore1201','', '🧭 文学探索',function(){openExplore1201('themes')}]
+    ];
+    items.forEach(function(it){
+      var q='[data-go-'+it[0]+']',b=menu.querySelector(q)||(it[1]?menu.querySelector(it[1]):null);
+      if(!b){b=document.createElement('button');b.className='v1201-home-entry';b.textContent=it[2];menu.appendChild(b)}
+      b.setAttribute('data-go-'+it[0],'');b.onclick=it[3];
+    });
+    var oldPassport=menu.querySelector('[data-go-passport76]');if(oldPassport)oldPassport.onclick=openPassport1201;
+    var oldRecord=menu.querySelector('[data-go-record728]');if(oldRecord)oldRecord.onclick=openRecord1201;
+  }
+  var priorRenderHome1201=window.renderHome;
+  if(typeof priorRenderHome1201==='function'){
+    window.renderHome=function(){var r=priorRenderHome1201.apply(this,arguments);addHomeEntries1201();return r};
+    renderHome=window.renderHome;
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('[data-go-passport76],[data-go-passport1201],[data-go-record728],[data-go-record1201],[data-go-explore1201]');
+    if(!b)return;
+    e.preventDefault();e.stopPropagation();
+    if(b.matches('[data-go-passport76],[data-go-passport1201]'))openPassport1201();
+    else if(b.matches('[data-go-record728],[data-go-record1201]'))openRecord1201();
+    else openExplore1201('themes');
+  },true);
+  setTimeout(function(){
+    if(typeof window.renderHome==='function'&&!document.getElementById('homeView').classList.contains('hidden'))window.renderHome();
+    else addHomeEntries1201();
+    var note=document.getElementById('v120-version-note');if(note)note.textContent='Literature RPG Ver.12.0.1';
+  },0);
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
