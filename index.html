@@ -374,7 +374,7 @@ img,svg,canvas,video{max-width:100%;height:auto}
  .data-grid{grid-template-columns:1fr!important}
 }
 </style>
-</head><body><header><div class="title">📚 文学RPG <small>Ver.8.5</small></div><div class="sub">500冊の本編＋EX612作品を巡る、全1112作品の文学RPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
+</head><body><header><div class="title">📚 文学RPG <small>Ver.12.4.4</small></div><div class="sub">500冊の本編＋EX612作品を巡る、全1112作品の文学RPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
 <button class="active" data-view="home">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="bosses">ボス戦</button><button data-view="backup">保存</button>
 </nav></header><main>
 <section id="homeView"></section><section class="hidden" id="phasesView"></section><section class="hidden" id="exView"></section><section class="hidden" id="booksView"></section><section class="hidden" id="authorsView"></section><section class="hidden" id="timelineView"></section>
@@ -3150,7 +3150,7 @@ button,[role="button"],select,input{touch-action:manipulation}
  window.literatureRpgAuditV85=audit();
  if(Object.values(window.literatureRpgAuditV85).some(v=>Array.isArray(v)&&v.length))console.warn('[文学RPG Ver.8.5 監査]',window.literatureRpgAuditV85);else console.info('[文学RPG Ver.8.5 監査] 重大な欠損・重複・ボスリンク切れなし',window.literatureRpgAuditV85);
  document.title='文学RPG Ver.8.5 全体整理・使い勝手監査';
- const small=document.querySelector('.title small');if(small)small.textContent='Ver.8.5';
+ const small=document.querySelector('.title small');if(small)small.textContent='Ver.12.4.4';
  annotateBossCards();focusActiveNav();
  window.literatureRpgV85={version:VERSION,newPages:0,newStorageKeys:0,audit:window.literatureRpgAuditV85};
 })();
@@ -5295,5 +5295,30 @@ renderEx=function(){applyTaxonomy1243();const r=oldRenderEx1243();postRender1243
 document.title='文学RPG Ver.12.4.3';
 setTimeout(()=>{const x=document.querySelector('.title small');if(x)x.textContent='Ver.12.4.3';const m=document.createElement('div');m.id='v1243-audit';m.hidden=true;m.dataset.groups=String(Object.keys(GROUPS1243).length);m.dataset.genrePacks=String(EX_WORLD_PACKS.filter(p=>p.type==='ジャンルパック').length);m.dataset.unclassified=String(EX_WORLD_PACKS.filter(p=>p.type==='ジャンルパック'&&!Object.keys(GROUPS1243).includes(p.group)).length);document.body.appendChild(m)},0);
 window.literatureRpgV1243={version:'12.4.3',visibleName:'読書パック',groups:Object.keys(GROUPS1243),unclassified:EX_WORLD_PACKS.filter(p=>p.type==='ジャンルパック'&&!Object.keys(GROUPS1243).includes(p.group)).length};
+})();
+</script>
+
+
+<!-- Ver.12.4.4：EX上部の4分類案内を撤去／初期バージョン表示を修正 -->
+<style id="v1244-ex-cleanup-style">
+.genre-policy-1241,.pack-taxonomy-1243{display:none!important}
+</style>
+<script id="v1244-ex-cleanup-script">
+(()=>{
+'use strict';
+const VERSION1244='12.4.4';
+function cleanExHeader1244(){
+  if(typeof exView==='undefined'||!exView)return;
+  exView.querySelectorAll('.genre-policy-1241,.pack-taxonomy-1243').forEach(x=>x.remove());
+  const p=exView.querySelector('.ex-world-head p');
+  if(p)p.textContent='読書パック、作家パック、文学賞パックから、次に読む作品を探せます。';
+}
+const oldRenderEx1244=renderEx;
+renderEx=function(){const r=oldRenderEx1244();cleanExHeader1244();return r};
+cleanExHeader1244();
+document.title='文学RPG Ver.12.4.4';
+const label1244=document.querySelector('.title small');if(label1244)label1244.textContent='Ver.12.4.4';
+setTimeout(()=>{const x=document.querySelector('.title small');if(x)x.textContent='Ver.12.4.4';cleanExHeader1244()},0);
+window.literatureRpgV1244={version:VERSION1244,removedExTaxonomyPanel:true,initialVersionFlashFixed:true};
 })();
 </script>
