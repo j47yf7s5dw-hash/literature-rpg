@@ -3968,5 +3968,90 @@ console.info('[文学RPG Ver.10.6.1] EXナビを再接続しました');
  console.info('[文学RPG Ver.10.7 World Mapリファイン]',window.literatureRpgV107);
 })();
 </script>
+<!-- Ver.10.8：ボス戦リニューアル。既存データ構造・保存キーを維持。 -->
+<style id="v108-boss-renewal-style">
+.b108-arena{position:relative;overflow:hidden;background:linear-gradient(145deg,#171a26,#34283f)!important;color:#fff;border:0!important}
+.b108-arena:after{content:'⚔';position:absolute;right:-8px;top:-35px;font-size:145px;opacity:.055;transform:rotate(-12deg);pointer-events:none}
+.b108-arena .meta{color:#ddd6e5}.b108-arena h2{letter-spacing:.04em}
+.b108-banner{display:flex;align-items:center;gap:10px;margin-bottom:9px}.b108-banner strong{font-size:11px;letter-spacing:.16em;color:#e9c979}
+.b108-guide{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}.b108-guide>div{padding:9px;border-radius:12px;background:#ffffff0d;border:1px solid #ffffff1c;text-align:center;font-size:10px}.b108-guide b{display:block;font-size:12px;margin-top:3px;color:#fff}
+.b108-card-badge{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:9px 0 6px}.b108-rank{font-size:10px;font-weight:900;padding:4px 8px;border-radius:999px;background:var(--soft);border:1px solid var(--line)}
+.b108-weakness{padding:9px 10px;border-radius:11px;background:rgba(128,65,92,.08);border:1px dashed rgba(128,65,92,.3);font-size:11px;line-height:1.55;margin:8px 0}.b108-weakness b{display:block;font-size:10px;letter-spacing:.08em;color:#7c425c;margin-bottom:2px}
+.b108-attack-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}.b108-attack-preview>div{background:var(--soft);border-radius:9px;padding:7px;text-align:center;font-size:9px}.b108-attack-preview b{display:block;font-size:12px;margin-top:2px}
+.b108-defeated-stamp{position:absolute;right:12px;top:12px;border:2px solid #b98a2d;color:#8b651d;border-radius:8px;padding:4px 7px;font-weight:1000;font-size:11px;transform:rotate(6deg);background:rgba(255,248,226,.88)}
+.boss82-card{position:relative}.boss82-card.ready{box-shadow:0 0 0 1px rgba(173,122,37,.25),0 10px 28px rgba(66,48,18,.08)}
+.b108-battle-panel{margin:10px 0;padding:12px;border-radius:15px;background:linear-gradient(145deg,#221e2b,#3a2d43);color:#fff;border:1px solid #ffffff18}.b108-battle-title{display:flex;justify-content:space-between;align-items:center;gap:8px}.b108-battle-title b{font-size:12px;letter-spacing:.12em}.b108-turn{font-size:10px;color:#dfc986}
+.b108-enemy-row{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;margin-top:10px}.b108-enemy-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#ffffff10;font-size:27px;border:1px solid #ffffff18}.b108-hp-label{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px}.b108-hp{height:10px;border-radius:99px;background:#ffffff18;overflow:hidden}.b108-hp i{height:100%;display:block;background:linear-gradient(90deg,#9f3150,#dc704d);transition:width .45s ease}.b108-command-log{margin-top:9px;border-top:1px solid #ffffff18;padding-top:8px;font-size:11px;line-height:1.6;color:#eee7f1}.b108-command-log strong{color:#f0ce78}
+.b108-stage-power{display:flex;gap:6px;overflow:auto;padding:2px 0 9px}.b108-stage-power span{white-space:nowrap;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 9px;font-size:10px;font-weight:900}.b108-stage-power span.done{background:#e3f0e7;color:#27543b;border-color:#bdd8c5}.b108-stage-power span.current{background:#3b3140;color:#fff;border-color:#3b3140}
+.b108-finisher{margin-top:9px;padding:10px;border-radius:12px;background:#f8efda;border:1px solid #dfc27e;color:#4a3917;font-size:11px}.b108-finisher b{display:block;margin-bottom:3px}
+.b108-victory{animation:b108Victory .55s ease-out}.b108-victory:before{content:'VICTORY';display:block;text-align:center;font-weight:1000;letter-spacing:.22em;font-size:22px;color:#b18427;margin:5px 0 12px;text-shadow:0 2px 0 #fff}
+@keyframes b108Victory{from{transform:scale(.97);opacity:.35}to{transform:scale(1);opacity:1}}
+@media(max-width:430px){.b108-guide,.b108-attack-preview{grid-template-columns:1fr 1fr}.b108-guide>div:last-child,.b108-attack-preview>div:last-child{grid-column:1/-1}.b108-enemy-icon{width:42px;height:42px;font-size:24px}}
+.dark .b108-weakness b{color:#d9a8bc}.dark .b108-defeated-stamp{background:#332b1c;color:#e5c77d}
+</style>
+<script id="v108-boss-renewal-script">
+(function(){
+ 'use strict';
+ if(window.literatureRpgV108)return;
+ const VERSION='10.8';
+ const weaknessMap={
+  '鏡の魔王':'自意識だけでなく、他者の視線と時代背景を結びつける比較',
+  '灰の記憶竜':'被害／加害の二分法を越え、沈黙や記憶の継承まで読むこと',
+  '不条理の蟲王':'謎を解くのではなく、説明のない世界での選択を比べること',
+  '硝子の女王':'個人の選択に見えるものを、制度・労働・身体から分解すること',
+  '帝国の亡霊':'語る側だけでなく、声を奪われた側の不在を見抜くこと',
+  '監視塔の主':'悪い支配者より、便利さと安心を求める市民の共犯性を見ること',
+  '血縁の迷宮':'愛情の有無だけでなく、家族内の役割と負担を比較すること',
+  '言葉を喰う王':'名前・分類・禁止語が思考そのものを狭める仕組みを捉えること'
+ };
+ function txt(el,sel){return (el.querySelector(sel)?.textContent||'').trim()}
+ function nums(str){return (String(str).match(/\d+/g)||[]).map(Number)}
+ function cardData(card){
+   const name=txt(card,'h3'), meta=txt(card,'.meta');
+   const progress=nums(txt(card,'.boss82-stats'));
+   const line=[...card.querySelectorAll('.meta')].map(x=>x.textContent).find(x=>x.includes('推奨作品読了'))||'';
+   const n=nums(line); return{name,read:n[0]||0,total:n[1]||0,min:n[2]||0,pct:progress.at(-1)||0,defeated:card.classList.contains('defeated'),ready:card.classList.contains('ready')};
+ }
+ function rank(d){if(d.defeated)return 'S・撃破済み';if(d.ready)return 'A・決戦可能';if(d.read>0)return 'B・交戦中';return 'C・未遭遇'}
+ function decorateCards(root=document){
+  root.querySelectorAll('.boss82-card').forEach(card=>{
+   if(card.dataset.v108)return;card.dataset.v108='1';const d=cardData(card);
+   const progress=card.querySelector('.boss82-progress');
+   if(progress){const badge=document.createElement('div');badge.className='b108-card-badge';badge.innerHTML=`<span class="b108-rank">RANK ${rank(d)}</span><span class="meta">読書攻撃力 ${d.read*25}</span>`;progress.insertAdjacentElement('beforebegin',badge)}
+   const weak=document.createElement('div');weak.className='b108-weakness';weak.innerHTML=`<b>WEAK POINT</b>${weaknessMap[d.name]||'複数作品の共通点と相違点を、自分の言葉で結び直すこと'}`;
+   const actions=card.querySelector('.boss82-actions');if(actions)actions.insertAdjacentElement('beforebegin',weak);
+   const atk=document.createElement('div');atk.className='b108-attack-preview';atk.innerHTML=`<div>読了攻撃<b>${d.read}/${d.min||'—'}</b></div><div>思考ゲージ<b>${d.ready?'解放':'蓄積中'}</b></div><div>必殺技<b>${d.defeated?'発動済':'最終回答'}</b></div>`;if(actions)actions.insertAdjacentElement('beforebegin',atk);
+   if(d.defeated){const stamp=document.createElement('div');stamp.className='b108-defeated-stamp';stamp.textContent='DEFEATED';card.appendChild(stamp)}
+  });
+ }
+ function enhanceHero(){
+  const hero=document.querySelector('#bossesView .boss82-hero');if(!hero||hero.dataset.v108)return;hero.dataset.v108='1';hero.classList.add('b108-arena');
+  hero.insertAdjacentHTML('afterbegin','<div class="b108-banner"><strong>BOSS BATTLE / LITERARY QUEST</strong></div>');
+  hero.insertAdjacentHTML('beforeend','<div class="b108-guide"><div>STEP 1<b>作品を読む</b></div><div>STEP 2<b>弱点を見抜く</b></div><div>STEP 3<b>自分の答えで撃破</b></div></div>');
+ }
+ function modalBossName(){return txt(document,'#modal h2')||txt(document,'#modal h3')}
+ function enhanceModal(){
+  const card=document.querySelector('#modal .modal-card');if(!card||card.dataset.v108||!document.querySelector('#modal [id^="b82"],#modal [data-b82-used],#modal .boss82-section'))return;
+  card.dataset.v108='1';const name=modalBossName();const p=window.state?.themeBossBattles?Object.values(window.state.themeBossBattles).find(()=>false):null;
+  const sections=[...card.querySelectorAll('.boss82-section')];const heading=sections.map(x=>txt(x,'h3')).find(Boolean)||'';const stage=Math.max(1,Math.min(4,Number((heading.match(/^[1-4]/)||['1'])[0])));
+  const readLine=[...card.querySelectorAll('.meta')].map(x=>x.textContent).find(x=>x.includes('読了済み'))||'';const rn=nums(readLine);const read=rn[0]||0,min=rn[1]||3;
+  const hp=stage===4?0:Math.max(10,100-Math.round((Math.min(read,min)/Math.max(1,min))*55)-(stage-1)*15);
+  const icon=card.querySelector('.boss82-icon')?.textContent||'👑';
+  const battle=document.createElement('div');battle.className='b108-battle-panel'+(stage===4?' b108-victory':'');
+  battle.innerHTML=`<div class="b108-battle-title"><b>${stage===4?'BATTLE RESULT':'BOSS ENCOUNTER'}</b><span class="b108-turn">PHASE ${stage} / 4</span></div><div class="b108-enemy-row"><div class="b108-enemy-icon">${icon}</div><div><div class="b108-hp-label"><span>${name||'文学ボス'}</span><strong>HP ${hp}%</strong></div><div class="b108-hp"><i style="width:${hp}%"></i></div></div></div><div class="b108-command-log">${stage===1?'推奨作品を読み、敵の思想と問いを観察せよ。':stage===2?`読了作品が攻撃力になる。現在 <strong>${read}冊</strong> の力を蓄積中。`:stage===3?'複数作品を比較し、<strong>最終回答</strong>を必殺技として放て。':'自分の言葉で問いに答え、文学ボスを撃破した。'}</div>`;
+  const first=card.querySelector('.boss82-head')||card.firstElementChild;first.insertAdjacentElement('afterend',battle);
+  const powers=document.createElement('div');powers.className='b108-stage-power';['作品遭遇','弱点解析','最終回答','撃破記録'].forEach((x,i)=>powers.insertAdjacentHTML('beforeend',`<span class="${i+1<stage?'done':i+1===stage?'current':''}">${i+1<stage?'✓ ':''}${x}</span>`));battle.insertAdjacentElement('afterend',powers);
+  if(stage===3){const ta=card.querySelector('#b82Final');if(ta){const f=document.createElement('div');f.className='b108-finisher';f.innerHTML='<b>必殺技「批評の一撃」</b>共通点だけで終わらず、作品同士の違いと、自分がどちらに立つかまで書くと威力が上がります。';ta.insertAdjacentElement('beforebegin',f)}}
+ }
+ function enhance(){enhanceHero();decorateCards();enhanceModal()}
+ const obs=new MutationObserver(()=>requestAnimationFrame(enhance));obs.observe(document.body,{childList:true,subtree:true});
+ document.addEventListener('click',e=>{if(e.target.closest('[data-view="bosses"],[data-b82-open],[data-b82-route],#b82StartFromWorks'))setTimeout(enhance,30)});
+ setTimeout(enhance,50);
+ const small=document.querySelector('.title small');if(small)small.textContent='Ver.10.8';document.title='文学RPG Ver.10.8 ボス戦リニューアル';
+ window.literatureRpgV108={version:VERSION,feature:'ボス戦リニューアル',newPages:0,newStorageKeys:0,storageCompatible:true};
+ console.info('[文学RPG Ver.10.8] ボス戦演出・弱点・戦闘進行表示を追加。保存構造は変更なし。',window.literatureRpgV108);
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
