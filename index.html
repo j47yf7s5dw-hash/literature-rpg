@@ -5062,6 +5062,106 @@ window.literatureRpgV1235={version:'12.3.5',routeLookup:'lexical-all-books',phas
 })();
 </script>
 
+
+
+<!-- Ver.12.4.2：全パック短解説・「物語のかたち」改名 -->
+<style id="v1242-pack-explanation-style">
+.pack-short-explanation-1242{font-size:11px;line-height:1.55;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;padding-left:21px;padding-right:2px}
+.pack-card[open] .pack-short-explanation-1242{-webkit-line-clamp:unset;display:block}
+.dark .pack-short-explanation-1242{color:#cfc5d1}
+</style>
+<script id="v1242-pack-explanations">
+(()=>{
+'use strict';
+const BASE1242={
+ '純文学':'娯楽性だけでなく、人間の内面や生き方、社会との関係を文章表現そのものから掘り下げる作品群。',
+ '私小説':'作者自身の経験や感情をもとに、生活、家族、弱さ、自己意識を率直に描く日本文学の系譜。',
+ 'SF':'科学技術や未来、未知の存在を通して、人間と社会の可能性や危うさを考える作品群。',
+ '世界SF':'各国のSFを横断し、未来社会、宇宙、科学、人間観の違いを比較しながら読む旅。',
+ 'ディストピア文学':'自由や言葉が管理された社会を描き、権力、監視、同調圧力の怖さを考える作品群。',
+ 'ミステリー':'事件や謎を追いながら、論理、人間心理、社会の隠れた構造に迫る作品群。',
+ '世界ミステリー':'国や時代によって異なる探偵像、犯罪、推理の形式を世界の作品からたどる旅。',
+ 'ファンタジー':'魔法や異世界、神話的な存在を通して、現実では描きにくい願望や葛藤を表す作品群。',
+ 'ホラー':'怪異や恐怖を通して、死、未知、人間の心の暗部や社会的不安を描く作品群。',
+ 'ゴシック文学':'古城、秘密、怪物、狂気などを用い、美しさと恐怖が混ざる暗い物語世界を読む旅。',
+ 'マジックリアリズム':'日常の中に魔法や死者、神話が自然に存在する表現。歴史や社会を別の角度から描く作品群。',
+ '不条理文学':'理由の分からない出来事や理不尽な制度を通して、意味のない世界で生きる人間を描く作品群。',
+ '実存主義文学':'自由、孤独、生きる意味、選択の責任を問い、自分の生をどう引き受けるか考える作品群。',
+ 'ポストモダン文学':'語りの仕掛けや引用、虚構と現実の混在によって、「物語を信じること」自体を問い直す作品群。',
+ '古典文学':'長い時代を越えて読み継がれ、後世の物語、思想、人物像の土台となった作品を読む旅。',
+ '時代小説':'過去の日本を舞台に、武士、町人、制度、暮らしを物語として描く作品群。',
+ '歴史小説':'史実や実在人物をもとに、過去の社会と個人の選択を物語として捉え直す作品群。',
+ '神話・叙事詩':'神々や英雄、民族の起源を語る長い物語から、後世の文学の原型をたどる旅。',
+ '青春小説':'成長の途中にある人物の友情、恋愛、挫折、進路、自意識の揺れを描く作品群。',
+ '恋愛小説':'人を愛する喜びや執着、すれ違いを通して、関係と社会のルールを描く作品群。',
+ '児童文学':'子どもの視点や想像力を通して、成長、冒険、家族、善悪を世代を越えて読む作品群。',
+ '戯曲':'舞台上の台詞と行動を中心に作られた文学。人物の衝突や場面の緊張を想像しながら読む旅。',
+ '短編集':'短い物語を複数収めた作品。限られた文章で世界や人物を立ち上げる技術を味わう旅。',
+ 'エッセイ・随筆':'作者の経験や考え、観察を比較的自由な形式で綴り、その人のものの見方に触れる作品群。',
+ 'ロシア文学':'信仰、罪、革命、共同体、広大な社会の中の個人を、ロシアの歴史とともに読む旅。',
+ 'フランス文学':'恋愛、階級、思想、芸術、都市生活を通して、近代的な個人と社会の関係を読む旅。',
+ 'イギリス文学':'階級、家庭、帝国、風刺、社会の変化を、多様な時代と語り方からたどる旅。',
+ 'ドイツ文学':'思想、教養、芸術、国家、個人の内面を、ドイツ語圏の歴史とともに読む旅。',
+ 'アメリカ文学':'人種、移民、自由、格差、広大な土地と夢の裏側を、アメリカ社会から読む旅。',
+ 'ラテンアメリカ文学':'植民地支配、独裁、家族、神話、共同体の記憶を、現実と幻想が交わる物語から読む旅。',
+ '中国文学':'王朝、革命、家族、農村と都市の変化を、中国社会の長い歴史とともに読む旅。',
+ '韓国文学':'植民地支配、分断、家族、競争社会、ジェンダーを、韓国の近現代史から読む旅。',
+ '北欧文学':'厳しい自然、福祉社会、孤独、家族、神話を、北欧各国の文化から読む旅。',
+ 'アフリカ文学':'植民地支配、独立、民族、言語、伝統と近代化を、アフリカ各地の多様な声から読む旅。',
+ '南アジア文学':'インド分割、宗教、カースト、家族、植民地経験を、南アジアの歴史から読む旅。',
+ '東南アジア文学':'戦争、占領、独立、移民、多民族社会を、東南アジア各地の生活から読む旅。',
+ '中東・アラブ文学':'宗教、国家、戦争、難民、都市生活を、中東・アラブ圏の個人の声から読む旅。',
+ '東欧文学':'帝国、戦争、社会主義、全体主義、国境の変化を、東欧の歴史とユーモアから読む旅。',
+ 'カリブ文学':'奴隷制、植民地支配、移民、言語、島の共同体を、カリブ海地域の視点から読む旅。',
+ '越境・ポストコロニアル文学':'植民地支配後の社会や移民の経験から、国境、言語、故郷、アイデンティティを問う作品群。'
+};
+const STAGE1242={
+ '入門':'読みやすく特徴がつかみやすい作品から、この分野の入口を知る段階。',
+ '基礎':'代表的な主題と表現を押さえ、この分野らしさを理解する段階。',
+ '発展':'地域・時代・技法の違いを比較し、分野の広がりを確かめる段階。',
+ '深淵':'長大・複雑・実験的な作品へ進み、この分野の核心に挑む段階。'
+};
+function journeyName1242(p){return String(p.journey||p.name||'').replace(/の旅.*$/,'').replace(/【.*$/,'').trim()}
+function genreDescription1242(p){
+ const name=journeyName1242(p),base=BASE1242[name]||`${name}に関わる作品を、時代や地域の違いとともにたどる旅。`;
+ return base+' '+(STAGE1242[p.stage]||'代表作品を通して、この分野の特徴をつかむパック。');
+}
+function authorDescription1242(p){
+ const name=p.authorName||String(p.name||'').replace(/を知る旅.*$/,'');
+ return `${name}の作品を読み比べ、主題、文体、作風の変化をたどる作家パック。`;
+}
+function awardDescription1242(p){
+ const name=String(p.name||'').replace(/への旅.*$/,'');
+ if(name==='ノーベル文学賞')return 'ノーベル文学賞を受賞した作家の代表作から、世界的に評価された文学的業績をたどるパック。';
+ return `${name}の受賞作を読み、どのような作品が評価されてきたかを知る文学賞パック。`;
+}
+function applyDescriptions1242(){
+ EX_WORLD_PACKS.forEach(p=>{
+  if(p.type==='ジャンルパック')p.desc=genreDescription1242(p);
+  else if(p.type==='作家パック')p.desc=authorDescription1242(p);
+  else if(p.type==='文学賞パック')p.desc=awardDescription1242(p);
+ });
+ // 分類名を、内容が伝わる名称へ変更。
+ if(EX_GENRE_GROUPS['形式別']){
+   EX_GENRE_GROUPS['物語のかたち']=EX_GENRE_GROUPS['形式別'];
+   delete EX_GENRE_GROUPS['形式別'];
+ }
+ EX_WORLD_PACKS.forEach(p=>{if(p.group==='形式別')p.group='物語のかたち'});
+}
+applyDescriptions1242();
+const oldRenderPack1242=renderExPack;
+renderExPack=function(p,compactName=false){
+ const html=oldRenderPack1242(p,compactName);
+ const note=`<div class="pack-short-explanation-1242">${esc(p.desc||'')}</div>`;
+ return html.includes('pack-short-explanation-1242')?html:html.replace('</summary>',note+'</summary>');
+};
+const oldRenderEx1242=renderEx;
+renderEx=function(){applyDescriptions1242();return oldRenderEx1242()};
+document.title='文学RPG Ver.12.4.2';
+setTimeout(()=>{const x=document.querySelector('.title small');if(x)x.textContent='Ver.12.4.2'},0);
+window.literatureRpgV1242={version:'12.4.2',allPackDescriptions:true,genreDescriptions:Object.keys(BASE1242).length,renamedGroup:'物語のかたち'};
+})();
+</script>
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
 
