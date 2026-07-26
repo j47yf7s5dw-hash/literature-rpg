@@ -4194,5 +4194,117 @@ console.info('[文学RPG Ver.10.6.1] EXナビを再接続しました');
  console.info('[文学RPG Ver.10.9.1] 旧BOSS ENCOUNTER HP表示を停止し、BOSS APPEARSのHPへ一本化。',window.literatureRpgV109);
 })();
 </script>
+<style id="v110-passport-style">
+.pass110-hero{position:relative;overflow:hidden;border:0;background:linear-gradient(145deg,#162f3a,#35666a 62%,#8b6a32);color:#fff;padding:16px}.pass110-hero:after{content:'✦';position:absolute;right:14px;top:-24px;font-size:128px;opacity:.07}.pass110-kicker{font-size:10px;font-weight:900;letter-spacing:.14em;color:#f4d78d}.pass110-profile{display:grid;grid-template-columns:70px minmax(0,1fr);gap:13px;align-items:center;margin-top:8px}.pass110-level{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;text-align:center;background:linear-gradient(145deg,#f5d06b,#a96e21);border:3px solid #ffffff55;box-shadow:0 8px 24px #0004;font-size:10px}.pass110-level b{display:block;font-size:25px;line-height:1}.pass110-profile h2{margin:0 0 2px;font-size:21px}.pass110-profile p{margin:3px 0;color:#e3eeee;font-size:11px;line-height:1.55}.pass110-xp{height:8px;border-radius:99px;background:#ffffff25;overflow:hidden;margin-top:8px}.pass110-xp i{display:block;height:100%;background:linear-gradient(90deg,#f2ca68,#fff2bb)}.pass110-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:13px}.pass110-kpis>div{padding:8px 5px;text-align:center;border-radius:11px;background:#ffffff13;border:1px solid #ffffff20}.pass110-kpis b,.pass110-kpis small{display:block}.pass110-kpis b{font-size:18px}.pass110-kpis small{font-size:9px;color:#dce9e9}.pass110-head{display:flex;justify-content:space-between;gap:10px;align-items:end;margin:16px 2px 8px}.pass110-head h3{margin:0}.pass110-head small{color:var(--muted)}.pass110-memories{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pass110-memory{min-width:0;min-height:132px;border:1px solid var(--line);border-radius:15px;background:var(--paper);padding:10px;text-align:left;color:var(--ink);position:relative}.pass110-memory .slot{font-size:9px;color:var(--muted);font-weight:900}.pass110-memory b{display:block;font-size:13px;line-height:1.45;margin-top:7px;overflow-wrap:anywhere}.pass110-memory span{display:block;font-size:10px;color:var(--muted);margin-top:4px}.pass110-memory.empty{display:grid;place-items:center;text-align:center;border-style:dashed;color:var(--muted)}.pass110-memory .edit{position:absolute;right:7px;bottom:7px;font-size:9px;font-weight:900;color:#7d6228}.pass110-stamps{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pass110-stamp{border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--paper);display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:9px;align-items:center}.pass110-seal{width:42px;height:42px;border-radius:50%;border:2px dashed #b9a78c;display:grid;place-items:center;font-size:19px;filter:grayscale(1);opacity:.35}.pass110-stamp.on .pass110-seal{filter:none;opacity:1;border-color:#b68629;background:#fff4cf}.pass110-stamp b,.pass110-stamp small{display:block}.pass110-stamp small{font-size:9px;color:var(--muted);margin-top:2px}.pass110-grade{font-size:9px;border-radius:99px;padding:4px 6px;background:var(--soft);font-weight:900;white-space:nowrap}.pass110-timeline{border-left:2px solid #c49a4d;margin-left:8px;padding-left:14px}.pass110-event{position:relative;padding:0 0 14px}.pass110-event:before{content:'';position:absolute;left:-20px;top:4px;width:9px;height:9px;border-radius:50%;background:#c49a4d;border:3px solid var(--bg)}.pass110-event time{font-size:9px;color:var(--muted);font-weight:900}.pass110-event b{display:block;font-size:13px;margin-top:2px}.pass110-event span{font-size:10px;color:var(--muted)}.pass110-titles{display:flex;gap:7px;overflow:auto;padding-bottom:4px}.pass110-title{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:7px 10px;font-size:10px;font-weight:900;color:var(--ink)}.pass110-title.on{background:#3b302a;color:#fff;border-color:#3b302a}.pass110-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.pass110-actions button{border:0;border-radius:12px;min-height:43px;font-weight:900}.pass110-primary{background:#315c58;color:#fff}.pass110-secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line)!important}.pass110-modal{position:fixed;inset:0;z-index:11050;background:#15110dcc;display:flex;align-items:flex-end;justify-content:center}.pass110-sheet{width:min(680px,100%);max-height:88dvh;overflow:auto;background:var(--bg);border-radius:22px 22px 0 0;padding:14px 13px calc(18px + env(safe-area-inset-bottom))}.pass110-sheet-head{position:sticky;top:-14px;z-index:2;background:var(--bg);display:flex;justify-content:space-between;align-items:center;padding:10px 0}.pass110-sheet-head h2{margin:0}.pass110-close{width:36px;height:36px;border:0;border-radius:50%;font-size:20px;background:var(--soft)}.pass110-picker{display:grid;gap:7px}.pass110-pick{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:10px;text-align:left;color:var(--ink)}.pass110-pick b,.pass110-pick small{display:block}.pass110-pick small{color:var(--muted);margin-top:3px}.pass110-clear{width:100%;margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--soft);color:var(--ink);font-weight:900}
+@media(max-width:560px){.pass110-memories{grid-template-columns:1fr}.pass110-memory{min-height:92px}.pass110-stamps{grid-template-columns:1fr}.pass110-kpis{grid-template-columns:1fr 1fr}}
+.dark .pass110-memory,.dark .pass110-stamp,.dark .pass110-pick{background:var(--paper)}
+</style>
+<script id="v110-passport-script">
+(()=>{
+ if(window.literatureRpgV110)return;
+ function ensure110(){if(!state.passportV110||typeof state.passportV110!=='object')state.passportV110={};if(!Array.isArray(state.passportV110.memories))state.passportV110.memories=[];state.passportV110.memories=state.passportV110.memories.slice(0,3);return state.passportV110}
+ function books110(){return (typeof ALL_BOOKS!=='undefined'&&Array.isArray(ALL_BOOKS)?ALL_BOOKS:[])}
+ function read110(){return books110().filter(b=>entry(b.no).got)}
+ function date110(e){return e.date||(e.sessions||[]).map(x=>x.date).filter(Boolean).sort().slice(-1)[0]||''}
+ function area110(b){let r=typeof normRegion==='function'?normRegion(b.region):String(b.region||'不明');return r||'不明'}
+ function stamp110(n){if(n>=10)return['文学通','expert'];if(n>=5)return['踏破','master'];if(n>=3)return['探検中','explore'];if(n>=1)return['初上陸','landed'];return['未訪問','']}
+ function memories110(){const p=ensure110(),all=books110();return [0,1,2].map(i=>all.find(b=>b.no===Number(p.memories[i]))||null)}
+ function titles110(){try{return typeof unlockedAchievements==='function'?unlockedAchievements().map(a=>a.title).filter(Boolean):[typeof equippedTitle==='function'?equippedTitle():'見習い読書家']}catch(e){return['見習い読書家']}}
+ function profileLine110(rows){if(!rows.length)return '最初の一冊を待つ、文学世界の旅人。';const m={};rows.forEach(b=>{const r=area110(b);m[r]=(m[r]||0)+1});const top=Object.entries(m).sort((a,b)=>b[1]-a[1])[0];return `${top[0]}を中心に探索中。${new Set(rows.map(b=>b.author)).size}人の作家と出会った旅人。`}
+ function timeline110(rows){return rows.map(b=>({b,d:date110(entry(b.no))})).filter(x=>x.d).sort((a,b)=>b.d.localeCompare(a.d)||b.b.no-a.b.no).slice(0,20)}
+ function render110(){
+  const rows=read110(),c=typeof stats==='function'?stats():{xp:rows.length*100,notes:0},li=typeof levelInfo==='function'?levelInfo(c.xp||0):{level:1,pct:0,next:120},mem=memories110(),tl=timeline110(rows),areas={};books110().forEach(b=>{const r=area110(b);if(!areas[r])areas[r]={total:0,read:0,icon:r==='日本'?'🗾':'🌍'};areas[r].total++;if(entry(b.no).got)areas[r].read++});const areaRows=Object.entries(areas).sort((a,b)=>b[1].read-a[1].read||a[0].localeCompare(b[0],'ja')),titles=titles110(),eq=typeof equippedTitle==='function'?equippedTitle():titles[0],bosses=(window.THEME_BOSS_BATTLES||[]).filter(b=>state.themeBossBattles?.[b.id]?.defeatedAt).length;
+  passportView.innerHTML=`<div class="panel pass110-hero"><div class="pass110-kicker">LITERARY PASSPORT / VER.11.0</div><div class="pass110-profile"><div class="pass110-level">LEVEL<b>${li.level}</b></div><div><h2>${esc(eq)}</h2><p>${esc(profileLine110(rows))}</p><div>${Number(c.xp||0).toLocaleString()} XP</div><div class="pass110-xp"><i style="width:${li.pct}%"></i></div><p>次のレベルまで ${Math.max(0,(li.next||0)-(c.xp||0)).toLocaleString()} XP</p></div></div><div class="pass110-kpis"><div><b>${rows.length}</b><small>総読了</small></div><div><b>${Object.values(areas).filter(x=>x.read).length}</b><small>訪問文学圏</small></div><div><b>${c.notes||0}</b><small>文学ノート</small></div><div><b>${bosses}</b><small>ボス撃破</small></div></div></div>
+  <div class="pass110-head"><div><h3>💎 思い出の3冊</h3><small>自分で選ぶ、読書人生の展示棚。</small></div></div><div class="pass110-memories">${mem.map((b,i)=>b?`<button class="pass110-memory" data-pass110-memory="${i}"><span class="slot">MEMORY ${i+1}</span><b>『${esc(b.title)}』</b><span>${esc(b.author)}</span><span class="edit">変更</span></button>`:`<button class="pass110-memory empty" data-pass110-memory="${i}"><span>＋<br>思い出の一冊を選ぶ</span></button>`).join('')}</div>
+  <div class="pass110-head"><div><h3>🛂 地域スタンプ帳</h3><small>World Mapで探し、Passportで旅を振り返る。</small></div></div><div class="pass110-stamps">${areaRows.map(([r,x])=>{const s=stamp110(x.read);return `<article class="pass110-stamp ${x.read?'on':''}"><div class="pass110-seal">${x.icon}</div><div><b>${esc(r)}</b><small>${x.read}/${x.total}冊読了</small></div><span class="pass110-grade">${s[0]}</span></article>`}).join('')}</div>
+  <div class="pass110-head"><div><h3>👑 称号コレクション</h3><small>獲得済みの称号をその場で装備。</small></div></div><div class="pass110-titles">${titles.map(t=>`<button class="pass110-title ${t===eq?'on':''}" data-pass110-title="${encodeURIComponent(t)}">${esc(t)}</button>`).join('')}</div>
+  <div class="pass110-head"><div><h3>📜 読書履歴</h3><small>読了日が記録された作品を新しい順に表示。</small></div></div>${tl.length?`<div class="panel"><div class="pass110-timeline">${tl.map(x=>`<button class="pass110-event" data-pass110-book="${x.b.no}" style="display:block;width:100%;border:0;background:none;text-align:left;color:var(--ink);padding-right:0"><time>${esc(x.d)}</time><b>『${esc(x.b.title)}』を読了</b><span>${esc(x.b.author)}｜${esc(area110(x.b))}</span></button>`).join('')}</div></div>`:'<div class="panel empty">読了日を登録すると、ここに旅の履歴が刻まれます。</div>'}
+  <div class="pass110-actions"><button class="pass110-primary" onclick="setView('world')">🌍 次の土地を探す</button><button class="pass110-secondary" onclick="setView('home')">🏠 HOMEへ</button></div>`;
+  passportView.querySelectorAll('[data-pass110-memory]').forEach(x=>x.onclick=()=>openMemory110(Number(x.dataset.pass110Memory)));
+  passportView.querySelectorAll('[data-pass110-title]').forEach(x=>x.onclick=()=>{const t=decodeURIComponent(x.dataset.pass110Title);if(typeof setTitle==='function')setTitle(t);render110();toast(`称号「${t}」を装備しました`)});
+  passportView.querySelectorAll('[data-pass110-book]').forEach(x=>x.onclick=()=>openDetail(Number(x.dataset.pass110Book)));
+ }
+ function openMemory110(slot){document.getElementById('pass110Modal')?.remove();const rows=read110().slice().sort((a,b)=>date110(entry(b.no)).localeCompare(date110(entry(a.no)))||a.title.localeCompare(b.title,'ja')),el=document.createElement('div');el.id='pass110Modal';el.className='pass110-modal';el.onclick=e=>{if(e.target===el)el.remove()};el.innerHTML=`<div class="pass110-sheet"><div class="pass110-sheet-head"><div><div class="pass110-kicker" style="color:#8b6a32">MEMORY ${slot+1}</div><h2>思い出の一冊を選ぶ</h2></div><button class="pass110-close">×</button></div><div class="pass110-picker">${rows.map(b=>`<button class="pass110-pick" data-pass110-pick="${b.no}"><b>『${esc(b.title)}』</b><small>${esc(b.author)}｜${esc(date110(entry(b.no))||'読了日未記録')}</small></button>`).join('')||'<div class="empty">読了済みの作品がありません。</div>'}</div><button class="pass110-clear">この枠を空にする</button></div>`;document.body.appendChild(el);el.querySelector('.pass110-close').onclick=()=>el.remove();el.querySelectorAll('[data-pass110-pick]').forEach(x=>x.onclick=()=>{const p=ensure110(),no=Number(x.dataset.pass110Pick);p.memories=p.memories.filter(v=>Number(v)!==no);while(p.memories.length<3)p.memories.push(null);p.memories[slot]=no;saveState();el.remove();render110();toast('思い出の一冊を登録しました')});el.querySelector('.pass110-clear').onclick=()=>{const p=ensure110();while(p.memories.length<3)p.memories.push(null);p.memories[slot]=null;saveState();el.remove();render110();toast('思い出の枠を空にしました')}
+ }
+ window.renderPassport110=render110;window.openMemory110=openMemory110;
+ const prevSetView110=setView;setView=function(v){prevSetView110(v);if(v==='passport')render110()};window.setView=setView;
+ const small=document.querySelector('.title small');if(small)small.textContent='Ver.11.0';document.title='文学RPG Ver.11.0 Passport大型アップデート';
+ window.literatureRpgV110={version:'11.0',feature:'Passport大型アップデート',newStorageKeys:0,storageCompatible:true,sections:['文学者プロフィール','地域スタンプ帳','読書履歴','称号コレクション','思い出の3冊']};
+ console.info('[文学RPG Ver.11.0] Passport大型アップデートを適用。',window.literatureRpgV110);
+})();
+</script>
+
+
+
+<!-- Ver.11.1：作品詳細UI改善。既存保存キー・記録形式を維持。 -->
+<style id="v111-detail-style">
+.ver111-detail{padding-bottom:24px}
+.ver111-detail .detail-hero{padding:19px 17px 17px;border-radius:20px;background:linear-gradient(145deg,#342820,#70503c);box-shadow:0 10px 24px rgba(49,34,25,.15)}
+.ver111-detail .detail-hero h2{font-size:24px;line-height:1.35;margin:7px 0 5px}.ver111-detail .detail-hero .hook{line-height:1.65;margin-top:12px}
+.v111-meta-chips{display:flex;gap:6px;overflow:auto;padding:1px 1px 5px;margin-top:10px;scrollbar-width:none}.v111-meta-chips::-webkit-scrollbar{display:none}.v111-meta-chips span{flex:0 0 auto;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800}
+.v111-primary{margin:11px 0 3px;border-radius:17px;padding:13px;background:linear-gradient(145deg,#fff8e5,#f3e1b8);border:1px solid #d9b86f}.v111-primary button{width:100%;border:0;border-radius:13px;padding:13px 12px;font-size:15px;font-weight:900;background:#5d3827;color:#fff}.v111-primary small{display:block;text-align:center;margin-top:7px;color:#725e50;line-height:1.45}
+.v111-primary.reading{background:linear-gradient(145deg,#eef7f1,#dfeee5);border-color:#a6c6b2}.v111-primary.reading button{background:#315a45}.v111-primary.done{background:linear-gradient(145deg,#fff8de,#f5dfa0);border-color:#d8b34f}.v111-primary.done button{background:#7a541c}
+.ver111-detail .v86-statusbar{margin:10px 0 0}.ver111-detail .detail-actions{position:static;margin:8px 0 0;padding:8px 0;border-top:0;background:transparent;backdrop-filter:none}
+.ver111-detail .v86-block{margin-top:10px;border-radius:16px}.ver111-detail .v86-block-title{padding:11px 13px;font-size:14px}.ver111-detail .v86-block-body{padding:0 11px 11px}.ver111-detail .detail-section{padding:12px 2px}.ver111-detail .detail-section p{line-height:1.78;margin:7px 0}
+.ver111-detail .data-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.ver111-detail .data-cell{padding:8px}.ver111-detail .data-cell b{font-size:12px}
+.v111-spoiler{border:1px dashed #c09b68!important;border-radius:13px!important;margin:8px 0!important;padding:0!important;overflow:hidden}.v111-spoiler>summary{list-style:none;cursor:pointer;padding:12px;font-weight:900;background:rgba(185,134,44,.08);display:flex;justify-content:space-between;gap:8px}.v111-spoiler>summary::-webkit-details-marker{display:none}.v111-spoiler .v111-spoiler-body{padding:4px 12px 12px}.v111-lock{padding:14px;text-align:center;color:var(--muted);font-size:12px;line-height:1.6}
+.v111-related-note{font-size:11px;color:var(--muted);margin-bottom:8px}.ver111-detail .related-book{padding:9px}.ver111-detail .related-book:nth-of-type(n+4){display:none}
+.ver111-detail.state-unread .record-hub details:nth-of-type(2),.ver111-detail.state-reading .record-hub details:nth-of-type(2){display:none}.ver111-detail.state-done .v111-before-only{display:none}
+.v111-read-reason{font-weight:800;font-size:14px;line-height:1.7;border-left:4px solid #bd8c35;padding:8px 11px;background:rgba(189,140,53,.07);border-radius:0 10px 10px 0}
+@media(max-width:430px){.ver111-detail .detail-hero h2{font-size:21px}.v111-primary{padding:10px}.v111-primary button{padding:12px}.ver111-detail .data-grid{grid-template-columns:1fr 1fr}}
+.dark .v111-primary{background:#453923;border-color:#725c31}.dark .v111-primary.reading{background:#293d32;border-color:#476b57}.dark .v111-primary.done{background:#473d25}.dark .v111-meta-chips span{background:var(--paper)}
+</style>
+<script id="v111-detail-script">
+(function(){
+ 'use strict';
+ const VERSION='11.1';
+ function statusOf(no){const e=entry(no),r=e.reading||{};return e.got?'done':((r.status==='読書中'||r.startDate||Number(r.currentPage)>0)?'reading':'unread')}
+ window.v111StartReading=function(no){const e=entry(no);e.reading=e.reading||{};e.reading.status='読書中';if(!e.reading.startDate)e.reading.startDate=new Date().toISOString().slice(0,10);saveState();toast('読書を開始しました');currentDetailNo=null;openDetail(no)};
+ window.v111OpenReading=function(no){const d=document.querySelector('#modal .record-hub details');if(d){d.open=true;d.scrollIntoView({behavior:'smooth',block:'start'})}}
+ window.v111OpenNotes=function(no){const ds=document.querySelectorAll('#modal .record-hub details');if(ds[1]){ds[1].open=true;ds[1].scrollIntoView({behavior:'smooth',block:'start'})}}
+ function enhance(no){
+   const wrap=document.querySelector('#modal .detail-wrap');if(!wrap||wrap.classList.contains('ver111-detail'))return;
+   const b=ALL_BOOKS.find(x=>Number(x.no)===Number(no));if(!b)return;const e=entry(no),stateName=statusOf(no),d=enrich(b);
+   wrap.classList.add('ver111-detail','state-'+stateName);
+   const hero=wrap.querySelector('.detail-hero');
+   if(hero){hero.insertAdjacentHTML('afterend',`<div class="v111-meta-chips"><span>${esc(b.length)}</span><span>難易度 ${esc(String(b.difficulty))}</span><span>${esc(b.genre)}</span><span>${esc(b.region)}</span><span>${yearLabel(b)}</span></div>`)}
+   const statusbar=wrap.querySelector('.v86-statusbar');
+   const primary=document.createElement('section');primary.className='v111-primary '+stateName;
+   if(stateName==='unread')primary.innerHTML=`<button onclick="v111StartReading(${no})">📖 この作品を読む</button><small>開始日を今日として読書中に登録します。読了扱いにはなりません。</small>`;
+   else if(stateName==='reading')primary.innerHTML=`<button onclick="v111OpenReading(${no})">📍 続きから読む・進捗を記録</button><small>${e.reading?.currentPage&&e.reading?.totalPages?`${e.reading.currentPage}/${e.reading.totalPages}ページまで記録済み`:'読書中。ページ数やメモを残せます。'}</small>`;
+   else primary.innerHTML=`<button onclick="v111OpenNotes(${no})">✍️ 読後の文学ノートを書く</button><small>${(e.sessions||[]).length?`読了記録 ${(e.sessions||[]).length}回`:'読了済み'}。問いと関連作品が解放されています。</small>`;
+   (statusbar||hero)?.insertAdjacentElement('afterend',primary);
+   const blocks=[...wrap.querySelectorAll('.v86-block')];
+   if(blocks[0])blocks[0].querySelector('.v86-block-title').textContent='作品について';
+   if(blocks[1])blocks[1].querySelector('.v86-block-title').textContent='この作品を読む理由';
+   if(blocks[2])blocks[2].querySelector('.v86-block-title').textContent=stateName==='done'?'読了後の記録':'読書の準備と記録';
+   const synopsis=[...wrap.querySelectorAll('.detail-section')].find(x=>(x.querySelector('h3')?.textContent||'').includes('あらすじ'));
+   if(synopsis){const p=synopsis.querySelector('p');if(p)p.style.maxWidth='42em'}
+   const appeal=[...wrap.querySelectorAll('.detail-section')].find(x=>(x.querySelector('h3')?.textContent||'').includes('面白さ'));
+   if(appeal){const p=appeal.querySelector('p');if(p)p.classList.add('v111-read-reason')}
+   const before=[...wrap.querySelectorAll('.detail-section')].find(x=>(x.querySelector('h3')?.textContent||'').includes('読む前'));
+   if(before)before.classList.add('v111-before-only');
+   const question=[...wrap.querySelectorAll('.detail-section')].find(x=>(x.querySelector('h3')?.textContent||'').includes('読後に考えたい問い'));
+   if(question){
+     if(stateName==='done'){
+       const details=document.createElement('details');details.className='v111-spoiler';details.open=true;details.innerHTML='<summary><span>🔓 読了後の問い</span><span>−</span></summary><div class="v111-spoiler-body"></div>';question.parentNode.insertBefore(details,question);details.querySelector('.v111-spoiler-body').appendChild(question);
+     }else{
+       question.innerHTML='<div class="v111-lock">🔒 読了すると「読後に考えたい問い」が解放されます。<br>先入観なしで作品と出会うため、内容はまだ表示しません。</div>';
+       question.classList.add('v111-spoiler');
+     }
+   }
+   const related=[...wrap.querySelectorAll('.detail-section')].find(x=>(x.querySelector('h3')?.textContent||'').includes('文学的なつながり'));
+   if(related){const list=related.querySelector('.related-books');if(list)list.insertAdjacentHTML('beforebegin','<div class="v111-related-note">同じ作家・地域・主題から、次の3冊を優先表示しています。</div>')}
+   const explore=wrap.querySelector('.v86-explore');if(explore){explore.querySelector('summary span:first-child').textContent='次に読む作品を探す';if(stateName==='done')explore.open=true}
+   const actions=wrap.querySelector('.detail-actions');if(actions){const mark=actions.querySelector('.read-mark');if(mark){mark.textContent=e.got?'✓ 読了':'☆';mark.style.width=e.got?'86px':'46px'}}
+ }
+ const previous=window.openDetail;
+ window.openDetail=function(no){previous.apply(this,arguments);setTimeout(()=>enhance(no),80)};openDetail=window.openDetail;
+ document.title='文学RPG Ver.11.1';const small=document.querySelector('.title small');if(small)small.textContent='Ver.11.1';
+ window.literatureRpgV111={version:VERSION,feature:'作品詳細UI改善',newStorageKeys:0,compatibleFrom:'11.0'};
+ console.info('[文学RPG Ver.11.1]',window.literatureRpgV111);
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
