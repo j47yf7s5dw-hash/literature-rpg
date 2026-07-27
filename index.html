@@ -5910,3 +5910,44 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
  window.literatureRpgV131={version:VERSION,addsFeatures:false,compactPackCards:true,collapsedDescriptionLines:2,keepsExistingPacks:true};
 })();
 </script>
+
+
+<!-- Ver.13.2.2：日本作家15パック全件表示修正 -->
+<style id="v1322-author-pack-all-visible">
+/* 横幅はカード側で抑え、一覧コンテナは縦方向に切り取らない */
+.regional-pack-group .genre-major-body,
+.regional-pack-group .pack-grid{
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+.regional-pack-group .pack-grid{
+  display:grid!important;
+  grid-auto-flow:row!important;
+  grid-auto-rows:auto!important;
+  align-content:start!important;
+}
+.regional-pack-group .pack-card{
+  display:block!important;
+  visibility:visible!important;
+  min-width:0!important;
+  width:100%!important;
+  max-width:100%!important;
+}
+</style>
+<script id="v1322-author-pack-all-visible-script">
+(()=>{
+ 'use strict';
+ const VERSION='13.2.2';
+ const previousRegional1322=renderRegionalPackGroups;
+ renderRegionalPackGroups=function(type,ps){
+   const html=previousRegional1322(type,ps);
+   return html;
+ };
+ const applyVersion1322=()=>document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);
+ document.title='文学RPG Ver.'+VERSION;
+ applyVersion1322();setTimeout(applyVersion1322,0);
+ try{if(typeof currentView!=='undefined'&&currentView==='ex')renderEx()}catch(e){}
+ window.literatureRpgV1322={version:VERSION,authorPackClippingFixed:true,allRegionalCardsVisible:true};
+})();
+</script>
