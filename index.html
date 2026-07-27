@@ -374,6 +374,28 @@ img,svg,canvas,video{max-width:100%;height:auto}
  .data-grid{grid-template-columns:1fr!important}
 }
 </style>
+
+<style id="v1321-author-pack-overflow-fix">
+/* Ver.13.2.1.1: 作家パックの横はみ出し修正 */
+.ex-category[data-pack-category="author"],
+.regional-pack-group,
+.regional-pack-group .genre-major-body,
+.regional-pack-group .pack-grid,
+.regional-pack-group .pack-card{min-width:0;max-width:100%;box-sizing:border-box}
+.regional-pack-group .pack-grid{grid-template-columns:minmax(0,1fr);width:100%;overflow:hidden}
+.regional-pack-group .pack-summary-top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;width:100%;min-width:0}
+.regional-pack-group .pack-title-row{min-width:0;max-width:100%;flex-wrap:wrap}
+.regional-pack-group .pack-title-row h3{min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:break-word;line-height:1.45}
+.regional-pack-group .pack-compact-side{min-width:max-content;max-width:100%}
+.regional-pack-group .pack-body,.regional-pack-group .author-pack-guide,.regional-pack-group .guide-grid,.regional-pack-group .guide-item{min-width:0;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+@media(min-width:760px){.regional-pack-group .pack-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){
+ .regional-pack-group .pack-summary-top{grid-template-columns:minmax(0,1fr);gap:7px}
+ .regional-pack-group .pack-compact-side{justify-self:end}
+ .regional-pack-group .pack-title-row{align-items:flex-start}
+}
+</style>
+
 </head><body><header><div class="title">📚 文学RPG <small>Ver.12.6</small></div><div class="sub">500冊の本編＋EX612作品を巡る、全1112作品の文学RPG</div><button aria-label="表示テーマを切り替える" class="theme-toggle" id="themeToggle" type="button">◐</button><nav aria-label="メインナビゲーション">
 <button class="active" data-view="home">HOME</button><button data-view="phases">Phase</button><button data-view="ex">EX</button><button data-view="books">作品図鑑</button><button data-view="authors">作家図鑑</button><button data-view="timeline">文学史</button><button data-view="bosses">ボス戦</button><button data-view="backup">保存</button>
 </nav></header><main>
@@ -5319,7 +5341,7 @@ window.literatureRpgV1242={version:'12.4.2',allPackDescriptions:true,genreDescri
 
 
 
-<!-- Ver.13.2：パック詳細の段階切り替えと視認性整理 -->
+<!-- Ver.13.2.1：パック詳細の段階切り替えと視認性整理 -->
 <style id="v132-pack-detail-tabs-style">
 .pack-body{padding-bottom:9px}
 .pack-expanded-head{display:grid;gap:8px}
