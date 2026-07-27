@@ -5747,3 +5747,64 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
  window.literatureRpgV130={version:VERSION,search:true,kindFilter:true,progressFilter:true,addsPanels:false};
 })();
 </script>
+
+<!-- Ver.13.1：パックカード引き算UI -->
+<style id="v131-pack-card-polish">
+/* 一覧では「名前・残り冊数・進捗・短い説明」だけを優先する */
+.pack-grid{gap:7px}
+.pack-card{border-radius:13px;box-shadow:none;transition:border-color .16s ease,background-color .16s ease}
+.pack-card:active{transform:none}
+.pack-card summary{padding:9px 10px 8px;gap:5px}
+.pack-summary-top{gap:7px;align-items:flex-start}
+.pack-title-row{gap:6px;align-items:center}
+.pack-title-row h3{font-size:14px;line-height:1.3}
+.pack-chevron{font-size:10px;color:var(--muted);margin-top:1px}
+.pack-remaining{font-size:9px;padding:3px 6px;line-height:1.1}
+.pack-compact-side{gap:5px;align-items:center}
+.pack-compact-count{font-size:11px;font-weight:900;color:var(--muted)}
+.pack-compact-percent{display:none!important}
+.pack-pin{padding:4px 6px;font-size:11px;opacity:.68}
+.pack-pin.on{opacity:1}
+.pack-compact-meta{display:block}
+.pack-compact-chips{display:none!important}
+.pack-compact-progress{width:100%}
+.pack-progress{height:5px}
+.pack-short-explanation-1242{margin:0;color:var(--muted);font-size:11px;line-height:1.45;display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.pack-card[open] .pack-short-explanation-1242{display:none!important}
+.pack-card[open] summary{padding-bottom:9px;background:var(--soft)}
+.pack-body{padding:0 10px 7px}
+.pack-expanded-head{padding-top:9px}
+.pack-expanded-head>p.meta{font-size:12px;line-height:1.65;margin:0 0 9px}
+.pack-expanded-stats{gap:6px}
+.pack-expanded-stat{padding:7px 5px}
+.pack-expanded-stat b{font-size:14px}
+.pack-expanded-stat span{font-size:9px}
+.pack-expanded-progress{margin:7px 0}
+.pack-tools-inline{gap:6px;margin:8px 0}
+.pack-tools-inline button{padding:7px 9px;font-size:10px;background:transparent;border:1px solid var(--line);color:var(--muted)}
+.ex-book{padding:8px 0}
+.genre-major{margin:7px 0}
+.genre-major>summary{padding:10px 11px;border-radius:12px;font-size:13px}
+.genre-major[open]>summary{border-radius:12px 12px 0 0}
+.genre-major-body{padding:7px;border-radius:0 0 12px 12px}
+/* 補助情報は開いた時だけ。カード一覧の密度を守る */
+.pack-card:not([open]) .pack-type,.pack-card:not([open]) .pack-achievement{display:none!important}
+@media(max-width:430px){
+ .pack-card summary{padding:8px 9px 7px}
+ .pack-title-row h3{font-size:13px}
+ .pack-short-explanation-1242{font-size:10.5px}
+ .pack-pin{padding:3px 5px}
+ .genre-major-body{padding:6px}
+}
+</style>
+<script id="v131-pack-card-polish-script">
+(()=>{
+ 'use strict';
+ const VERSION='13.1';
+ document.title='文学RPG Ver.'+VERSION;
+ const applyVersion=()=>document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);
+ applyVersion();
+ setTimeout(applyVersion,0);
+ window.literatureRpgV131={version:VERSION,addsFeatures:false,compactPackCards:true,collapsedDescriptionLines:2,keepsExistingPacks:true};
+})();
+</script>
