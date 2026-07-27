@@ -5669,3 +5669,81 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
 })();
 </script>
 
+
+<!-- Ver.13.0：読書パック検索・絞り込み -->
+<style id="v130-pack-discovery-style">
+.pack-discovery-130{margin:10px 0;padding:12px;background:var(--paper);border:1px solid var(--line);border-radius:15px;display:grid;gap:9px}
+.pack-search-130{position:relative}.pack-search-130 input{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:11px 38px 11px 12px;font-size:15px}
+.pack-search-130 input:focus{outline:3px solid rgba(134,101,154,.22);border-color:#86659a}.pack-search-130 span{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none}
+.pack-filter-row-130{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pack-filter-row-130 select{min-width:0;width:100%;border:1px solid var(--line);border-radius:11px;background:var(--paper);color:var(--ink);padding:10px;font-weight:800}
+.pack-result-row-130{display:flex;justify-content:space-between;align-items:center;gap:8px}.pack-result-row-130 button{border:0;background:transparent;color:#72507c;font-weight:800;padding:5px}.pack-empty-130{padding:24px 12px;text-align:center;color:var(--muted);background:var(--paper);border:1px dashed var(--line);border-radius:14px}
+.ex-pack-tools{display:none!important}
+@media(max-width:420px){.pack-filter-row-130{grid-template-columns:1fr}.pack-discovery-130{padding:10px}}
+.dark .pack-search-130 input{background:#28202b}.dark .pack-result-row-130 button{color:#d4b5de}
+</style>
+<script id="v130-pack-discovery">
+(()=>{
+ 'use strict';
+ const VERSION='13.0';
+ let search130='',kind130='all',progress130='all';
+ const normalize130=v=>String(v||'').normalize('NFKC').toLowerCase().replace(/\s+/g,'');
+ function kindMatch130(p){
+   if(kind130==='all')return true;
+   if(kind130==='region')return p.type==='ジャンルパック'&&p.group==='国・地域';
+   if(kind130==='genre')return p.type==='ジャンルパック'&&p.group!=='国・地域';
+   if(kind130==='author')return p.type==='作家パック';
+   if(kind130==='award')return p.type==='文学賞パック';
+   return true;
+ }
+ function progressMatch130(p){
+   if(progress130==='all')return true;
+   const total=packTotalCount(p),read=packReadCount(p);
+   if(progress130==='notStarted')return read===0;
+   if(progress130==='inProgress')return read>0&&read<total;
+   if(progress130==='complete')return total>0&&read===total;
+   return true;
+ }
+ function searchMatch130(p){
+   if(!search130)return true;
+   const books=(p.nos||[]).map(no=>ALL_BOOKS.find(b=>b.no===no)).filter(Boolean);
+   const hay=[p.name,p.desc,p.type,p.group,p.journey,p.stage,p.authorName,...books.flatMap(b=>[b.title,b.author])].join(' ');
+   return normalize130(hay).includes(normalize130(search130));
+ }
+ function matches130(p){return kindMatch130(p)&&progressMatch130(p)&&searchMatch130(p)}
+ function matchedPacks130(){return EX_WORLD_PACKS.filter(matches130)}
+ function controls130(){
+   const count=matchedPacks130().length;
+   return `<div class="pack-discovery-130" id="packDiscovery130"><div class="pack-search-130"><input id="packSearch130" type="search" value="${esc(search130)}" placeholder="パック名・作家名・作品名で検索" aria-label="読書パックを検索" oninput="setPackSearch130(this.value)"><span>🔎</span></div><div class="pack-filter-row-130"><select aria-label="パックの種類" onchange="setPackKind130(this.value)"><option value="all" ${kind130==='all'?'selected':''}>すべての種類</option><option value="region" ${kind130==='region'?'selected':''}>国・地域</option><option value="genre" ${kind130==='genre'?'selected':''}>ジャンル・主題・潮流・形式</option><option value="author" ${kind130==='author'?'selected':''}>作家パック</option><option value="award" ${kind130==='award'?'selected':''}>文学賞パック</option></select><select aria-label="進捗状況" onchange="setPackProgress130(this.value)"><option value="all" ${progress130==='all'?'selected':''}>すべての進捗</option><option value="notStarted" ${progress130==='notStarted'?'selected':''}>未着手</option><option value="inProgress" ${progress130==='inProgress'?'selected':''}>進行中</option><option value="complete" ${progress130==='complete'?'selected':''}>制覇済み</option></select></div><div class="pack-result-row-130"><span class="meta"><b>${count}</b>パック表示</span>${search130||kind130!=='all'||progress130!=='all'?'<button onclick="resetPackFilters130()">条件をクリア</button>':''}</div></div>`;
+ }
+ function refresh130(focus=false){
+   const host=document.getElementById('exWorldCategories');if(host)host.innerHTML=renderExCategories();
+   const box=document.getElementById('packDiscovery130');if(box)box.outerHTML=controls130();
+   if(focus){const input=document.getElementById('packSearch130');if(input){input.focus();input.setSelectionRange(input.value.length,input.value.length)}}
+ }
+ window.setPackSearch130=v=>{search130=v;refresh130(true)};
+ window.setPackKind130=v=>{kind130=v;refresh130(false)};
+ window.setPackProgress130=v=>{progress130=v;refresh130(false)};
+ window.resetPackFilters130=()=>{search130='';kind130='all';progress130='all';refresh130(false)};
+ const oldCategories130=renderExCategories;
+ renderExCategories=function(){
+   const all=EX_WORLD_PACKS,visible=all.filter(matches130);
+   if(!visible.length)return '<div class="pack-empty-130">条件に合う読書パックがありません。</div>';
+   const original=EX_WORLD_PACKS.slice();
+   try{EX_WORLD_PACKS.splice(0,EX_WORLD_PACKS.length,...visible);return oldCategories130()}
+   finally{EX_WORLD_PACKS.splice(0,EX_WORLD_PACKS.length,...original)}
+ };
+ const oldRenderEx130=renderEx;
+ renderEx=function(){
+   const r=oldRenderEx130();
+   const sort=exView.querySelector('.ex-sort-row');
+   if(sort&&!exView.querySelector('#packDiscovery130'))sort.insertAdjacentHTML('beforebegin',controls130());
+   return r;
+ };
+ setTimeout(()=>{
+   const label=document.querySelector('.title small');if(label)label.textContent='Ver.13.0';
+   document.title=document.title.replace(/Ver\.?\s*12\.9|12\.9/g,'Ver.13.0');
+   if(typeof currentView!=='undefined'&&currentView==='ex')renderEx();
+ },0);
+ window.literatureRpgV130={version:VERSION,search:true,kindFilter:true,progressFilter:true,addsPanels:false};
+})();
+</script>
