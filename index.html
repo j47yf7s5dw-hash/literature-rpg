@@ -5317,6 +5317,86 @@ window.literatureRpgV1242={version:'12.4.2',allPackDescriptions:true,genreDescri
 })();
 </script>
 
+
+
+<!-- Ver.13.2：パック詳細の段階切り替えと視認性整理 -->
+<style id="v132-pack-detail-tabs-style">
+.pack-body{padding-bottom:9px}
+.pack-expanded-head{display:grid;gap:8px}
+.pack-desc-125,.pack-expanded-head>p.meta{order:1;margin:0!important}
+.pack-expanded-stats{order:2;margin:0}
+.pack-expanded-progress{order:3;margin:0}
+.pack-stage-progress{order:4;margin:0}
+.pack-achievement{order:5;margin:0}
+.pack-tools-inline{margin:8px 0 7px}
+.pack-stage-tabs-132{display:flex;gap:5px;overflow-x:auto;padding:2px 0 7px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.pack-stage-tabs-132::-webkit-scrollbar{display:none}
+.pack-stage-tab-132{flex:1 0 auto;min-width:62px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);padding:7px 10px;font-size:11px;font-weight:900;white-space:nowrap}
+.pack-stage-tab-132.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.pack-stage-panel-132{display:none}
+.pack-stage-panel-132.active{display:block}
+.pack-stage-panel-132 .reading-stage{display:none}
+.pack-stage-panel-132 .ex-book:first-child{border-top:1px solid var(--line)}
+.pack-stage-summary-132{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:1px 0 7px;padding:0 2px;color:var(--muted);font-size:10px;font-weight:800}
+.pack-stage-summary-132 b{color:var(--ink);font-size:11px}
+.pack-card .ex-book.is-read{opacity:.66}
+.pack-card .ex-book:not(.is-read){opacity:1}
+.pack-card .open-btn{min-width:44px}
+@media(max-width:430px){
+ .pack-expanded-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .pack-stage-tab-132{padding:7px 9px;min-width:58px}
+ .pack-body{padding-left:9px;padding-right:9px}
+}
+.dark .pack-stage-tab-132.active{background:#efe6f1;color:#2d2230;border-color:#efe6f1}
+</style>
+<script id="v132-pack-detail-tabs-script">
+(()=>{
+ const VERSION='13.2';
+ const STAGES132=['入門','基礎','発展','深淵'];
+ function splitStageList132(html){
+   const marker='<div class="reading-stage"><b>';
+   const first=html.indexOf(marker);
+   if(first<0)return html;
+   const before=html.slice(0,first),tail=html.slice(first);
+   const positions=[];
+   STAGES132.forEach(stage=>{
+     const key=marker+stage+'</b>';
+     const i=tail.indexOf(key);
+     if(i>=0)positions.push({stage,i});
+   });
+   positions.sort((a,b)=>a.i-b.i);
+   if(positions.length<2)return html;
+   const sections=positions.map((x,idx)=>({
+     stage:x.stage,
+     body:tail.slice(x.i,idx+1<positions.length?positions[idx+1].i:tail.length)
+   }));
+   const tabs=sections.map((x,i)=>`<button type="button" class="pack-stage-tab-132 ${i===0?'active':''}" data-stage="${x.stage}" onclick="switchPackStage132(this,'${x.stage}')">${x.stage}</button>`).join('');
+   const panels=sections.map((x,i)=>{
+     const read=(x.body.match(/class="ex-book[^\"]*is-read/g)||[]).length;
+     const total=(x.body.match(/class="ex-book/g)||[]).length;
+     return `<div class="pack-stage-panel-132 ${i===0?'active':''}" data-stage="${x.stage}"><div class="pack-stage-summary-132"><b>${x.stage}</b><span>${read}/${total}作読了</span></div>${x.body}</div>`;
+   }).join('');
+   return before+`<div class="pack-stage-tabs-132" role="tablist" aria-label="読書段階">${tabs}</div>${panels}`;
+ }
+ const previous132=renderExPack;
+ renderExPack=function(p,compactName=false){
+   const html=previous132(p,compactName);
+   if(p.type==='文学賞パック'||p.stage)return html;
+   return splitStageList132(html);
+ };
+ window.switchPackStage132=function(btn,stage){
+   const body=btn.closest('.pack-body');if(!body)return;
+   body.querySelectorAll('.pack-stage-tab-132').forEach(x=>x.classList.toggle('active',x===btn));
+   body.querySelectorAll('.pack-stage-panel-132').forEach(x=>x.classList.toggle('active',x.dataset.stage===stage));
+ };
+ document.title='文学RPG Ver.'+VERSION;
+ const setVersion=()=>document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);
+ setVersion();setTimeout(setVersion,0);
+ window.literatureRpgV132={version:VERSION,stageTabs:true,newPanels:false,compactDetail:true};
+ try{if(typeof currentView!=='undefined'&&currentView==='ex')renderEx()}catch(e){}
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
 
