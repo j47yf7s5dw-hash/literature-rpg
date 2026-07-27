@@ -6106,7 +6106,7 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
 })();
 </script>
 
-<!-- Ver.15.0：職業・ギルドランク・作品属性・ボス弱点 -->
+<!-- Ver.15.0.1：職業変更時のプロフィール再描画修正 -->
 <style id="v150-literary-guild-style">
 /* HOMEは既存パネルを増やさず、RPGステータスだけを4項目へ整理 */
 .v15-status-hero{background:linear-gradient(145deg,#111318,#262a31)!important;color:#fff!important;border:1px solid rgba(255,255,255,.08)!important;padding:13px!important}
@@ -6140,7 +6140,7 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
 (()=>{
  'use strict';
  if(window.literatureRpgV150)return;
- const VERSION='15.0';
+ const VERSION='15.0.1';
  const ATTRIBUTES=['青春','恋愛','哲学','戦争','SF','社会','心理','家族'];
  const JOBS={
   '批評家':{icon:'✒️',attrs:['社会','戦争'],desc:'制度・権力・歴史を読む。社会／戦争属性の読了で経験値+20。'},
@@ -6269,7 +6269,22 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
   const c=stats15(),p=ensureCareer15(),job=JOBS[p.job],rank=guildRank15(c.n||0),next=rank.next==null?'最高位':`次の昇格まで ${Math.max(0,rank.next-c.n)}冊`;
   return `<section class="panel v15-career-panel"><div class="v15-career-head"><div><h3>⚔️ 文学ギルド</h3><div class="meta">職業はいつでも変更可能。読了記録は作品IDのまま共有されます。</div></div><span class="badge">${esc(rank.name)}</span></div><select class="v15-job-select" onchange="setLiteraryJob15(this.value)">${Object.entries(JOBS).map(([name,x])=>`<option value="${esc(name)}" ${name===p.job?'selected':''}>${x.icon} ${esc(name)}</option>`).join('')}</select><div class="v15-job-affinity">${job.attrs.map(a=>`<span>${esc(a)} +20 XP</span>`).join('')}</div><p class="meta">${esc(job.desc)} 現在 ${c.jobMatched}冊一致・職業ボーナス +${Number(c.jobBonus||0).toLocaleString()} XP。</p><div class="v15-rank-track"><i style="width:${rank.pct}%"></i></div><div class="meta" style="margin-top:5px">${next}</div></section>`;
  }
- window.setLiteraryJob15=function(job){if(!JOBS[job])return;ensureCareer15().job=job;saveState();toast(`職業を「${job}」に変更しました`);const active=typeof activeViewName==='function'?activeViewName():'';if(active==='home'&&typeof renderHome==='function')renderHome();if(active==='profile'&&typeof renderProfile==='function')renderProfile()};
+ window.setLiteraryJob15=function(job){
+  if(!JOBS[job])return;
+  ensureCareer15().job=job;
+  saveState();
+  toast(`職業を「${job}」に変更しました`);
+  // プロフィールは上部ナビに存在しないため、activeViewName()ではHOMEと誤判定される。
+  // 実際に表示中のsectionを見て、職業説明・一致冊数・XPを即時再描画する。
+  const profileVisible=typeof profileView!=='undefined'&&profileView&&!profileView.classList.contains('hidden');
+  const homeVisible=typeof homeView!=='undefined'&&homeView&&!homeView.classList.contains('hidden');
+  if(profileVisible&&typeof renderProfile==='function')renderProfile();
+  else{
+   const panel=document.querySelector('#profileView .v15-career-panel');
+   if(panel)panel.outerHTML=careerPanel15();
+  }
+  if(homeVisible&&typeof renderHome==='function')renderHome();
+ };
  const baseRenderHome15=typeof window.renderHome==='function'?window.renderHome:(typeof renderHome==='function'?renderHome:null);
  function renderHome15(){const out=baseRenderHome15?.apply(this,arguments);enhanceHome15();return out}
  try{renderHome=renderHome15}catch(e){}window.renderHome=renderHome15;
