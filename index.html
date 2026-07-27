@@ -5956,3 +5956,128 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
  window.literatureRpgV1323={version:VERSION,authorFolderNestingFixed:true,safeStageTabs:true};
 })();
 </script>
+
+
+<!-- Ver.14.0：本編作品を読書パック・作家パック・文学賞パックへ統合 -->
+<style id="v140-main-book-pack-integration-style">
+.main-pack-badge{display:inline-flex;align-items:center;font-size:9px;font-weight:900;line-height:1;border-radius:999px;padding:4px 6px;margin-left:5px;background:#f6ead0;color:#76531d;border:1px solid #dfc58d;vertical-align:middle}
+.dark .main-pack-badge{background:#4d4028;color:#ffe5a8;border-color:#756039}
+</style>
+<script id="v140-main-book-pack-integration-script">
+(()=>{
+ 'use strict';
+ const VERSION='14.0';
+ const uniq=a=>[...new Set(a)];
+ const allGenreNames=()=>typeof EX_GENRE_GROUPS==='object'?uniq(Object.values(EX_GENRE_GROUPS).flat()):[];
+ const textOf=b=>[b.title,b.author,b.genre,b.region,b.era,b.why,b.hook,b.synopsis,b.appeal,b.recommend,b.question].filter(Boolean).join(' ').toLowerCase();
+ const contains=(t,words)=>words.some(w=>t.includes(String(w).toLowerCase()));
+ const scoreGenre=(b,name)=>{
+   const t=textOf(b), jp=typeof exIsJapan==='function'?exIsJapan(b):(b.category==='日本'||b.region==='日本');
+   let s=0;
+   try{if(typeof exGenreMatch==='function'&&exGenreMatch(b,name))s+=100}catch(e){}
+   const rules={
+    '純文学':['純文学','私小説','近代文学','現代文学','自然主義','心理小説','文学'],
+    'ミステリー':['ミステリー','推理','探偵','犯罪','謎','殺人','事件'],
+    'SF':['sf','科学','宇宙','未来','人工知能','ロボット','時間旅行'],
+    'ファンタジー':['ファンタジー','幻想','魔法','異世界','神話'],
+    'ホラー':['ホラー','怪奇','恐怖','幽霊','怪物','吸血鬼'],
+    '時代小説':['時代小説','江戸','侍','剣豪','武士'],
+    '歴史小説':['歴史小説','歴史','戦国','幕末','古代','中世'],
+    '青春小説':['青春','成長','学校','高校','少年','少女'],
+    '恋愛小説':['恋愛','愛','結婚','恋人'],
+    '私小説':['私小説','告白','自伝的','自己'],
+    'エッセイ・随筆':['随筆','エッセイ','評論','紀行'],
+    '児童文学':['児童文学','童話','子ども','少年少女'],
+    '世界SF':['sf','科学','宇宙','未来','人工知能','ロボット','ディストピア'],
+    '世界ミステリー':['ミステリー','推理','探偵','犯罪','謎','殺人'],
+    'ゴシック文学':['ゴシック','怪奇','恐怖','怪物','吸血鬼','幽霊'],
+    'ディストピア文学':['ディストピア','監視','全体主義','統制','管理社会'],
+    'マジックリアリズム':['マジックリアリズム','魔術的リアリズム','ラテンアメリカ','幻想と現実'],
+    '不条理文学':['不条理','疎外','カフカ的','意味のない'],
+    '実存主義文学':['実存','不条理','自由','孤独','生の意味'],
+    'ポストモダン文学':['ポストモダン','メタフィクション','迷宮','語り','実験小説'],
+    '古典文学':['古典','古代','中世','叙事詩'],
+    '神話・叙事詩':['神話','叙事詩','英雄譚'],
+    '戯曲':['戯曲','演劇','舞台劇','悲劇','喜劇'],
+    '短編集':['短編集','短編小説集','掌編'],
+    'ロシア文学':['ロシア','ソ連'],
+    'フランス文学':['フランス'],
+    'イギリス文学':['イギリス','英国'],
+    'ドイツ文学':['ドイツ','オーストリア','ドイツ語圏'],
+    'アメリカ文学':['アメリカ','米国'],
+    'ラテンアメリカ文学':['ラテンアメリカ','中南米','コロンビア','アルゼンチン','チリ','ペルー','メキシコ','ブラジル','キューバ'],
+    '中国文学':['中国'],
+    '韓国文学':['韓国'],
+    '北欧文学':['北欧','スウェーデン','ノルウェー','デンマーク','フィンランド','アイスランド']
+   };
+   if(rules[name]&&contains(t,rules[name]))s+=35;
+   if(jp&&['純文学','ミステリー','SF','ファンタジー','ホラー','時代小説','歴史小説','青春小説','恋愛小説','私小説','エッセイ・随筆','児童文学'].includes(name))s+=8;
+   if(!jp&&['世界SF','世界ミステリー','ゴシック文学','ディストピア文学','マジックリアリズム','不条理文学','実存主義文学','ポストモダン文学','古典文学','神話・叙事詩','戯曲','短編集','ロシア文学','フランス文学','イギリス文学','ドイツ文学','アメリカ文学','ラテンアメリカ文学','中国文学','韓国文学','北欧文学'].includes(name))s+=8;
+   return s;
+ };
+ function chooseGenres(b,names){
+   let ranked=names.map(name=>({name,score:scoreGenre(b,name)})).filter(x=>x.score>20).sort((a,z)=>z.score-a.score||a.name.localeCompare(z.name,'ja'));
+   if(!ranked.length){
+     const jp=b.category==='日本'||b.region==='日本';
+     ranked=[{name:jp?(Number(b.year)>=2000&&names.includes('純文学')?'純文学':'純文学'):(names.find(n=>String(b.region||'').includes(n.replace('文学','')))||'古典文学'),score:1}];
+   }
+   const picked=[];
+   for(const x of ranked){
+     if(!names.includes(x.name)||picked.includes(x.name))continue;
+     picked.push(x.name);
+     if(picked.length>=3)break;
+   }
+   return picked;
+ }
+ function integrateMainBooks(){
+   if(typeof BOOKS==='undefined'||typeof EX_WORLD_PACKS==='undefined')return {assigned:0,total:0};
+   const names=allGenreNames();
+   const assignments=new Map(names.map(n=>[n,[]]));
+   BOOKS.forEach(b=>chooseGenres(b,names).forEach(n=>assignments.get(n)?.push(b)));
+   assignments.forEach((list,name)=>{
+     const ordered=typeof plannedBooks==='function'?plannedBooks(list):[...list];
+     ordered.forEach((b,i)=>{
+       const stage=typeof stageForIndex==='function'?stageForIndex(i,ordered.length):'基礎';
+       const target=EX_WORLD_PACKS.find(p=>p.type==='ジャンルパック'&&p.journey===name+'の旅'&&p.stage===stage)
+         ||EX_WORLD_PACKS.find(p=>p.type==='ジャンルパック'&&p.journey===name+'の旅');
+       if(target)target.nos=uniq([...(target.nos||[]),b.no]);
+     });
+   });
+   // 作家パックは作品ID共有を保証。表記揺れを吸収して本編を再追加する。
+   EX_WORLD_PACKS.filter(p=>p.type==='作家パック').forEach(p=>{
+     const author=p.authorName||String(p.name||'').replace(/を知る旅.*$/,'').replace(/パック$/,'');
+     const ids=BOOKS.filter(b=>{
+       try{return typeof exAuthorMatch==='function'?exAuthorMatch(b.author,author):String(b.author||'').includes(author)}catch(e){return String(b.author||'').includes(author)}
+     }).map(b=>b.no);
+     p.nos=uniq([...(p.nos||[]),...ids]);
+   });
+   // 文学賞パックは既存の受賞作タイトル表を本編にも再適用する。
+   if(typeof EX_AWARD_TITLES==='object')EX_WORLD_PACKS.filter(p=>p.type==='文学賞パック').forEach(p=>{
+     const award=String(p.name||'').replace(/への旅.*$/,'').replace(/[0-9]+$/,'');
+     const titles=EX_AWARD_TITLES[award]||[];
+     p.nos=uniq([...(p.nos||[]),...BOOKS.filter(b=>titles.includes(b.title)).map(b=>b.no)]);
+   });
+   const assigned=new Set(EX_WORLD_PACKS.filter(p=>p.type==='ジャンルパック').flatMap(p=>(p.nos||[]).filter(no=>no<=500)));
+   return {assigned:assigned.size,total:BOOKS.length};
+ }
+ const report=integrateMainBooks();
+ // 本編作品のラベルは既存のNo.表示を維持しつつ、小さな「本編」表示を追加。
+ if(typeof renderFlatBookList==='function'){
+   const oldFlat=renderFlatBookList;
+   window.renderFlatBookList=function(books){
+     return oldFlat(books).replace(/(<span class="ex-no">No\.\d+<\/span>)/g,'$1<span class="main-pack-badge">本編</span>');
+   };
+ }
+ if(typeof renderPlannedBookList==='function'){
+   const oldPlanned=renderPlannedBookList;
+   window.renderPlannedBookList=function(books,stage){
+     return oldPlanned(books,stage).replace(/(<span class="ex-no">No\.\d+<\/span>)/g,'$1<span class="main-pack-badge">本編</span>');
+   };
+ }
+ document.title='文学RPG Ver.'+VERSION;
+ const apply=()=>document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);
+ apply();setTimeout(apply,0);
+ try{if(typeof currentView!=='undefined'&&currentView==='ex'&&typeof renderEx==='function')renderEx()}catch(e){}
+ window.literatureRpgV140={version:VERSION,mainBooksInReadingPacks:true,sharedBookIds:true,assignedMainBooks:report.assigned,totalMainBooks:report.total,maxReadingPacksPerBook:3};
+})();
+</script>
