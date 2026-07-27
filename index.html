@@ -5251,6 +5251,72 @@ window.literatureRpgV1242={version:'12.4.2',allPackDescriptions:true,genreDescri
  try{if(typeof currentView!=='undefined'&&currentView==='ex')renderEx()}catch(e){}
 })();
 </script>
+
+<!-- Ver.12.9：読書パック品質監査 -->
+<script id="v129-pack-quality-audit">
+(()=>{
+ const VERSION='12.9';
+ const norm=v=>String(v||'').normalize('NFKC').replace(/[\s　・･=＝]/g,'').toLowerCase();
+ const bookByNo=new Map(EX_BOOKS.map(b=>[b.no,b]));
+ let invalid=0,duplicates=0,authorMismatch=0,stageMoves=0;
+ EX_BOOKS.forEach(b=>{
+   ['title','author','region','era','genre'].forEach(k=>{if(typeof b[k]==='string')b[k]=b[k].normalize('NFKC').replace(/[ \t]+/g,' ').trim()});
+ });
+ EX_WORLD_PACKS.forEach(p=>{
+   const seen=new Set(),clean=[];
+   for(const no of (p.nos||[])){
+     if(!bookByNo.has(no)){invalid++;continue}
+     if(seen.has(no)){duplicates++;continue}
+     seen.add(no);clean.push(no);
+   }
+   if(p.type==='作家パック'&&p.authorName){
+     const target=norm(p.authorName);
+     p.nos=clean.filter(no=>{const ok=norm(bookByNo.get(no).author)===target;if(!ok)authorMismatch++;return ok});
+   }else p.nos=clean;
+ });
+ // 同じ読書系列の入門〜深淵では、一作品を一段階だけにし、難易度と長さで再配置する。
+ const lenRank={短:0,中:1,長:2,'超長':3};
+ const journeys=new Map();
+ EX_WORLD_PACKS.filter(p=>p.type==='ジャンルパック'&&p.journey).forEach(p=>{
+   if(!journeys.has(p.journey))journeys.set(p.journey,[]);journeys.get(p.journey).push(p);
+ });
+ journeys.forEach(stages=>{
+   if(stages.length<2)return;
+   stages.sort((a,b)=>(a.stageOrder??99)-(b.stageOrder??99));
+   const sizes=stages.map(p=>p.nos.length),seen=new Set(),books=[];
+   stages.forEach(p=>p.nos.forEach(no=>{if(!seen.has(no)){seen.add(no);books.push(bookByNo.get(no))}}));
+   books.sort((a,b)=>(Number(a.difficulty)||3)-(Number(b.difficulty)||3)||(lenRank[a.length]??1)-(lenRank[b.length]??1)||(a.year??9999)-(b.year??9999)||a.title.localeCompare(b.title,'ja'));
+   let pos=0;
+   stages.forEach((p,i)=>{
+     const count=i===stages.length-1?books.length-pos:Math.min(sizes[i],books.length-pos);
+     const next=books.slice(pos,pos+count).map(b=>b.no);pos+=count;
+     stageMoves+=next.filter((no,j)=>p.nos[j]!==no).length;
+     p.nos=next;
+   });
+ });
+ // 分類表示を「国・地域→ジャンル・主題→文学潮流・思想→物語のかたち」に統一。
+ const groupRank129={'国・地域':0,'ジャンル・主題':1,'文学潮流・思想':2,'物語のかたち':3};
+ const priorSorted129=sortedExPacks;
+ sortedExPacks=function(ps){
+   const out=priorSorted129(ps);
+   if(out.every(p=>p.type==='ジャンルパック')&&exPackSort==='name'){
+     out.sort((a,b)=>(groupRank129[a.group]??9)-(groupRank129[b.group]??9)||String(a.journey||a.name).localeCompare(String(b.journey||b.name),'ja')||(a.stageOrder??99)-(b.stageOrder??99));
+     if(exPackDirection==='desc')out.reverse();
+   }
+   return out;
+ };
+ setTimeout(()=>{
+   const t=document.querySelector('.title small');if(t)t.textContent='Ver.12.9';
+   document.title=document.title.replace(/Ver\.?\s*12\.8\.2|12\.8\.2/g,'Ver.12.9');
+   const a=document.createElement('div');a.id='v129-audit';a.hidden=true;
+   a.dataset.invalid=invalid;a.dataset.duplicates=duplicates;a.dataset.authorMismatch=authorMismatch;a.dataset.stageMoves=stageMoves;
+   a.dataset.unassigned=EX_BOOKS.filter(b=>!EX_WORLD_PACKS.some(p=>(p.nos||[]).includes(b.no))).length;
+   document.body.appendChild(a);
+ },0);
+ window.literatureRpgV129={version:VERSION,invalidRemoved:invalid,duplicatesRemoved:duplicates,authorMismatchRemoved:authorMismatch,stageMoves,groupOrder:true};
+})();
+</script>
+
 </body></html>
 <!-- Ver.7.25: removed persistent quest floating button -->
 
