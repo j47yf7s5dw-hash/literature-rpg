@@ -5566,19 +5566,9 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
 })();
 </script>
 
-<style id="v128-author-award-style">
-.pack-links-128{margin:12px 0;padding:11px;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
-.pack-links-128 h4{margin:0 0 8px;font-size:14px}.pack-link-list-128{display:flex;flex-wrap:wrap;gap:7px}
-.pack-link-128{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:900}
-.pack-overview-128{margin:10px 0}.pack-overview-grid-128{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.pack-overview-card-128{border:1px solid var(--line);border-radius:13px;padding:11px;background:var(--paper)}
-.pack-overview-card b{display:block;font-size:18px}.pack-overview-card small{color:var(--muted)}
-.pack-badge-note-128{margin-top:8px;font-size:11px;color:var(--muted)}
-@media(max-width:460px){.pack-overview-grid-128{grid-template-columns:1fr 1fr}.pack-overview-card-128:last-child{grid-column:1/-1}}
-</style>
-<script id="v128-author-award-expansion">
+<script id="v1281-author-packs-only">
 (()=>{
- const VERSION='12.8';
+ const VERSION='12.8.1';
  const AUTHORS_128={
   '谷崎潤一郎':{person:'耽美的な初期作品から日本の伝統美を見直す後期作品まで、欲望と美意識を追究した作家。',genre:'耽美文学、心理小説、家族小説。',feature:'官能、支配と服従、光と陰影、東西文化の対立を、濃密で技巧的な文章で描く。',start:'『痴人の愛』または『春琴抄』'},
   '小川洋子':{person:'静かな日常の中に、喪失、記憶、身体の不穏さを忍び込ませる現代作家。',genre:'現代文学、幻想小説、家族小説。',feature:'抑制された文章と閉ざされた空間によって、やさしさと残酷さが同居する世界を作る。',start:'『博士の愛した数式』'},
@@ -5607,42 +5597,10 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
    const pack={id:'v128-author-'+name,type:'作家パック',group:/[\u3040-\u30ff\u3400-\u9fff]/.test(name)&&!/[A-Z・＝]/.test(name)?'日本':'海外',icon:'✍️',authorName:name,name:name+'を知る旅',desc:name+'の作品を、入りやすい一冊から作風の核心へ向かう順番で読む。主題、文体、時代による変化を一人の作家の軌跡としてたどる。',nos:ordered.map(b=>b.no),titles:{beginner:name+'入門者',mid:name+'研究員',master:name+'研究家'}};
    EX_WORLD_PACKS.push(pack);additions.push(pack);
  });
- // 作品詳細から、所属する作家・文学賞パックへ移動する。
- function relevantPacks128(no){return EX_WORLD_PACKS.filter(p=>(p.type==='作家パック'||p.type==='文学賞パック')&&(p.nos||[]).includes(Number(no)))}
- function openPack128(id){
-   if(typeof setView==='function')setView('ex');
-   if(typeof exPackFilter!=='undefined'){const p=EX_WORLD_PACKS.find(x=>x.id===id);if(p)exPackFilter=p.type;}
-   if(typeof renderEx==='function')renderEx();
-   setTimeout(()=>{
-     const cards=[...document.querySelectorAll('#exView .pack-card')];
-     const p=EX_WORLD_PACKS.find(x=>x.id===id);if(!p)return;
-     const card=cards.find(c=>c.querySelector('h3')?.textContent.includes(p.name.replace(/を知る旅|への旅/g,'')));
-     if(card){card.open=true;card.scrollIntoView({behavior:'smooth',block:'center'});}
-   },80);
- }
- window.openPack128=openPack128;
- const oldOpen128=openDetail;
- openDetail=function(no){
-   oldOpen128(no);
-   setTimeout(()=>{
-     const wrap=document.querySelector('#modal .detail-wrap');if(!wrap||wrap.querySelector('.pack-links-128'))return;
-     const packs=relevantPacks128(no);if(!packs.length)return;
-     const sec=document.createElement('section');sec.className='detail-section pack-links-128';
-     sec.innerHTML=`<h4>🧭 この作品から進める読書パック</h4><div class="pack-link-list-128">${packs.map(p=>`<button class="pack-link-128" data-pack128="${esc(p.id)}">${p.type==='作家パック'?'✍️':'🏆'} ${esc(p.name)}</button>`).join('')}</div>`;
-     wrap.appendChild(sec);sec.querySelectorAll('[data-pack128]').forEach(b=>b.onclick=()=>{modal.classList.add('hidden');openPack128(b.dataset.pack128)});
-   },0);
- };
- // EX画面上部に作家・文学賞攻略状況を追加。
- function overview128(){
-   const authors=EX_WORLD_PACKS.filter(p=>p.type==='作家パック'),awards=EX_WORLD_PACKS.filter(p=>p.type==='文学賞パック');
-   const completed=ps=>ps.filter(p=>packTotalCount(p)>0&&packRemainingCount(p)===0).length;
-   return `<div class="panel pack-overview-128"><h3 class="section-title">✍️ 作家・文学賞コレクション</h3><div class="pack-overview-grid-128"><div class="pack-overview-card-128"><b>${authors.length}</b><small>作家パック</small><div class="pack-badge-note-128">制覇 ${completed(authors)}人</div></div><div class="pack-overview-card-128"><b>${awards.length}</b><small>文学賞パック</small><div class="pack-badge-note-128">制覇 ${completed(awards)}賞</div></div><div class="pack-overview-card-128"><b>${additions.length}</b><small>今回追加した作家</small><div class="pack-badge-note-128">全作品から自動収録</div></div></div></div>`;
- }
- const oldRenderEx128=renderEx;
- renderEx=function(){const r=oldRenderEx128();const atlas=exView.querySelector('.pack-atlas-127');if(atlas&&!exView.querySelector('.pack-overview-128'))atlas.insertAdjacentHTML('afterend',overview128());return r};
- document.title='文学RPG Ver.'+VERSION;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);
- setTimeout(()=>{document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);try{if(typeof currentView!=='undefined'&&currentView==='ex')renderEx()}catch(e){}},0);
- window.literatureRpgV128={version:VERSION,authorPacksAdded:additions.length,totalAuthorPacks:EX_WORLD_PACKS.filter(p=>p.type==='作家パック').length,totalAwardPacks:EX_WORLD_PACKS.filter(p=>p.type==='文学賞パック').length,detailLinks:true};
+ document.title='文学RPG Ver.'+VERSION;
+ document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);
+ setTimeout(()=>document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION),0);
+ window.literatureRpgV1281={version:VERSION,authorPacksAdded:additions.length,packOnly:true};
 })();
 </script>
 
