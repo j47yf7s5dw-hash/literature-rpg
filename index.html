@@ -5565,3 +5565,84 @@ window.literatureRpgV1251={version:'12.5.1',definitions:Object.keys(DEFINITIONS_
 try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))renderEx()}catch(e){}
 })();
 </script>
+
+<style id="v128-author-award-style">
+.pack-links-128{margin:12px 0;padding:11px;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
+.pack-links-128 h4{margin:0 0 8px;font-size:14px}.pack-link-list-128{display:flex;flex-wrap:wrap;gap:7px}
+.pack-link-128{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:900}
+.pack-overview-128{margin:10px 0}.pack-overview-grid-128{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pack-overview-card-128{border:1px solid var(--line);border-radius:13px;padding:11px;background:var(--paper)}
+.pack-overview-card b{display:block;font-size:18px}.pack-overview-card small{color:var(--muted)}
+.pack-badge-note-128{margin-top:8px;font-size:11px;color:var(--muted)}
+@media(max-width:460px){.pack-overview-grid-128{grid-template-columns:1fr 1fr}.pack-overview-card-128:last-child{grid-column:1/-1}}
+</style>
+<script id="v128-author-award-expansion">
+(()=>{
+ const VERSION='12.8';
+ const AUTHORS_128={
+  '谷崎潤一郎':{person:'耽美的な初期作品から日本の伝統美を見直す後期作品まで、欲望と美意識を追究した作家。',genre:'耽美文学、心理小説、家族小説。',feature:'官能、支配と服従、光と陰影、東西文化の対立を、濃密で技巧的な文章で描く。',start:'『痴人の愛』または『春琴抄』'},
+  '小川洋子':{person:'静かな日常の中に、喪失、記憶、身体の不穏さを忍び込ませる現代作家。',genre:'現代文学、幻想小説、家族小説。',feature:'抑制された文章と閉ざされた空間によって、やさしさと残酷さが同居する世界を作る。',start:'『博士の愛した数式』'},
+  '宮部みゆき':{person:'ミステリー、時代小説、幻想小説を横断し、社会と人間を読みやすい物語へ落とし込む作家。',genre:'社会派ミステリー、時代小説、幻想文学。',feature:'事件の背景にある貧困、家族、制度を丁寧に描き、幅広い読者を物語へ導く。',start:'『火車』'},
+  '江戸川乱歩':{person:'日本の探偵小説を確立し、怪奇、犯罪、倒錯的な美を大衆文学へ広げた作家。',genre:'探偵小説、怪奇小説、少年向け冒険小説。',feature:'密室、暗号、変装、猟奇的な欲望を、見世物的な魅力と論理の両方で描く。',start:'『人間椅子』または『二銭銅貨』'},
+  '吉本ばなな':{person:'喪失を抱えた若者の日常と再生を、透明感のある語りで描く現代作家。',genre:'現代文学、青春小説、家族小説。',feature:'死、食事、夢、共同生活を通じ、傷ついた人が他者との関係を結び直す過程を描く。',start:'『キッチン』'},
+  'マーガレット・アトウッド':{person:'ジェンダー、権力、環境問題を、現実と地続きのディストピアとして描くカナダの作家。',genre:'ディストピア、SF、歴史小説、詩。',feature:'女性の身体や語りが制度に支配される構造を、鋭い皮肉と多層的な物語で示す。',start:'『侍女の物語』'},
+  'アーシュラ・K・ル＝グウィン':{person:'SFとファンタジーを通じて、社会制度、性、文化の違いを根本から問い直した作家。',genre:'SF、ファンタジー、思弁小説。',feature:'異文化との接触や社会の別の可能性を、明晰な世界設定と哲学的な物語で描く。',start:'『闇の左手』または『ゲド戦記』'},
+  'トニ・モリスン':{person:'奴隷制と人種差別の記憶を、黒人女性と共同体の視点から描いたノーベル文学賞作家。',genre:'アフリカ系アメリカ文学、歴史小説、家族小説。',feature:'詩的で多声的な語りを使い、歴史的暴力が家族や身体へ残す傷を描く。',start:'『青い眼がほしい』から『ビラヴド』へ'},
+  'J・M・クッツェー':{person:'南アフリカの歴史を背景に、暴力、支配、沈黙の倫理を厳しく問うノーベル文学賞作家。',genre:'ポストコロニアル文学、寓話、心理小説。',feature:'乾いた文体と限定された視点によって、語る者の責任と他者理解の限界を示す。',start:'『恥辱』'},
+  'ヴァージニア・ウルフ':{person:'意識の流れを用い、時間、記憶、女性の生活を革新的に描いたモダニズム作家。',genre:'モダニズム、心理小説、評論。',feature:'外的事件よりも意識の揺れを追い、一日の中に人生全体の時間を重ねる。',start:'『ダロウェイ夫人』'},
+  'カズオ・イシグロ':{person:'記憶と自己欺瞞を抑制された一人称で描く、英国のノーベル文学賞作家。',genre:'記憶の小説、歴史小説、SF的寓話。',feature:'語り手が語らないことから、後悔、責任、失われた人生が浮かび上がる。',start:'『日の名残り』'},
+  'ハン・ガン':{person:'韓国現代史、身体、暴力、沈黙を、詩的で鋭い文章によって描く作家。',genre:'現代文学、歴史小説、身体をめぐる文学。',feature:'個人の身体に刻まれた社会的暴力を、断片的で静かな語りから可視化する。',start:'『菜食主義者』'},
+  'イタロ・カルヴィーノ':{person:'寓話、SF、実験小説を横断し、読むことそのものを遊びに変えたイタリアの作家。',genre:'幻想文学、メタフィクション、寓話。',feature:'軽やかな構成と知的な仕掛けで、都市、宇宙、物語の可能性を探る。',start:'『木のぼり男爵』または『見えない都市』'},
+  'スタニスワフ・レム':{person:'科学技術と人間認識の限界を、哲学的かつ風刺的に描いたポーランドのSF作家。',genre:'SF、哲学小説、風刺。',feature:'未知との遭遇を人間中心主義への批判として描き、科学の言葉そのものも疑う。',start:'『ソラリス』'},
+  'スティーヴン・キング':{person:'恐怖を日常生活や共同体の問題と結びつけ、現代ホラーを代表する作家。',genre:'ホラー、青春小説、幻想小説。',feature:'超自然的恐怖だけでなく、家族、依存、暴力、地方社会の閉塞を長大な物語で描く。',start:'『キャリー』または『シャイニング』'}
+ };
+ const existingAuthorNames=new Set(EX_WORLD_PACKS.filter(p=>p.type==='作家パック').map(p=>p.authorName||String(p.name).replace(/を知る旅.*$/,'')));
+ const additions=[];
+ Object.entries(AUTHORS_128).forEach(([name,guide])=>{
+   EX_AUTHOR_GUIDES[name]=guide;
+   if(existingAuthorNames.has(name))return;
+   const books=ALL_BOOKS.filter(b=>String(b.author||'').includes(name));
+   if(books.length<3)return;
+   const ordered=typeof plannedBooks==='function'?plannedBooks(books):books.slice().sort((a,b)=>Number(a.difficulty||3)-Number(b.difficulty||3)||a.no-b.no);
+   const pack={id:'v128-author-'+name,type:'作家パック',group:/[\u3040-\u30ff\u3400-\u9fff]/.test(name)&&!/[A-Z・＝]/.test(name)?'日本':'海外',icon:'✍️',authorName:name,name:name+'を知る旅',desc:name+'の作品を、入りやすい一冊から作風の核心へ向かう順番で読む。主題、文体、時代による変化を一人の作家の軌跡としてたどる。',nos:ordered.map(b=>b.no),titles:{beginner:name+'入門者',mid:name+'研究員',master:name+'研究家'}};
+   EX_WORLD_PACKS.push(pack);additions.push(pack);
+ });
+ // 作品詳細から、所属する作家・文学賞パックへ移動する。
+ function relevantPacks128(no){return EX_WORLD_PACKS.filter(p=>(p.type==='作家パック'||p.type==='文学賞パック')&&(p.nos||[]).includes(Number(no)))}
+ function openPack128(id){
+   if(typeof setView==='function')setView('ex');
+   if(typeof exPackFilter!=='undefined'){const p=EX_WORLD_PACKS.find(x=>x.id===id);if(p)exPackFilter=p.type;}
+   if(typeof renderEx==='function')renderEx();
+   setTimeout(()=>{
+     const cards=[...document.querySelectorAll('#exView .pack-card')];
+     const p=EX_WORLD_PACKS.find(x=>x.id===id);if(!p)return;
+     const card=cards.find(c=>c.querySelector('h3')?.textContent.includes(p.name.replace(/を知る旅|への旅/g,'')));
+     if(card){card.open=true;card.scrollIntoView({behavior:'smooth',block:'center'});}
+   },80);
+ }
+ window.openPack128=openPack128;
+ const oldOpen128=openDetail;
+ openDetail=function(no){
+   oldOpen128(no);
+   setTimeout(()=>{
+     const wrap=document.querySelector('#modal .detail-wrap');if(!wrap||wrap.querySelector('.pack-links-128'))return;
+     const packs=relevantPacks128(no);if(!packs.length)return;
+     const sec=document.createElement('section');sec.className='detail-section pack-links-128';
+     sec.innerHTML=`<h4>🧭 この作品から進める読書パック</h4><div class="pack-link-list-128">${packs.map(p=>`<button class="pack-link-128" data-pack128="${esc(p.id)}">${p.type==='作家パック'?'✍️':'🏆'} ${esc(p.name)}</button>`).join('')}</div>`;
+     wrap.appendChild(sec);sec.querySelectorAll('[data-pack128]').forEach(b=>b.onclick=()=>{modal.classList.add('hidden');openPack128(b.dataset.pack128)});
+   },0);
+ };
+ // EX画面上部に作家・文学賞攻略状況を追加。
+ function overview128(){
+   const authors=EX_WORLD_PACKS.filter(p=>p.type==='作家パック'),awards=EX_WORLD_PACKS.filter(p=>p.type==='文学賞パック');
+   const completed=ps=>ps.filter(p=>packTotalCount(p)>0&&packRemainingCount(p)===0).length;
+   return `<div class="panel pack-overview-128"><h3 class="section-title">✍️ 作家・文学賞コレクション</h3><div class="pack-overview-grid-128"><div class="pack-overview-card-128"><b>${authors.length}</b><small>作家パック</small><div class="pack-badge-note-128">制覇 ${completed(authors)}人</div></div><div class="pack-overview-card-128"><b>${awards.length}</b><small>文学賞パック</small><div class="pack-badge-note-128">制覇 ${completed(awards)}賞</div></div><div class="pack-overview-card-128"><b>${additions.length}</b><small>今回追加した作家</small><div class="pack-badge-note-128">全作品から自動収録</div></div></div></div>`;
+ }
+ const oldRenderEx128=renderEx;
+ renderEx=function(){const r=oldRenderEx128();const atlas=exView.querySelector('.pack-atlas-127');if(atlas&&!exView.querySelector('.pack-overview-128'))atlas.insertAdjacentHTML('afterend',overview128());return r};
+ document.title='文学RPG Ver.'+VERSION;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);
+ setTimeout(()=>{document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);try{if(typeof currentView!=='undefined'&&currentView==='ex')renderEx()}catch(e){}},0);
+ window.literatureRpgV128={version:VERSION,authorPacksAdded:additions.length,totalAuthorPacks:EX_WORLD_PACKS.filter(p=>p.type==='作家パック').length,totalAwardPacks:EX_WORLD_PACKS.filter(p=>p.type==='文学賞パック').length,detailLinks:true};
+})();
+</script>
+
