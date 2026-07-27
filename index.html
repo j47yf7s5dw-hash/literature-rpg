@@ -6105,3 +6105,237 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
  window.literatureRpgV1401={version:VERSION,authorStageTabsFixed:true,delegatedClick:true};
 })();
 </script>
+
+<!-- Ver.15.0：職業・ギルドランク・作品属性・ボス弱点 -->
+<style id="v150-literary-guild-style">
+/* HOMEは既存パネルを増やさず、RPGステータスだけを4項目へ整理 */
+.v15-status-hero{background:linear-gradient(145deg,#111318,#262a31)!important;color:#fff!important;border:1px solid rgba(255,255,255,.08)!important;padding:13px!important}
+.v15-status-grid{display:grid;grid-template-columns:72px repeat(3,minmax(0,1fr));gap:7px}
+.v15-status-cell{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);border-radius:12px;padding:9px 10px}
+.v15-status-cell small{display:block;color:#aaaeb7;font-size:9px;font-weight:900;letter-spacing:.12em;margin-bottom:4px}
+.v15-status-cell b{display:block;color:#fff;font-size:13px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v15-status-cell.level{display:grid;place-items:center;text-align:center;background:linear-gradient(145deg,#3d3120,#1f2025);border-color:rgba(224,185,93,.35)}
+.v15-status-cell.level small{color:#d7bc77;margin:0}.v15-status-cell.level b{font-size:25px;line-height:1.05}
+.v15-career-panel{border-left:4px solid #b68b36}
+.v15-career-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.v15-career-head h3{margin:0}.v15-career-head .badge{margin:0}
+.v15-job-select{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);padding:11px;margin:10px 0 8px;font-weight:900}
+.v15-job-affinity{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.v15-job-affinity span,.v15-attribute-chip{display:inline-flex;align-items:center;border:1px solid #c9a964;border-radius:999px;padding:5px 8px;background:rgba(185,134,44,.09);font-size:10px;font-weight:900;color:var(--ink)}
+.v15-rank-track{height:7px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}.v15-rank-track i{display:block;height:100%;background:linear-gradient(90deg,#8d6834,#d4b45c)}
+.v15-attribute-strip{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:9px 0 2px;padding:8px 10px;border:1px solid var(--line);border-radius:13px;background:var(--paper)}
+.v15-attribute-strip>small{font-size:9px;letter-spacing:.12em;color:var(--muted);font-weight:900;margin-right:2px}
+.v15-read-flash{position:fixed;left:50%;bottom:24px;z-index:10000;transform:translate(-50%,14px);min-width:min(330px,calc(100vw - 28px));max-width:420px;padding:11px 14px;border:1px solid rgba(230,203,139,.42);border-radius:14px;background:rgba(18,19,22,.96);color:#fff;box-shadow:0 12px 38px rgba(0,0,0,.35);text-align:center;opacity:0;animation:v15ReadFlash 1.65s ease forwards;pointer-events:none}
+.v15-read-flash small{display:block;color:#d3b66c;font-size:9px;letter-spacing:.16em;font-weight:900}.v15-read-flash b{display:block;font-size:15px;margin:2px 0}.v15-read-flash span{display:block;color:#c7c9cf;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@keyframes v15ReadFlash{0%{opacity:0;transform:translate(-50%,14px)}16%,76%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-5px)}}
+.v15-weakness{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;font-size:9px;color:var(--muted)}
+.v15-weakness b{color:#8e6221}.v15-weakness span{border:1px solid var(--line);border-radius:999px;padding:3px 6px;background:var(--paper)}
+.v15-boss-weakness{margin:8px 0 0;padding:8px 9px;border:1px solid rgba(225,194,111,.28);border-radius:10px;background:rgba(255,255,255,.06);display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;font-size:10px}
+.v15-boss-weakness small{color:#d9c77e;font-weight:900;letter-spacing:.09em}.v15-boss-weakness b{color:#fff}.v15-boss-weakness span{color:#d4d5da;white-space:nowrap}
+.v15-title-note{font-size:10px;color:var(--muted);margin-top:4px}
+@media(max-width:560px){.v15-status-grid{grid-template-columns:68px 1fr}.v15-status-cell:nth-child(4){grid-column:1/-1}.v15-career-head{display:block}.v15-career-head .badge{margin-top:7px}.v15-boss-weakness{grid-template-columns:1fr auto}.v15-boss-weakness small{grid-column:1/-1}}
+.dark .v15-job-select,.dark .v15-attribute-strip{background:var(--paper)}
+</style>
+<script id="v150-literary-guild-script">
+(()=>{
+ 'use strict';
+ if(window.literatureRpgV150)return;
+ const VERSION='15.0';
+ const ATTRIBUTES=['青春','恋愛','哲学','戦争','SF','社会','心理','家族'];
+ const JOBS={
+  '批評家':{icon:'✒️',attrs:['社会','戦争'],desc:'制度・権力・歴史を読む。社会／戦争属性の読了で経験値+20。'},
+  '冒険者':{icon:'🧭',attrs:['青春','SF'],desc:'成長と未知の世界を進む。青春／SF属性の読了で経験値+20。'},
+  '哲学者':{icon:'🕯️',attrs:['哲学','心理'],desc:'存在と内面を掘り下げる。哲学／心理属性の読了で経験値+20。'},
+  '収集家':{icon:'🗃️',attrs:['家族','恋愛'],desc:'人と人の結びつきの形を集める。家族／恋愛属性の読了で経験値+20。'},
+  '作家':{icon:'🪶',attrs:['心理','恋愛'],desc:'人物と感情の技法を学ぶ。心理／恋愛属性の読了で経験値+20。'}
+ };
+ const GUILD_RANKS=[
+  {min:0,name:'D級'},{min:10,name:'C級'},{min:30,name:'B級'},
+  {min:75,name:'A級'},{min:150,name:'S級'},{min:300,name:'伝説級'}
+ ];
+ const BOSS_WEAKNESS={
+  'modern-self':'心理','war-memory':'戦争','absurd':'哲学','women-society':'社会',
+  'colonial':'社会','dystopia':'SF','family':'家族','language-power':'哲学'
+ };
+ const baseAutoTags15=typeof window.autoTags==='function'?window.autoTags:(typeof autoTags==='function'?autoTags:null);
+ const allBooks15=()=>typeof ALL_BOOKS!=='undefined'&&Array.isArray(ALL_BOOKS)?ALL_BOOKS:(Array.isArray(window.ALL_BOOKS)?window.ALL_BOOKS:[]);
+ const safeText15=v=>String(v??'').normalize('NFKC').toLowerCase();
+ function ensureCareer15(){
+  if(!state.profile||typeof state.profile!=='object')state.profile={};
+  if(!JOBS[state.profile.job])state.profile.job='冒険者';
+  return state.profile;
+ }
+ function attrContext15(b){
+  let movement='';try{movement=typeof movementFor==='function'?movementFor(b):''}catch(e){}
+  return {
+   genre:safeText15(b?.genre),movement:safeText15(movement),
+   strong:safeText15([b?.title,b?.genre,b?.hook,b?.why,b?.question,b?.appeal,b?.recommend,movement].filter(Boolean).join(' ')),
+   body:safeText15([b?.synopsis,b?.before].filter(Boolean).join(' '))
+  };
+ }
+ function attributesFor15(b){
+  if(Array.isArray(b?.attributes)&&b.attributes.length)return [...new Set(b.attributes.filter(x=>ATTRIBUTES.includes(x)))].slice(0,3);
+  const c=attrContext15(b),scores=Object.fromEntries(ATTRIBUTES.map(a=>[a,0]));
+  const rules={
+   '青春':{genre:['青春','児童','学園','ya'],movement:['教養小説'],strong:['青春','成長物語','思春期','学園','高校生','中学生'],body:['青春','思春期','学校生活','少年少女']},
+   '恋愛':{genre:['恋愛','ロマンス'],movement:[],strong:['恋愛','恋人','失恋','片思い','純愛','性愛','愛の物語'],body:['恋愛','恋人','失恋','片思い','恋に落ち','愛する人']},
+   '哲学':{genre:['哲学','思想','実存'],movement:['不条理文学','実存主義'],strong:['哲学','実存','不条理','倫理','真理','生の意味','存在とは','宗教思想'],body:['哲学','実存','不条理','倫理','生の意味','存在の意味']},
+   '戦争':{genre:['戦争','戦記'],movement:['戦争文学','ホロコースト文学'],strong:['戦争','戦場','軍隊','兵士','空襲','原爆','ホロコースト','紛争','従軍'],body:['戦争','戦場','軍隊','兵士','空襲','原爆','ホロコースト','紛争']},
+   'SF':{genre:['sf','science fiction','サイエンス・フィクション','ディストピア'],movement:['ディストピア','sf','サイエンス・フィクション'],strong:['sf','宇宙','人工知能','ロボット','ディストピア','時間旅行','未来社会','科学技術'],body:['宇宙','人工知能','ロボット','ディストピア','時間旅行','未来社会']},
+   '社会':{genre:['社会','政治','社会派','プロレタリア','犯罪'],movement:['社会派','プロレタリア文学','ポストコロニアル'],strong:['社会','政治','国家','階級','労働','貧困','差別','制度','権力','ジェンダー','植民地','監視社会'],body:['社会問題','政治','階級','労働','貧困','差別','制度','権力','植民地','監視社会']},
+   '心理':{genre:['心理','私小説','ミステリー'],movement:['意識の流れ'],strong:['心理','内面','意識','記憶','孤独','自我','狂気','罪悪感','疎外','トラウマ'],body:['心理','内面','記憶','孤独','自我','狂気','罪悪感','疎外','トラウマ']},
+   '家族':{genre:['家族'],movement:[],strong:['家族','親子','母と子','父と子','兄弟姉妹','家庭','血縁','介護'],body:['家族','親子','母と子','父と子','兄弟姉妹','家庭','血縁','介護']}
+  };
+  Object.entries(rules).forEach(([attr,r])=>{
+   if(r.genre.some(w=>c.genre.includes(safeText15(w))))scores[attr]+=8;
+   if(r.movement.some(w=>c.movement.includes(safeText15(w))))scores[attr]+=6;
+   r.strong.forEach(w=>{if(c.strong.includes(safeText15(w)))scores[attr]+=3});
+   r.body.forEach(w=>{if(c.body.includes(safeText15(w)))scores[attr]+=1});
+  });
+  if(c.genre.includes('純文学'))scores['心理']+=3;
+  if(c.genre.includes('ミステリー')){scores['心理']+=3;if(c.genre.includes('社会派'))scores['社会']+=4}
+  if(c.movement.includes('ゴシック'))scores['心理']+=2;
+  let ranked=Object.entries(scores).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]||ATTRIBUTES.indexOf(a[0])-ATTRIBUTES.indexOf(b[0]));
+  if(!ranked.length){
+   if(/青春|児童|学園/.test(c.genre))ranked=[['青春',1]];
+   else if(/sf|幻想|ファンタジー/.test(c.genre))ranked=[['SF',1]];
+   else if(/戦争|戦記/.test(c.genre))ranked=[['戦争',1]];
+   else if(/社会|政治|歴史/.test(c.genre))ranked=[['社会',1]];
+   else if(/恋愛|ロマンス/.test(c.genre))ranked=[['恋愛',1]];
+   else ranked=[['心理',1]];
+  }
+  const chosen=[ranked[0][0]],top=ranked[0][1];
+  if(ranked[1]&&ranked[1][1]>=3&&ranked[1][1]>=top*.35)chosen.push(ranked[1][0]);
+  if(ranked[2]&&ranked[2][1]>=4&&ranked[2][1]>=top*.4)chosen.push(ranked[2][0]);
+  return [...new Set(chosen)].slice(0,3);
+ }
+ allBooks15().forEach(b=>{b.attributes=attributesFor15(b)});
+ function autoTags15(b){
+  const base=baseAutoTags15?baseAutoTags15(b):[];
+  return [...new Set([...base,...attributesFor15(b)])];
+ }
+ try{autoTags=autoTags15}catch(e){}window.autoTags=autoTags15;
+ function readCountByAttribute15(attr){return allBooks15().filter(b=>entry(b.no).got&&attributesFor15(b).includes(attr)).length}
+ function jobBonus15(){
+  const job=JOBS[ensureCareer15().job];
+  const matched=allBooks15().filter(b=>entry(b.no).got&&attributesFor15(b).some(a=>job.attrs.includes(a))).length;
+  return {matched,xp:matched*20};
+ }
+ function guildRank15(n){
+  let current=GUILD_RANKS[0],next=null;
+  for(let i=0;i<GUILD_RANKS.length;i++){if(n>=GUILD_RANKS[i].min)current=GUILD_RANKS[i];else{next=GUILD_RANKS[i];break}}
+  const into=n-current.min,need=next?next.min-current.min:1;
+  return {name:current.name,min:current.min,next:next?.min??null,pct:next?Math.min(100,Math.round(into/need*100)):100};
+ }
+ const baseStats15=typeof window.stats==='function'?window.stats:(typeof stats==='function'?stats:null);
+ function stats15(){
+  const c=baseStats15?baseStats15():{n:0,xp:0};
+  const bonus=jobBonus15();
+  c.baseXp15=Number(c.xp||0);c.jobBonus=bonus.xp;c.jobMatched=bonus.matched;c.xp=Number(c.xp||0)+bonus.xp;c.job=ensureCareer15().job;c.guildRank=guildRank15(Number(c.n||0)).name;
+  return c;
+ }
+ try{stats=stats15}catch(e){}window.stats=stats15;
+ const V15_TITLES=[
+  {name:'青春の旅人',icon:'🌱',desc:'青春属性を5冊読む',test:()=>readCountByAttribute15('青春')>=5},
+  {name:'SF探究者',icon:'🛰️',desc:'SF属性を5冊読む',test:()=>readCountByAttribute15('SF')>=5},
+  {name:'漱石研究員',icon:'🎓',desc:'夏目漱石を3冊読む',test:()=>allBooks15().filter(b=>entry(b.no).got&&safeText15(b.author).includes('夏目漱石')).length>=3},
+  {name:'海外文学開拓者',icon:'🌍',desc:'海外文学を20冊読む',test:c=>Number(c.world||0)>=20},
+  {name:'戦争の証言者',icon:'🕊️',desc:'戦争属性を5冊読む',test:()=>readCountByAttribute15('戦争')>=5},
+  {name:'哲学の巡礼者',icon:'🕯️',desc:'哲学属性を5冊読む',test:()=>readCountByAttribute15('哲学')>=5},
+  {name:'心の読解者',icon:'🪞',desc:'心理属性を10冊読む',test:()=>readCountByAttribute15('心理')>=10},
+  {name:'家族年代記の収集家',icon:'🏠',desc:'家族属性を10冊読む',test:()=>readCountByAttribute15('家族')>=10}
+ ];
+ function baseLiteraryTitles15(){try{const list=eval('LIT_TITLES');return Array.isArray(list)?list:[]}catch(e){return []}}
+ const baseTitleList15=baseLiteraryTitles15();V15_TITLES.forEach(t=>{if(!baseTitleList15.some(x=>x.name===t.name))baseTitleList15.push(t)});
+ function allLiteraryTitles15(){const base=baseLiteraryTitles15();return [...base,...V15_TITLES.filter(t=>!base.some(x=>x.name===t.name))]}
+ function unlockedLiteraryTitle15(name){
+  const t=allLiteraryTitles15().find(x=>x.name===name);if(!t)return false;
+  try{return !!t.test(stats15())}catch(e){return false}
+ }
+ const baseEquipped15=typeof window.equippedTitle==='function'?window.equippedTitle:(typeof equippedTitle==='function'?equippedTitle:null);
+ function equippedTitle15(){
+  ensureCareer15();const current=state.profile?.title;
+  if(current&&unlockedLiteraryTitle15(current))return current;
+  if(baseEquipped15){const legacy=baseEquipped15();if(current&&legacy===current)return current;if(legacy)return legacy}
+  return '読書の旅人';
+ }
+ try{equippedTitle=equippedTitle15}catch(e){}window.equippedTitle=equippedTitle15;
+ function statusHero15(){
+  const c=stats15(),li=typeof levelInfo==='function'?levelInfo(c.xp):{level:1},job=JOBS[ensureCareer15().job],rank=guildRank15(c.n||0);
+  return `<div class="v15-status-grid"><div class="v15-status-cell level"><small>Lv</small><b>${li.level}</b></div><div class="v15-status-cell"><small>職業</small><b>${job.icon} ${esc(state.profile.job)}</b></div><div class="v15-status-cell"><small>ギルドランク</small><b>${esc(rank.name)}</b></div><div class="v15-status-cell"><small>称号</small><b>${esc(equippedTitle15())}</b></div></div>`;
+ }
+ function enhanceHome15(){const hero=homeView?.querySelector('.rpg-hero');if(!hero)return;hero.classList.add('v15-status-hero');hero.innerHTML=statusHero15()}
+ function careerPanel15(){
+  const c=stats15(),p=ensureCareer15(),job=JOBS[p.job],rank=guildRank15(c.n||0),next=rank.next==null?'最高位':`次の昇格まで ${Math.max(0,rank.next-c.n)}冊`;
+  return `<section class="panel v15-career-panel"><div class="v15-career-head"><div><h3>⚔️ 文学ギルド</h3><div class="meta">職業はいつでも変更可能。読了記録は作品IDのまま共有されます。</div></div><span class="badge">${esc(rank.name)}</span></div><select class="v15-job-select" onchange="setLiteraryJob15(this.value)">${Object.entries(JOBS).map(([name,x])=>`<option value="${esc(name)}" ${name===p.job?'selected':''}>${x.icon} ${esc(name)}</option>`).join('')}</select><div class="v15-job-affinity">${job.attrs.map(a=>`<span>${esc(a)} +20 XP</span>`).join('')}</div><p class="meta">${esc(job.desc)} 現在 ${c.jobMatched}冊一致・職業ボーナス +${Number(c.jobBonus||0).toLocaleString()} XP。</p><div class="v15-rank-track"><i style="width:${rank.pct}%"></i></div><div class="meta" style="margin-top:5px">${next}</div></section>`;
+ }
+ window.setLiteraryJob15=function(job){if(!JOBS[job])return;ensureCareer15().job=job;saveState();toast(`職業を「${job}」に変更しました`);const active=typeof activeViewName==='function'?activeViewName():'';if(active==='home'&&typeof renderHome==='function')renderHome();if(active==='profile'&&typeof renderProfile==='function')renderProfile()};
+ const baseRenderHome15=typeof window.renderHome==='function'?window.renderHome:(typeof renderHome==='function'?renderHome:null);
+ function renderHome15(){const out=baseRenderHome15?.apply(this,arguments);enhanceHome15();return out}
+ try{renderHome=renderHome15}catch(e){}window.renderHome=renderHome15;
+ const baseRenderProfile15=typeof window.renderProfile==='function'?window.renderProfile:(typeof renderProfile==='function'?renderProfile:null);
+ function renderProfile15(){const out=baseRenderProfile15?.apply(this,arguments);const hero=profileView?.querySelector('.rpg-hero');if(hero&&!profileView.querySelector('.v15-career-panel'))hero.insertAdjacentHTML('afterend',careerPanel15());return out}
+ try{renderProfile=renderProfile15}catch(e){}window.renderProfile=renderProfile15;
+ const baseRenderAchievements15=typeof window.renderAchievements==='function'?window.renderAchievements:(typeof renderAchievements==='function'?renderAchievements:null);
+ function renderAchievements15(){
+  const out=baseRenderAchievements15?.apply(this,arguments),select=achievementsView?.querySelector('.profile-title');
+  if(select)allLiteraryTitles15().filter(t=>{try{return t.test(stats15())}catch(e){return false}}).forEach(t=>{if(![...select.options].some(o=>o.value===t.name))select.add(new Option(t.name,t.name,t.name===equippedTitle15(),t.name===equippedTitle15()))});
+  return out;
+ }
+ try{renderAchievements=renderAchievements15}catch(e){}window.renderAchievements=renderAchievements15;
+ const baseRenderTitles15=typeof window.renderTitles==='function'?window.renderTitles:(typeof renderTitles==='function'?renderTitles:null);
+ function renderTitles15(){
+  const out=baseRenderTitles15?.apply(this,arguments),grid=titlesView?.querySelector('.title-grid'),c=stats15();
+  if(grid)V15_TITLES.forEach(t=>{if([...grid.querySelectorAll('.title-card h3')].some(h=>h.textContent===t.name))return;let ok=false;try{ok=!!t.test(c)}catch(e){}const eq=equippedTitle15()===t.name;grid.insertAdjacentHTML('beforeend',`<div class="title-card v15-title-card ${ok?'':'locked'} ${eq?'equipped':''}"><div style="font-size:28px">${t.icon}</div><h3>${esc(t.name)}</h3><p class="meta">${esc(t.desc)}</p>${ok?`<button class="open-btn" onclick="setTitle('${esc(t.name)}');renderTitles()">${eq?'装備中':'装備する'}</button>`:'<span class="mini-badge">未解除</span>'}</div>`)});
+  return out;
+ }
+ try{renderTitles=renderTitles15}catch(e){}window.renderTitles=renderTitles15;
+ function decorateDetail15(no){
+  const b=allBooks15().find(x=>Number(x.no)===Number(no)),wrap=document.querySelector('#modal .detail-wrap');if(!b||!wrap||wrap.querySelector('.v15-attribute-strip'))return;
+  const strip=document.createElement('div');strip.className='v15-attribute-strip';strip.innerHTML=`<small>ATTRIBUTE</small>${attributesFor15(b).map(a=>`<span class="v15-attribute-chip">${esc(a)}</span>`).join('')}`;
+  const chips=wrap.querySelector('.v111-meta-chips');if(chips)chips.insertAdjacentElement('afterend',strip);else wrap.querySelector('.detail-hero')?.insertAdjacentElement('afterend',strip);
+ }
+ const baseOpenDetail15=typeof window.openDetail==='function'?window.openDetail:(typeof openDetail==='function'?openDetail:null);
+ function openDetail15(no){const out=baseOpenDetail15?.apply(this,arguments);decorateDetail15(no);return out}
+ try{openDetail=openDetail15}catch(e){}window.openDetail=openDetail15;
+ function showReadFlash15(book){
+  if(!book)return;document.querySelector('.v15-read-flash')?.remove();const el=document.createElement('div');el.className='v15-read-flash';el.innerHTML=`<small>READ COMPLETE</small><b>文学を1冊修めた</b><span>『${esc(book.title)}』</span>`;document.body.appendChild(el);setTimeout(()=>el.remove(),1750);
+ }
+ const baseSetReading15=typeof window.setReadingStatus==='function'?window.setReadingStatus:(typeof setReadingStatus==='function'?setReadingStatus:null);
+ function setReadingStatus15(no,status,opts){const was=!!entry(no).got,out=baseSetReading15?.apply(this,arguments),now=!!entry(no).got;if(!was&&now)showReadFlash15(allBooks15().find(b=>Number(b.no)===Number(no)));return out}
+ try{setReadingStatus=setReadingStatus15}catch(e){}window.setReadingStatus=setReadingStatus15;
+ if(typeof window.addSession==='function'||typeof addSession==='function'){
+  const baseAddSession15=typeof window.addSession==='function'?window.addSession:addSession;
+  const addSession15=function(no){const was=!!entry(no).got,out=baseAddSession15.apply(this,arguments);if(!was&&entry(no).got)showReadFlash15(allBooks15().find(b=>Number(b.no)===Number(no)));return out};
+  try{addSession=addSession15}catch(e){}window.addSession=addSession15;
+ }
+ function bossInfo15(id){
+  const themes=Array.isArray(window.THEME_BOSS_BATTLES)?window.THEME_BOSS_BATTLES:[],theme=themes.find(b=>String(b.id)===String(id));
+  if(theme){const weakness=BOSS_WEAKNESS[theme.id]||'哲学',count=readCountByAttribute15(weakness);return {id:theme.id,name:theme.name,weakness,count,power:100+Math.min(20,count)*5}}
+  const legacy=(window.BOSS_BATTLES||[]).find(b=>String(b.no)===String(id));if(legacy){const book=allBooks15().find(x=>Number(x.no)===Number(legacy.no)),weakness=attributesFor15(book||{})[0]||'哲学',count=readCountByAttribute15(weakness);return{id:legacy.no,name:legacy.title,weakness,count,power:100+Math.min(20,count)*5}}
+  return null;
+ }
+ let currentBoss15='';
+ function weaknessHTML15(info,dark=false){return info?`<div class="${dark?'v15-boss-weakness':'v15-weakness'}">${dark?'<small>WEAKNESS</small>':'<b>弱点</b>'}<b>${esc(info.weakness)}</b><span>属性読了 ${info.count}冊・攻撃力 ${info.power}</span></div>`:''}
+ function enhanceBosses15(){
+  document.querySelectorAll('#bossesView .v109-card').forEach(card=>{if(card.querySelector('.v15-weakness'))return;const id=card.querySelector('[data-v109-open]')?.dataset.v109Open,info=bossInfo15(id);card.querySelector('.v109-theme-line')?.insertAdjacentHTML('afterend',weaknessHTML15(info,false))});
+  document.querySelectorAll('#bossesView .boss82-card').forEach(card=>{if(card.querySelector('.v15-weakness'))return;const id=card.querySelector('[data-b82-open]')?.dataset.b82Open,info=bossInfo15(id);card.querySelector('.boss82-progress')?.insertAdjacentHTML('afterend',weaknessHTML15(info,false))});
+  document.querySelectorAll('#bossesView .boss-card').forEach(card=>{if(card.querySelector('.v15-weakness'))return;const id=card.querySelector('[data-boss-open]')?.dataset.bossOpen,info=bossInfo15(id);card.querySelector('.boss-hp')?.insertAdjacentHTML('afterend',weaknessHTML15(info,false))});
+ }
+ function enhanceBossModal15(){
+  const root=document.querySelector('#modal:not(.hidden)');if(!root||root.querySelector('.v15-boss-weakness'))return;
+  let info=bossInfo15(currentBoss15);
+  if(!info){const title=(root.querySelector('.v109-enemy b,.boss82-head h2,.boss-detail-head h2')?.textContent||'').trim();const theme=(window.THEME_BOSS_BATTLES||[]).find(b=>title.includes(b.name));if(theme)info=bossInfo15(theme.id)}
+  if(!info)return;
+  const target=root.querySelector('.v109-battle .v109-enemy,.b108-battle-panel .b108-enemy,.boss-detail-head .boss-top,.boss82-head');
+  if(target)target.insertAdjacentHTML('afterend',weaknessHTML15(info,true));
+ }
+ document.addEventListener('click',event=>{const t=event.target.closest?.('[data-v109-open],[data-b82-open],[data-boss-open]');if(t)currentBoss15=t.dataset.v109Open||t.dataset.b82Open||t.dataset.bossOpen||'';setTimeout(()=>{enhanceBosses15();enhanceBossModal15()},30)},true);
+ const observer15=new MutationObserver(()=>requestAnimationFrame(()=>{enhanceBosses15();enhanceBossModal15()}));observer15.observe(document.body,{childList:true,subtree:true});
+ ensureCareer15();saveState();
+ const applyVersion15=()=>{document.title='文学RPG Ver.'+VERSION;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION)};
+ applyVersion15();setTimeout(()=>{applyVersion15();try{renderHome15()}catch(e){}enhanceBosses15()},0);
+ window.LITERARY_ATTRIBUTES=ATTRIBUTES;window.LITERARY_JOBS=JOBS;window.literaryAttributes=attributesFor15;window.guildRank15=guildRank15;window.literatureRpgV150={version:VERSION,jobs:Object.keys(JOBS),attributes:ATTRIBUTES,guildRanks:GUILD_RANKS.map(x=>x.name),allBooksAttributed:allBooks15().every(b=>Array.isArray(b.attributes)&&b.attributes.length>0),storageCompatible:true};
+ console.info('[文学RPG Ver.15.0]',window.literatureRpgV150);
+})();
+</script>
