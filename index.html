@@ -5407,7 +5407,7 @@ window.literatureRpgV1242={version:'12.4.2',allPackDescriptions:true,genreDescri
      button.className='pack-stage-tab-132'+(index===0?' active':'');
      button.dataset.stage=section.stage;
      button.textContent=section.stage;
-     button.addEventListener('click',function(){switchPackStage132(this,section.stage)});
+     button.setAttribute('onclick',"switchPackStage132(this,'"+section.stage+"');return false;");
      tabs.appendChild(button);
    });
    body.insertBefore(tabs,markers[0]);
@@ -6079,5 +6079,29 @@ try{if(typeof renderEx==='function'&&!exView.classList.contains('hidden'))render
  apply();setTimeout(apply,0);
  try{if(typeof currentView!=='undefined'&&currentView==='ex'&&typeof renderEx==='function')renderEx()}catch(e){}
  window.literatureRpgV140={version:VERSION,mainBooksInReadingPacks:true,sharedBookIds:true,assignedMainBooks:report.assigned,totalMainBooks:report.total,maxReadingPacksPerBook:3};
+})();
+</script>
+
+
+<!-- Ver.14.0.1：作家パック段階ボタンのクリック修正 -->
+<script id="v1401-author-stage-tab-click-fix">
+(()=>{
+ 'use strict';
+ const VERSION='14.0.1';
+ // innerHTML再描画後も動くよう、段階ボタンをイベント委譲で補強する。
+ document.addEventListener('click',function(event){
+   const button=event.target.closest?.('.pack-stage-tab-132');
+   if(!button)return;
+   const body=button.closest('.pack-body');
+   if(!body)return;
+   event.preventDefault();
+   event.stopPropagation();
+   const stage=button.dataset.stage;
+   if(typeof window.switchPackStage132==='function')window.switchPackStage132(button,stage);
+ },false);
+ document.title='文学RPG Ver.'+VERSION;
+ const apply=()=>document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+VERSION);
+ apply();setTimeout(apply,0);
+ window.literatureRpgV1401={version:VERSION,authorStageTabsFixed:true,delegatedClick:true};
 })();
 </script>
