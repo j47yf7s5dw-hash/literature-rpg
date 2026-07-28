@@ -3386,7 +3386,7 @@ body.v95-overlay-open{overflow:hidden;touch-action:none}
    if(dynamic){dynamic.remove?.();dynamic.classList?.add('hidden');syncOverlay95();return}
    const modal=document.getElementById('modal');if(modal&&!modal.classList.contains('hidden')){modal.classList.add('hidden');syncOverlay95()}
  });
- const modal95=document.getElementById('modal');if(modal95)new MutationObserver(syncOverlay95).observe(modal95,{attributes:true,attributeFilter:['class']});let overlayQueued95=false;new MutationObserver(()=>{if(overlayQueued95)return;overlayQueued95=true;requestAnimationFrame(()=>{overlayQueued95=false;syncOverlay95()})}).observe(document.body,{childList:true});
+ const modal95=document.getElementById('modal');if(modal95)new MutationObserver(syncOverlay95).observe(modal95,{attributes:true,attributeFilter:['class']});let overlayQueued95=false;/* Ver.16.5.2: whole-body observer removed; modal class observer handles overlay sync. */
  function audit95(){
    const issues=[];
    const ids={};document.querySelectorAll('[id]').forEach(el=>{ids[el.id]=(ids[el.id]||0)+1});
@@ -5238,11 +5238,7 @@ console.info('[文学RPG Ver.16.0.3]',window.literatureRpgV160);
 
 
 <!-- Ver.16.5.0：戦闘準備・技4枠装備 -->
-<script id="v1619-version-patch">(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);for(const k of ['literatureRpgV161','literatureRpgBossDexV1613','literatureRpgBossStoryV1614','literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617','literatureRpgRelicsV1618'])if(window[k])window[k].version=V;if(window.literatureRpgV161){window.literatureRpgV161.skillLoadout=true;window.literatureRpgV161.skillSlots=4;window.literatureRpgV161.battlePreparation=true}}apply();setTimeout(apply,100);setTimeout(apply,1000);setTimeout(apply,2800);window.addEventListener('pageshow',apply);console.info('[文学RPG Ver.16.5.1 戦闘準備・技4枠装備]')})();</script>
-
 <!-- Ver.16.5.0：第3階層ボス8体 -->
-<script id="v1620-version-patch">(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);for(const k of ['literatureRpgV161','literatureRpgBossDexV1613','literatureRpgBossStoryV1614','literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617','literatureRpgRelicsV1618'])if(window[k])window[k].version=V;if(window.literatureRpgV161){window.literatureRpgV161.implementedBosses=32;window.literatureRpgV161.implementedTiers=4;window.literatureRpgV161.tier3Gimmicks=['他者模倣','記憶焼却','代価の逆説','美徳の秤','名づけの徴税','思想矯正','犠牲の継承','定義の判決']}}apply();setTimeout(apply,100);setTimeout(apply,1000);setTimeout(apply,2800);window.addEventListener('pageshow',apply);window.literatureRpgV1620={version:V,addedBosses:8,totalImplemented:32,tier:4,recommendedLevel:29,phaseBand:'Phase 7〜8'};console.info('[文学RPG Ver.16.5.1 第3階層]',window.literatureRpgV1620)})();</script>
-
 <!-- Ver.16.5.0：育成実感・戦闘分析・次の挑戦先・階層バランス調整 -->
 <style id="v1621-growth-balance-style">
 .v1621-recommend{border:1px solid var(--line);border-radius:18px;background:var(--paper);padding:14px;margin-bottom:12px}.v1621-recommend-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.v1621-recommend-head small{font-size:9px;letter-spacing:.14em;color:var(--accent);font-weight:900}.v1621-recommend-head h3{margin:2px 0 0}.v1621-recommend-head>span{font-size:10px;font-weight:900;padding:5px 8px;border-radius:999px;background:var(--soft);border:1px solid var(--line)}.v1621-recommend-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v1621-recommend-grid button{border:1px solid var(--line);border-radius:13px;background:var(--soft);color:var(--ink);padding:11px;text-align:left}.v1621-recommend-grid small,.v1621-recommend-grid span,.v1621-recommend-grid i{display:block}.v1621-recommend-grid small{font-size:9px;color:var(--accent);font-weight:900}.v1621-recommend-grid b{display:block;margin:4px 0;font-size:13px}.v1621-recommend-grid span,.v1621-recommend-grid i{font-size:10px;color:var(--muted);font-style:normal;line-height:1.45}.v1621-report{margin:12px 0;padding:12px;border:1px solid #ffffff20;border-radius:14px;background:#ffffff09;text-align:left}.v1621-report h4{margin:0 0 9px;font-size:13px}.v1621-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.v1621-report-grid>div{border:1px solid #ffffff18;border-radius:10px;padding:8px}.v1621-report-grid span{display:block;font-size:9px;color:#cfc7d2}.v1621-report-grid b{display:block;margin-top:3px;font-size:13px;color:#fff;overflow-wrap:anywhere}.v1621-advice{margin-top:9px}.v1621-advice p{margin:5px 0!important;padding:8px 9px;border-left:3px solid #d8b765;background:#ffffff09;border-radius:0 9px 9px 0;font-size:11px!important;line-height:1.55}.v1621-levelup{margin-top:9px;padding:10px;border:1px solid #d7b35c;border-radius:11px;background:#d7b35c18}.v1621-levelup strong,.v1621-levelup span{display:block}.v1621-levelup strong{color:#f4d98b}.v1621-levelup span{font-size:10px;margin-top:4px;color:#eee}.v1621-growth{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:420;width:min(430px,calc(100% - 22px));border:1px solid #d0ad59;border-radius:20px;background:linear-gradient(145deg,#211c28,#3a293e);color:#fff;padding:15px;box-shadow:0 18px 60px #0009;animation:v1621up .28s ease}.v1621-growth-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.v1621-growth-head small{display:block;font-size:9px;letter-spacing:.14em;color:#e3c66e;font-weight:900}.v1621-growth-head h3{margin:4px 0 0;font-size:15px;line-height:1.4}.v1621-growth-close{border:0;border-radius:50%;width:31px;height:31px;background:#ffffff16;color:#fff}.v1621-growth-xp{font-size:24px;font-weight:900;color:#f0cf72;margin:11px 0}.v1621-growth-stats{display:flex;gap:6px;flex-wrap:wrap}.v1621-growth-stats span{padding:6px 8px;border-radius:999px;background:#ffffff10;border:1px solid #ffffff18;font-size:10px}.v1621-growth-level{margin-top:10px;padding:9px 10px;border-radius:11px;background:#d3ad4f18;border:1px solid #d3ad4f55}.v1621-growth-level b,.v1621-growth-level small{display:block}.v1621-growth-level small{margin-top:3px;color:#ddd}.v1621-growth-note{margin-top:8px;font-size:9px;color:#c9c0ca}.dark .v1621-recommend-grid button{background:#211b18}@keyframes v1621up{from{transform:translate(-50%,24px);opacity:0}to{transform:translate(-50%,0);opacity:1}}@media(max-width:430px){.v1621-recommend-grid{grid-template-columns:1fr}.v1621-growth{bottom:10px}}
@@ -5272,13 +5268,9 @@ console.info('[文学RPG Ver.16.0.3]',window.literatureRpgV160);
 
 
 <!-- Ver.16.5.0：第4階層ボス8体・反応行動 -->
-<script id="v1630-tier4-patch">(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);if(window.literatureRpgV161){window.literatureRpgV161.version=V;window.literatureRpgV161.implementedBosses=32;window.literatureRpgV161.implementedTiers=4;window.literatureRpgV161.tier4Reactions=true}for(const k of ['literatureRpgBossDexV1613','literatureRpgBossStoryV1614','literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617','literatureRpgRelicsV1618'])if(window[k])window[k].version=V}apply();setTimeout(apply,120);setTimeout(apply,2200);window.addEventListener('pageshow',apply);window.literatureRpgV1630={version:V,addedBosses:8,totalImplemented:32,tier:4,recommendedLevel:29,phaseBand:'Phase 7〜8',feature:'反応行動'};console.info('[文学RPG Ver.16.5.1 第4階層]',window.literatureRpgV1630)})();</script>
-
 <style id="v1631-job-awakening-style">
 .v1631-awakening{margin:11px 0;padding:12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,rgba(95,64,112,.07),rgba(185,134,44,.06))}.v1631-awakening>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:8px}.v1631-awakening small{font-size:9px;letter-spacing:.13em;color:var(--accent);font-weight:900}.v1631-awakening-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.v1631-awakening-list span{border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--paper)}.v1631-awakening-list span.locked{opacity:.43;filter:grayscale(1)}.v1631-awakening-list i,.v1631-awakening-list strong,.v1631-awakening-list em{display:block;font-style:normal}.v1631-awakening-list i{font-size:9px;color:var(--accent);font-weight:900}.v1631-awakening-list strong{font-size:11px;margin-top:2px}.v1631-awakening-list em{font-size:9px;line-height:1.45;color:var(--muted);margin-top:3px}.v1631-awakening.compact{margin:0 0 11px}.v161-arena .v1631-awakening{margin:0 12px 10px;border-color:#ffffff18;background:#ffffff08;color:#fff}.v161-arena .v1631-awakening-list span{border-color:#ffffff16;background:#ffffff08}.v161-arena .v1631-awakening-list em{color:#d0c8d2}.v161-skill-btn:disabled b span:first-child:after{content:""}.v151-roadmap .v151-step:nth-child(n+4){border-left-color:#8b5a9b}@media(max-width:430px){.v1631-awakening-list{grid-template-columns:1fr}}
 </style>
-<script id="v1631-job-awakening-version">(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);if(window.literatureRpgV161){Object.assign(window.literatureRpgV161,{version:V,jobLevelCap:8,jobPassives:true,jobSkillUpgrades:true,jobUltimates:true})}for(const k of ['literatureRpgBossDexV1613','literatureRpgBossStoryV1614','literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617','literatureRpgRelicsV1618','literatureRpgV1620','literatureRpgV1621','literatureRpgV1630'])if(window[k])window[k].version=V}apply();setTimeout(apply,100);setTimeout(apply,2400);window.addEventListener('pageshow',apply);window.literatureRpgV1631={version:V,jobLevelCap:8,questSteps:7,features:['Lv5職業パッシブ','Lv6既存技強化','Lv7新職業技','Lv8一戦一回の職業奥義']};console.info('[文学RPG Ver.16.5.1 職業覚醒]',window.literatureRpgV1631)})();</script>
-
 <!-- Ver.16.5.0：職業別の遭遇・撃破対話 -->
 <style id="v1632-job-dialogue-style">
 .v1632-job-scene{border-left:3px solid #e1bd69;padding-left:13px}
@@ -5326,8 +5318,6 @@ console.info('[文学RPG Ver.16.0.3]',window.literatureRpgV160);
 <style id="v1640-style">
 .v1640-law,.v1640-prep-law{border:1px solid #b89a5b;border-radius:13px;background:linear-gradient(135deg,#251f1a,#171516);padding:12px;margin:10px 0;color:#eee3ce}.v1640-law{display:flex;justify-content:space-between;gap:12px;align-items:center}.v1640-law small{display:block;font-size:8px;letter-spacing:.15em;color:#c8aa70}.v1640-law b,.v1640-prep-law b{display:block;font-size:13px;margin:2px 0}.v1640-law span,.v1640-prep-law span{display:block;font-size:10px;line-height:1.55;color:#d0c5b5}.v1640-law i{font-style:normal;font-size:9px;white-space:nowrap;border:1px solid #8e7445;border-radius:999px;padding:5px 8px}.v1640-prep-law{background:var(--soft);color:var(--ink);border-color:var(--accent);margin:12px 0}.v1640-prep-law span{color:var(--muted);margin-top:4px}@media(max-width:430px){.v1640-law{align-items:flex-start;flex-direction:column}.v1640-law i{white-space:normal}}
 </style>
-<script id="v1640-version-patch">(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);if(window.literatureRpgV161)Object.assign(window.literatureRpgV161,{version:V,implementedBosses:40,implementedTiers:5,tier5BattlefieldLaws:true,bossNamingRevised:true});for(const k of ['literatureRpgBossDexV1613','literatureRpgBossStoryV1614','literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617','literatureRpgRelicsV1618','literatureRpgV1631'])if(window[k])window[k].version=V}apply();setTimeout(apply,120);setTimeout(apply,2400);window.addEventListener('pageshow',apply);window.literatureRpgV1640={version:V,addedBosses:8,totalImplemented:40,tier:5,recommendedLevel:38,phaseBand:'Phase 9〜10',features:['戦場の法則','既存32体を含む全面改名','第5階層物語・遺物・攻略作品']};console.info('[文学RPG Ver.16.5.1 第五階層・ボス改名]',window.literatureRpgV1640)})();</script>
-
 <style id="v1641-battle-presentation-style">
 .v1641-arena{position:relative}.v161-unit{position:relative;overflow:visible}.v161-effects{min-height:0}.v161-effects:empty{display:none}.v161-effects .v1641-status{display:inline-flex;align-items:center;gap:4px;border-radius:5px;border:1px solid #ffffff1f;background:#ffffff0d;padding:4px 6px;font-size:9px;line-height:1.15}.v161-effects .v1641-status b{font-size:8px;color:#f0d486}.v161-effects .v1641-status.good{border-color:#80a88966;background:#5e8d681f}.v161-effects .v1641-status.bad{border-color:#bd657466;background:#9d3c501f}.v161-effects .v1641-status.law{border-color:#b99b5c77;background:#94733820}.v161-effects .v1641-status.danger{border-color:#d45a6b99;background:#a522392b;color:#ffd9de}
 .v1641-recent-log{margin:0 12px 10px;padding:9px 11px;border-radius:12px;background:#080a10a8;border:1px solid #ffffff16}.v1641-recent-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}.v1641-recent-head b{font-size:9px;letter-spacing:.08em;color:#f0ce78}.v1641-recent-head span{font-size:8px;color:#aaa0ac}.v1641-recent-log p{margin:0;padding:4px 0;border-top:1px solid #ffffff0d;color:#ddd5df;font-size:10px;line-height:1.45}.v1641-recent-log p:first-of-type{border-top:0}
@@ -5349,39 +5339,8 @@ console.info('[文学RPG Ver.16.0.3]',window.literatureRpgV160);
  const mo=new MutationObserver(scan);[document.getElementById('bossesView'),document.getElementById('modal')].filter(Boolean).forEach(x=>mo.observe(x,{childList:true,subtree:true}));scan();apply();window.addEventListener('pageshow',()=>{scan();apply()});window.literatureRpgV1641={version:V,features:['戦闘開始全面表示','形態変化カットイン','日本語状態札','直近3件ログ','40体固有勝敗文','軽いダメージ・回復・SP演出']};console.info('[文学RPG Ver.16.5.1 戦闘演出・状態表示]',window.literatureRpgV1641)
 })();
 </script>
-
-
-<script id="v1642-version-patch">(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);for(const k of ['literatureRpgV161','literatureRpgBossDexV1613','literatureRpgBossStoryV1614','literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617','literatureRpgRelicsV1618'])if(window[k])window[k].version=V;if(window.literatureRpgV161){window.literatureRpgV161.jobMatchups=true;window.literatureRpgV161.relicCategories=['汎用型','戦術型','対策型'];window.literatureRpgV161.skillMetrics=true;window.literatureRpgV161.balancePolicy='推奨Lv＋攻略作品・職業相性・技・遺物';}window.literatureRpgBalanceV1642={version:V,jobMatchups:5,relics:40,categories:['汎用型','戦術型','対策型'],skillPolicy:'buff-only',relicUpgrade:false,numericSkillInfo:true}}apply();setTimeout(apply,100);setTimeout(apply,1500);window.addEventListener('pageshow',apply);console.info('[文学RPG Ver.16.5.1 技・遺物バランス調整]',window.literatureRpgBalanceV1642)})();</script>
 <!-- Ver.16.5.0：職業相性・技底上げ・遺物分類 -->
 
-<script id="v1650-feature-marker">
-(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);if(window.literatureRpgV161){window.literatureRpgV161.version=V;window.literatureRpgV161.implementedTiers=6;window.literatureRpgV161.tier6Transformation=true;window.literatureRpgV161.tier6GuideNotGuaranteed=true}}apply();setTimeout(apply,120);setTimeout(apply,2200);window.addEventListener('pageshow',apply);window.literatureRpgTier6V1650={version:V,bosses:8,secondForms:8,guideBooks:6,victoryGuaranteed:false,reward:['XP','固有遺物']}})();
-</script>
-
-<script id="v1651-performance-consolidation">
-(()=>{
- 'use strict';
- const V='16.5.1';
- const applyVersion=()=>{
-  window.__LITRPG_VERSION__=V;
-  document.title='文学RPG Ver.'+V;
-  document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);
-  for(const k of ['literatureRpgV161','literatureRpgBossDexV1613','literatureRpgBossStoryV1614','literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617','literatureRpgRelicsV1618','literatureRpgReadingGuideV1615','literatureRpgBalanceV1642'])if(window[k])window[k].version=V;
- };
- applyVersion();
- window.addEventListener('pageshow',applyVersion,{passive:true});
- window.literatureRpgPerformanceV1651={
-  version:V,
-  uiChanged:false,
-  dataCompatible:true,
-  changes:['起動時監査のアイドル実行','全画面DOM監視の対象限定','重複バージョン同期の削減','図鑑装飾の遅延初期化','戦闘演出監視の局所化']
- };
- if(window.literatureRpgV161)Object.assign(window.literatureRpgV161,{version:V,performanceConsolidation:true,uiCompatible:true});
- console.info('[文学RPG Ver.16.5.1 内部統合・起動高速化]',window.literatureRpgPerformanceV1651);
-})();
-</script>
-</body>
-</html>
 <!-- Ver.7.25: removed persistent quest floating button -->
 
 <!-- Ver.12.2.4：作品図鑑・EXパック・作家図鑑の並び替えに昇順／降順を追加。 -->
@@ -8232,19 +8191,94 @@ body.v1614-story-open{overflow:hidden}
 .v1615-knowledge{margin:0 12px 10px;padding:10px 11px;border:1px solid #ffffff18;border-radius:12px;background:#ffffff09;display:grid;gap:7px;font-size:10px;line-height:1.55}.v1615-knowledge>div>b{display:block;color:#f0ce78;margin-bottom:5px}.v1615-knowledge span{display:flex;gap:5px;flex-wrap:wrap}.v1615-knowledge i{font-style:normal;padding:3px 6px;border-radius:999px;background:#ffffff12}.v1615-knowledge>strong{padding:7px 9px;border-radius:9px;background:#9c653e33;color:#ffd99a}.v1615-reading-knowledge{line-height:1.7}.v1615-guide-book{align-items:start}.v1615-guide-book.unlocked{border-color:#a57d42;background:rgba(185,134,44,.08)}.v1615-guide-effect{margin-top:6px;padding:7px 8px;border-radius:9px;background:rgba(92,67,118,.08);font-size:10px;line-height:1.5}.v1615-guide-effect b,.v1615-guide-effect span{display:block}.v1615-guide-effect span{margin-top:2px;color:var(--muted)}.dark .v1615-guide-effect{background:#4a38535c}
 @media(max-width:430px){.v1615-knowledge{margin-left:10px;margin-right:10px}.v1615-guide-book{grid-template-columns:auto 1fr}.v1615-guide-book>button{grid-column:2;width:100%}}
 </style>
-<script id="v1615-version-script">
-(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);if(window.literatureRpgV161)window.literatureRpgV161.version=V;if(window.literatureRpgBossDexV1613)window.literatureRpgBossDexV1613.version=V;if(window.literatureRpgBossStoryV1614)window.literatureRpgBossStoryV1614.version=V}apply();setTimeout(apply,120);setTimeout(apply,2200);window.addEventListener('pageshow',apply);window.literatureRpgReadingGuideV1615={version:V,effects:['弱点解析','対策読解','知識の余裕','行動予測','反論の構築','核心崩し']};console.info('[文学RPG Ver.16.5.1 行動予告・形態変化]',window.literatureRpgReadingGuideV1615)})();
-</script>
-
 <style id="v1617-replay-evaluation-style">
 .v1617-first-clear{margin:12px 0;padding:12px;border-radius:13px;background:#ffffff0d;border:1px solid #ffffff18}.v1617-first-clear b,.v1617-first-clear span{display:block}.v1617-first-clear span{font-size:10px;color:#d8d0da;margin-top:4px}.v1617-result-rank{margin:12px 0 7px;padding:11px;border:1px solid #ffffff24;border-radius:14px;background:#ffffff0c;display:grid;grid-template-columns:58px 1fr;gap:11px;align-items:center;text-align:left}.v1617-rank-letter{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:34px;font-weight:1000;background:#ffffff12}.v1617-result-rank small,.v1617-result-rank b,.v1617-result-rank span{display:block}.v1617-result-rank small{font-size:9px;letter-spacing:.14em;color:#d4c7d8}.v1617-result-rank b{margin-top:3px}.v1617-result-rank span{font-size:10px;color:#d8d0da;margin-top:3px}.v1617-result-rank.rank-S{border-color:#e8c061;background:#ad792325}.v1617-result-rank.rank-S .v1617-rank-letter{color:#ffe48f;background:#c08b2d38}.v1617-result-rank.rank-A{border-color:#ae8bd1}.v1617-result-rank.rank-B{border-color:#7ea19a}.v1617-result-rank.rank-C{border-color:#82776f}.v1617-medals{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin:0 0 10px}.v1617-medals span{font-size:9px;padding:4px 7px;border-radius:999px;background:#ffffff11;border:1px solid #ffffff18}.v1617-best{margin:-2px 0 10px;padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:rgba(93,65,113,.06);display:grid;grid-template-columns:1fr auto;gap:3px 8px;align-items:center}.v1617-best span,.v1617-best small{font-size:10px;color:var(--muted)}.v1617-best small{grid-column:1/-1}.v1617-best b{font-size:13px}.v1617-best b.rank-S,.v1617-dex-rank.rank-S{color:#a36d10}.v1617-best b.rank-A,.v1617-dex-rank.rank-A{color:#70508c}.v1617-best b.rank-B,.v1617-dex-rank.rank-B{color:#397369}.v1617-dex-rank{display:inline-block;margin-top:7px;padding:4px 7px;border-radius:999px;background:#eee3f2;font-size:9px;font-weight:1000}.dark .v1617-best{background:#392c405c}.dark .v1617-dex-rank{background:#49384f}.dark .v1617-best b.rank-S,.dark .v1617-dex-rank.rank-S{color:#f0c669}
 @media(max-width:430px){.v1617-result-rank{grid-template-columns:50px 1fr}.v1617-rank-letter{width:50px;height:50px;font-size:29px}}
 </style>
-<script id="v1617-version-script">
-(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);if(window.literatureRpgV161){window.literatureRpgV161.version=V;window.literatureRpgV161.replayEvaluation=true;window.literatureRpgV161.replayRanks=['S','A','B','C']}if(window.literatureRpgBossDexV1613)window.literatureRpgBossDexV1613.version=V;if(window.literatureRpgBossStoryV1614)window.literatureRpgBossStoryV1614.version=V;if(window.literatureRpgBossFormsV1616)window.literatureRpgBossFormsV1616.version=V}apply();setTimeout(apply,120);setTimeout(apply,2200);window.addEventListener('pageshow',apply);window.literatureRpgReplayEvaluationV1617={version:V,ranks:['S','A','B','C'],firstClearRated:false,metrics:['turns','remainingHp','noHeal','weakFinish']};console.info('[文学RPG Ver.16.5.1 再戦評価]',window.literatureRpgReplayEvaluationV1617)})();
-</script>
 <!-- Ver.16.5.0：再戦評価・最高ランク・評価章 -->
-<script id="v1618-final-version-lock">
-(()=>{const V='16.5.1';function apply(){window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);for(const k of ['literatureRpgV161','literatureRpgBossDexV1613','literatureRpgBossStoryV1614','literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617','literatureRpgRelicsV1618'])if(window[k])window[k].version=V;if(window.literatureRpgV161){window.literatureRpgV161.relics=true;window.literatureRpgV161.relicSlot=1}}apply();setTimeout(apply,100);setTimeout(apply,900);setTimeout(apply,2600);setTimeout(apply,5600);window.addEventListener('pageshow',apply)})();
+
+<script id="v1652-emergency-startup-fix">
+(()=>{
+ 'use strict';
+ const V='16.5.2';
+ const TITLE='文学RPG Ver.'+V;
+ const applyVersion=()=>{
+   window.__LITRPG_VERSION__=V;
+   if(document.title!==TITLE)document.title=TITLE;
+   document.querySelectorAll('.title small').forEach(el=>{
+     const text='Ver.'+V;
+     if(el.textContent!==text)el.textContent=text;
+   });
+   const versioned=[
+     'literatureRpgV161','literatureRpgBossDexV1613','literatureRpgBossStoryV1614',
+     'literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617',
+     'literatureRpgRelicsV1618','literatureRpgReadingGuideV1615','literatureRpgBalanceV1642',
+     'literatureRpgV1620','literatureRpgV1621','literatureRpgV1630','literatureRpgV1631',
+     'literatureRpgV1640','literatureRpgV1641','literatureRpgTier6V1650'
+   ];
+   versioned.forEach(key=>{if(window[key]&&typeof window[key]==='object')window[key].version=V});
+ };
+
+ // Metadata formerly spread across multiple version-lock scripts.
+ window.literatureRpgReadingGuideV1615=window.literatureRpgReadingGuideV1615||{
+   effects:['弱点解析','対策読解','知識の余裕','行動予測','反論の構築','核心崩し']
+ };
+ window.literatureRpgReplayEvaluationV1617=window.literatureRpgReplayEvaluationV1617||{
+   ranks:['S','A','B','C'],firstClearRated:false,
+   metrics:['turns','remainingHp','noHeal','weakFinish']
+ };
+ window.literatureRpgV1620=window.literatureRpgV1620||{
+   addedBosses:8,totalImplemented:24,tier:3,recommendedLevel:21,phaseBand:'Phase 5〜6'
+ };
+ window.literatureRpgV1630=window.literatureRpgV1630||{
+   addedBosses:8,totalImplemented:32,tier:4,recommendedLevel:29,phaseBand:'Phase 7〜8',feature:'反応行動'
+ };
+ window.literatureRpgV1631=window.literatureRpgV1631||{
+   jobLevelCap:8,questSteps:7,
+   features:['Lv5職業パッシブ','Lv6既存技強化','Lv7新職業技','Lv8一戦一回の職業奥義']
+ };
+ window.literatureRpgV1640=window.literatureRpgV1640||{
+   addedBosses:8,totalImplemented:40,tier:5,recommendedLevel:38,phaseBand:'Phase 9〜10',
+   features:['戦場の法則','既存32体を含む全面改名','第5階層物語・遺物・攻略作品']
+ };
+ window.literatureRpgBalanceV1642=window.literatureRpgBalanceV1642||{
+   jobMatchups:5,relics:40,categories:['汎用型','戦術型','対策型'],
+   skillPolicy:'buff-only',relicUpgrade:false,numericSkillInfo:true
+ };
+ window.literatureRpgTier6V1650=window.literatureRpgTier6V1650||{
+   bosses:8,secondForms:8,guideBooks:6,victoryGuaranteed:false,reward:['XP','固有遺物']
+ };
+ window.literatureRpgPerformanceV1652={
+   version:V,uiChanged:false,dataCompatible:true,emergencyStartupFix:true,
+   changes:[
+     'タイトル監視の自己発火ループを削除',
+     '重複したバージョン同期タイマーを統合',
+     '閉じタグ後のコードをbody内へ移動',
+     '全body監視を削除',
+     '起動確認用メタデータを一本化'
+   ]
+ };
+ if(window.literatureRpgV161&&typeof window.literatureRpgV161==='object'){
+   Object.assign(window.literatureRpgV161,{
+     version:V,implementedBosses:48,implementedTiers:6,
+     skillLoadout:true,skillSlots:4,battlePreparation:true,
+     jobLevelCap:8,jobPassives:true,jobSkillUpgrades:true,jobUltimates:true,
+     tier5BattlefieldLaws:true,bossNamingRevised:true,
+     tier6Transformation:true,tier6GuideNotGuaranteed:true,
+     jobMatchups:true,relicCategories:['汎用型','戦術型','対策型'],skillMetrics:true,
+     performanceConsolidation:true,emergencyStartupFix:true,uiCompatible:true
+   });
+ }
+ applyVersion();
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applyVersion,{once:true});
+ window.addEventListener('pageshow',applyVersion,{passive:true});
+ // Some legacy feature blocks still write their historic version label on delayed timers.
+ // One finite correction after those timers is enough; no DOM observer is needed.
+ setTimeout(applyVersion,2800);
+ setTimeout(applyVersion,6500);
+ console.info('[文学RPG Ver.16.5.2 緊急起動修正]',window.literatureRpgPerformanceV1652);
+})();
 </script>
-<script id="v1642-hard-version-lock">(()=>{const V='16.5.1',apply=()=>{window.__LITRPG_VERSION__=V;document.title='文学RPG Ver.'+V;document.querySelectorAll('.title small').forEach(x=>x.textContent='Ver.'+V);for(const k of ['literatureRpgV161','literatureRpgBossDexV1613','literatureRpgBossStoryV1614','literatureRpgBossFormsV1616','literatureRpgReplayEvaluationV1617','literatureRpgRelicsV1618','literatureRpgReadingGuideV1615'])if(window[k])window[k].version=V;if(window.literatureRpgBalanceV1642)window.literatureRpgBalanceV1642.version=V};apply();setTimeout(apply,1200);const title=document.querySelector('title');if(title)new MutationObserver(apply).observe(title,{childList:true,subtree:true,characterData:true});window.addEventListener('pageshow',apply)})();</script>
+
+</body>
+</html>
